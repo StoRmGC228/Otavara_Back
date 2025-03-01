@@ -16,8 +16,9 @@ namespace Domain.Entities
         public int? Price { get; set; }
         public string? Format  { get; set; }
         public string Game { get; set; }
-        public DateAndTime EventStartTime { get; set; }
-        public virtual List<User> Subscribers { get; set; }
+        public DateTime EventStartTime { get; set; }
+        public virtual List<Participant> Participants { get; set; }
+        public virtual List<RequestedCard> RequestedCards { get; set; }
 
     }
 }
