@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Good
+    public class Good:BaseEntity
     {
-        public Guid Id { get; set; }
         public Guid CustomerId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

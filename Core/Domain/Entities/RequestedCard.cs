@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class RequestedCard
+    public class RequestedCard:BaseEntity
     {
-        public Guid Id { get; set; }
         public Guid RequesterId { get; set; }
         public Guid EventId { get; set; }
         public string Link { get; set; }
