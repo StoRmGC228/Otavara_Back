@@ -8,9 +8,8 @@ namespace Domain.Entities
 {
     using Microsoft.VisualBasic;
 
-    public class Event
+    public class Event:BaseEntity
     {
-        public Guid Id { get; set; }
         public string Name { get; set; }
         public string? Description { get; set; }
         public int? Price { get; set; }
