@@ -1,11 +1,16 @@
 using API.Configurations;
+using API.DtoProfile;
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(DtoProfile));
 builder.Services.AddInfrastructureConfigurations(builder.Configuration);
-var app = builder.Build();
+builder.Services.AddApplicationConfigurations(builder.Configuration);
 
+var app = builder.Build();
 
 
 if (app.Environment.IsDevelopment())
@@ -16,4 +21,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 
+app.UseAuthorization();
+app.MapControllers();
+app.Run();
