@@ -1,20 +1,19 @@
-﻿namespace API.Configurations
-{
-    using Infrastructure.Configurations;
-    using Infrastructure.Repositories;
-    using Application.Interfaces;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.DependencyInjection;
+﻿namespace API.Configurations;
 
-    public static class InfrastructureConfiguration
+using Application.Interfaces;
+using Infrastructure.Configurations;
+using Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
+
+public static class InfrastructureConfiguration
+{
+    public static IServiceCollection AddInfrastructureConfigurations(this IServiceCollection services,
+        IConfiguration configuration)
     {
-        public static IServiceCollection AddInfrastructureConfigurations(this IServiceCollection services,
-            IConfiguration configuration)
-        {
-            var connectionString = configuration.GetValue<string>("ConnectionString");
-            services.AddDbContext<OtavaraDbContext>(options => options.UseNpgsql(connectionString));
-            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-            return services;
-        }
+        var connectionString = configuration.GetValue<string>("ConnectionString");
+        services.AddDbContext<OtavaraDbContext>(options => options.UseNpgsql(connectionString));
+        services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+        services.AddScoped<IUserRepository, UserRepository>();
+        return services;
     }
 }

@@ -1,13 +1,10 @@
 ﻿namespace Infrastructure.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
+
 using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
+public class BaseRepository<T> : IBaseRepository<T> where T : class,BaseEntity
 {
     private readonly DbContext _context;
     private readonly DbSet<T> _dbSet;
