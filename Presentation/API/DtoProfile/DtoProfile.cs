@@ -1,15 +1,14 @@
-﻿namespace API.DtoProfile
-{
-    using AutoMapper;
-    using Domain.DtoEntities;
-    using Domain.Entities;
+﻿namespace API.DtoProfile;
 
-    public class DtoProfile:Profile
+using AutoMapper;
+using Domain.DtoEntities;
+using Domain.Entities;
+
+public class DtoProfile : Profile
+{
+    public DtoProfile()
     {
-        public DtoProfile()
-        {
-            CreateMap<UserDto, User>();
-            CreateMap<User, UserDto>();
-        }
+        CreateMap<UserDto, User>();
+        CreateMap<User, UserDto>();
     }
 }

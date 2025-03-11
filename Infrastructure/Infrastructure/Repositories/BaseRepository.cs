@@ -4,7 +4,7 @@ using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-public class BaseRepository<T> : IBaseRepository<T> where T : class,BaseEntity
+public class BaseRepository<T> : IBaseRepository<T> where T : class, BaseEntity
 {
     private readonly DbContext _context;
     private readonly DbSet<T> _dbSet;
@@ -20,7 +20,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class,BaseEntity
         return await _dbSet.ToListAsync();
     }
 
-    public async Task<T?> GetByIdAsync(int id)
+    public async Task<T?> GetByIdAsync(Guid id)
     {
         return await _dbSet.FindAsync(id);
     }
@@ -39,7 +39,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class,BaseEntity
         return entity;
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(Guid id)
     {
         var entity = await _dbSet.FindAsync(id);
         if (entity != null)

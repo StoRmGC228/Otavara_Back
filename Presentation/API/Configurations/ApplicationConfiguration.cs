@@ -24,7 +24,6 @@ public static class ApplicationConfiguration
                     IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes(configuration.GetSection("JwtSettings").Get<JwtOptions>().SecretKey))
                 };
-             
             });
         services.AddAuthorization();
         services.Configure<JwtOptions>(configuration.GetSection("JwtSettings"));

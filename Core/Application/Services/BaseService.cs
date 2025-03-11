@@ -1,9 +1,7 @@
 ﻿namespace Application.Services;
-using Application.Interfaces;
+
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Interfaces;
 
 public class BaseService<T> : IBaseService<T> where T : BaseEntity
 {
@@ -11,43 +9,31 @@ public class BaseService<T> : IBaseService<T> where T : BaseEntity
 
     public BaseService(IBaseRepository<T> repository)
     {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        _repository = repository;
     }
 
-    public virtual async Task<IEnumerable<T>> GetAllAsync()
+    public async Task<IEnumerable<T>> GetAllAsync()
     {
         return await _repository.GetAllAsync();
     }
 
-    public virtual async Task<T?> GetByIdAsync(int id)
+    public async Task<T?> GetByIdAsync(Guid id)
     {
         return await _repository.GetByIdAsync(id);
     }
 
-    public virtual async Task<T> AddAsync(T entity)
+    public async Task<T> AddAsync(T entity)
     {
-        if (entity == null)
-            throw new ArgumentNullException(nameof(entity));
-
         return await _repository.AddAsync(entity);
     }
 
-    public virtual async Task<T> UpdateAsync(T entity)
+    public async Task<T> UpdateAsync(T entity)
     {
-        if (entity == null)
-            throw new ArgumentNullException(nameof(entity));
-
         return await _repository.UpdateAsync(entity);
     }
 
-    public virtual async Task DeleteAsync(int id)
+    public async Task DeleteAsync(Guid id)
     {
         await _repository.DeleteAsync(id);
-    }
-
-    public virtual async Task<bool> ExistsAsync(int id)
-    {
-        var entity = await _repository.GetByIdAsync(id);
-        return entity != null;
     }
 }

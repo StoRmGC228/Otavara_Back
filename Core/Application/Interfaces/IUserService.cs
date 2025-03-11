@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Application.Interfaces;
 
-namespace Application.Interfaces
+using Domain.Entities;
+
+public interface IUserService : IBaseService<User>
 {
-    using Domain.Entities;
-
-    public interface IUserService
-    {
-        Task<User> GetUserByLoginAsync(string login);
-    }
+    Task<User> GetUserByLoginAsync(string login);
 }

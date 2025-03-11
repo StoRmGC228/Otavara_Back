@@ -13,6 +13,7 @@ public class UserRepository : BaseRepository<User>, IUserRepository
     {
         _userDb = context.Set<User>();
     }
+
     public async Task AddUserAsync(User entity)
     {
         entity.HashPassword = Hashing.HashPassword(entity.HashPassword);
