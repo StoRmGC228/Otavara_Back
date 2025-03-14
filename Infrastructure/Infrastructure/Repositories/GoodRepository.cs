@@ -32,5 +32,13 @@ namespace Infrastructure.Repositories
                 ? await goodSet.OrderBy(x => x.QuantityInStock).ToListAsync()
                 : await goodSet.OrderByDescending(x => x.QuantityInStock).ToListAsync();
         }
+
+        public async Task<IEnumerable<Good>> GetAllSortedByTimeAsync(bool ascending)
+        {
+            var goodSet = _context.Set<Good>();
+            return ascending
+                ? await goodSet.OrderBy(x => x.CreatedAt).ToListAsync()
+                : await goodSet.OrderByDescending(x => x.CreatedAt).ToListAsync(); 
+        }
     }
 }
