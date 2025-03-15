@@ -14,6 +14,7 @@ public static class InfrastructureConfiguration
         services.AddDbContext<OtavaraDbContext>(options => options.UseNpgsql(connectionString));
         services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IEventRepository, EventRepository>();
         return services;
     }
 }
