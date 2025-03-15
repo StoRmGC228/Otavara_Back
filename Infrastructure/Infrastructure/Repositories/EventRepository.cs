@@ -1,5 +1,4 @@
 ﻿namespace Infrastructure.Repositories;
-
 using Application.Interfaces;
 using Configurations;
 using Domain.Entities;
@@ -12,21 +11,11 @@ public class EventRepository : BaseRepository<Event>, IEventRepository
 {
     private readonly OtavaraDbContext _context;
     private readonly DbSet<Event> _eventDb;
-    private readonly DbSet<Participant> _participantDb;
 
     public EventRepository(OtavaraDbContext context) : base(context)
     {
         _context = context;
         _eventDb = context.Set<Event>();
-        _participantDb = context.Set<Participant>();
-    }
-
-    public async Task<List<User>> GetEventParticipantsAsync(Guid eventId)
-    {
-        return await _participantDb
-            .Where(p => p.EventId == eventId)
-            .Select(p => p.User)
-            .ToListAsync();
     }
 
     public async Task<List<Event>> GetEventsSortedByDateAsync(bool ascending = true)
@@ -66,7 +55,8 @@ public class EventRepository : BaseRepository<Event>, IEventRepository
         int minPrice, int maxPrice, DateTime startDate, DateTime endDate)
     {
         return await _eventDb
-            .Where(e => e.Price >= minPrice && e.Price <= maxPrice && e.EventStartTime.Date >= startDate.Date && e.EventStartTime.Date <= endDate.Date)
+            .Where(e => e.Price >= minPrice && e.Price <= maxPrice &&
+                  e.EventStartTime.Date >= startDate.Date && e.EventStartTime.Date <= endDate.Date)
             .ToListAsync();
     }
 
@@ -75,23 +65,5 @@ public class EventRepository : BaseRepository<Event>, IEventRepository
         return await _eventDb
             .Where(e => e.Game.ToLower().Contains(game.ToLower()))
             .ToListAsync();
-    }
-
-    public async Task AddParticipantAsync(Guid eventId, Guid userId)
-    {
-        var participant = new Participant { EventId = eventId, UserId = userId };
-        await _participantDb.AddAsync(participant);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task RemoveParticipantAsync(Guid eventId, Guid userId)
-    {
-        var participantToRemove = await _participantDb.FirstOrDefaultAsync(
-            p => p.EventId == eventId && p.UserId == userId);
-        if (participantToRemove != null)
-        {
-            _participantDb.Remove(participantToRemove);
-            await _context.SaveChangesAsync();
-        }
     }
 }
