@@ -1,5 +1,7 @@
 ﻿namespace API.Configurations;
 
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using Application.Interfaces;
 using Application.Providers;
@@ -23,6 +25,17 @@ public static class ApplicationConfiguration
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes(configuration.GetSection("JwtSettings").Get<JwtOptions>().SecretKey))
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        if (context.Request.Cookies.ContainsKey("MySecretCookies"))
+                        {
+                            context.Token = context.Request.Cookies["MySecretCookies"];
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
         services.AddAuthorization();

@@ -29,12 +29,13 @@ public class EventController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetEventById(Guid id)
     {
-        var @event = await _eventService.GetByIdAsync(id);
-        if (@event == null)
+        var eventEntity = await _eventService.GetByIdAsync(id);
+        if (eventEntity == null)
         {
             return NotFound();
         }
-        return Ok(@event);
+        return Ok(eventEntity);
+
     }
 
     [HttpPost]
@@ -114,15 +115,6 @@ public class EventController : ControllerBase
     public async Task<IActionResult> GetEventsByDate([FromQuery] DateTime date)
     {
         var events = await _eventService.GetEventsByDateAsync(date);
-        return Ok(events);
-    }
-
-    [HttpGet("user")]
-    [Authorize]
-    public async Task<IActionResult> GetUserEvents()
-    {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        var events = await _eventService.GetUserEventsAsync(userId);
         return Ok(events);
     }
 }
