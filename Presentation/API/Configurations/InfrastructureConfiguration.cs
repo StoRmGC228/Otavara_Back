@@ -15,6 +15,7 @@ public static class InfrastructureConfiguration
         services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IEventRepository, EventRepository>();
+        services.AddScoped<IParticipantsRepository, ParticipantsRepository>();
         return services;
     }
 }
