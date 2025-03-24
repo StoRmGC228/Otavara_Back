@@ -20,8 +20,8 @@ public class UserRepository : BaseRepository<User>, IUserRepository
         await AddAsync(entity);
     }
 
-    public async Task<User?> GetUserByLoginAsync(string login)
+    public async Task<User?> GetUserByTelegramUserNameAsync(string telegramUserName)
     {
-        return await _userDb.FirstOrDefaultAsync(u => u.Login == login);
+        return await _userDb.FirstOrDefaultAsync(u => u.TelegramUserName == telegramUserName);
     }
 }

@@ -24,7 +24,7 @@ public class AuthController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Register([FromBody] UserDto newUser)
     {
-        var isExist = await _userService.GetUserByLoginAsync(newUser.Login);
+        var isExist = await _userService.GetUserByTelegramUserNameAsync(newUser.TelegramUserName);
         if (isExist != null)
         {
             return BadRequest();
@@ -38,7 +38,7 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] UserDto loginUser)
     {
-        var user = await _userService.GetUserByLoginAsync(loginUser.Login);
+        var user = await _userService.GetUserByTelegramUserNameAsync(loginUser.TelegramUserName);
         if (user == null)
         {
             return NotFound();

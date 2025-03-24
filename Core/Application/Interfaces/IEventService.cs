@@ -1,9 +1,6 @@
 ﻿namespace Application.Interfaces;
 
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 public interface IEventService : IBaseService<Event>
 {
@@ -12,7 +9,9 @@ public interface IEventService : IBaseService<Event>
     Task<List<Event>> GetEventsSortedByDateAsync(bool ascending = true);
     Task<List<Event>> GetEventsByDateRangeAsync(DateTime startDate, DateTime endDate);
     Task<List<Event>> GetEventsByPriceRangeAsync(int minPrice, int maxPrice);
-    Task<List<Event>> GetEventsByPriceRangeAndDateRangeAsync(int minPrice, int maxPrice, DateTime startDate, DateTime endDate);
+
+    Task<List<Event>> GetEventsByPriceRangeAndDateRangeAsync(int minPrice, int maxPrice, DateTime startDate,
+        DateTime endDate);
 
     Task<List<User>> GetEventParticipantsAsync(Guid eventId);
     Task AddParticipantAsync(Guid eventId, Guid userId);

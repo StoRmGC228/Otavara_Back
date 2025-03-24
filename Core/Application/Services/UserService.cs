@@ -12,9 +12,9 @@ public class UserService : BaseService<User>, IUserService
         _userRepository = userRepository;
     }
 
-    public async Task<User> GetUserByLoginAsync(string login)
+    public async Task<User> GetUserByTelegramUserNameAsync(string telegramUserName)
     {
-        var user = await _userRepository.GetUserByLoginAsync(login);
+        var user = await _userRepository.GetUserByTelegramUserNameAsync(telegramUserName);
         return user;
     }
 }
