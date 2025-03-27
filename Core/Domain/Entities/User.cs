@@ -3,10 +3,10 @@
 public class User : BaseEntity
 {
     public int TelegramId { get; set; }
-    public string TelegramFirstName { get; set; }
-    public string TelegramUserName { get; set; }
-    public string HashPassword { get; set; }
-    public string PhotoURL { get; set; }
+    public string? First_name { get; set; }
+    public string? Last_name { get; set; }
+    public string? Username { get; set; }
+    public string Photo_url { get; set; }
 
     public virtual List<Participant> SubscribedEvents { get; set; }
     public virtual List<RequestedCard> WishedCards { get; set; }

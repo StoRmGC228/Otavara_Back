@@ -16,12 +16,16 @@ public class UserRepository : BaseRepository<User>, IUserRepository
 
     public async Task AddUserAsync(User entity)
     {
-        entity.HashPassword = Hashing.HashPassword(entity.HashPassword);
         await AddAsync(entity);
     }
 
     public async Task<User?> GetUserByTelegramUserNameAsync(string telegramUserName)
     {
-        return await _userDb.FirstOrDefaultAsync(u => u.TelegramUserName == telegramUserName);
+        return await _userDb.FirstOrDefaultAsync(u => u.Username == telegramUserName);
+    }
+
+    public async Task<bool> IsUserExisting(User user)
+    {
+        return await _userDb.AnyAsync(u=>u.TelegramId==user.TelegramId);
     }
 }

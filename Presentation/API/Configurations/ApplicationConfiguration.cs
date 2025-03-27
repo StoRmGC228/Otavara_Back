@@ -1,7 +1,5 @@
 ﻿namespace API.Configurations;
 
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 using Application.Interfaces;
 using Application.Providers;
@@ -34,6 +32,7 @@ public static class ApplicationConfiguration
                         {
                             context.Token = context.Request.Cookies["MySecretCookies"];
                         }
+
                         return Task.CompletedTask;
                     }
                 };
