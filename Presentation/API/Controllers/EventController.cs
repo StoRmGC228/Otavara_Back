@@ -1,12 +1,10 @@
 ﻿namespace API.Controllers;
 
+using System.Security.Claims;
 using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -34,8 +32,8 @@ public class EventController : ControllerBase
         {
             return NotFound();
         }
-        return Ok(eventEntity);
 
+        return Ok(eventEntity);
     }
 
     [HttpPost]

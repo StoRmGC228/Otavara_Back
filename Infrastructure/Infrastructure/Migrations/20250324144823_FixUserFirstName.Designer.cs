@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(OtavaraDbContext))]
-    partial class OtavaraDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250324144823_FixUserFirstName")]
+    partial class FixUserFirstName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -152,20 +155,23 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("First_name")
+                    b.Property<string>("HashPassword")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Last_name")
+                    b.Property<string>("PhotoURL")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Photo_url")
+                    b.Property<string>("TelegramFirstName")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("TelegramId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Username")
+                    b.Property<string>("TelegramUserName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");

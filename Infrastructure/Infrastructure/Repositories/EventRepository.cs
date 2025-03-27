@@ -1,11 +1,9 @@
 ﻿namespace Infrastructure.Repositories;
+
 using Application.Interfaces;
 using Configurations;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 public class EventRepository : BaseRepository<Event>, IEventRepository
 {
@@ -24,10 +22,8 @@ public class EventRepository : BaseRepository<Event>, IEventRepository
         {
             return await _eventDb.OrderBy(e => e.EventStartTime).ToListAsync();
         }
-        else
-        {
-            return await _eventDb.OrderByDescending(e => e.EventStartTime).ToListAsync();
-        }
+
+        return await _eventDb.OrderByDescending(e => e.EventStartTime).ToListAsync();
     }
 
     public async Task<List<Event>> GetEventsByDateAsync(DateTime date)
@@ -56,7 +52,7 @@ public class EventRepository : BaseRepository<Event>, IEventRepository
     {
         return await _eventDb
             .Where(e => e.Price >= minPrice && e.Price <= maxPrice &&
-                  e.EventStartTime.Date >= startDate.Date && e.EventStartTime.Date <= endDate.Date)
+                        e.EventStartTime.Date >= startDate.Date && e.EventStartTime.Date <= endDate.Date)
             .ToListAsync();
     }
 

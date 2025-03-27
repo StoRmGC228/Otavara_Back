@@ -27,4 +27,4 @@
 		<ProjectReference Include="..\..\Infrastructure\Infrastructure\Infrastructure.csproj" />
 	</ItemGroup>
 
-				</Project>
+</Project>

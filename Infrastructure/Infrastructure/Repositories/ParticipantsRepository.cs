@@ -1,11 +1,9 @@
 ﻿namespace Infrastructure.Repositories;
+
 using Application.Interfaces;
 using Configurations;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 public class ParticipantsRepository : IParticipantsRepository
 {

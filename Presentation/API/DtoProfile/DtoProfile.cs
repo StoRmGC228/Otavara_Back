@@ -8,7 +8,6 @@ public class DtoProfile : Profile
 {
     public DtoProfile()
     {
-        CreateMap<UserDto, User>();
-        CreateMap<User, UserDto>();
+        
     }
 }

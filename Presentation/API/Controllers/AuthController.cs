@@ -21,30 +21,10 @@ public class AuthController : ControllerBase
         _mapper = mapper;
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Register([FromBody] UserDto newUser)
-    {
-        var isExist = await _userService.GetUserByLoginAsync(newUser.Login);
-        if (isExist != null)
-        {
-            return BadRequest();
-        }
-
-        var user = _mapper.Map<User>(newUser);
-        await _authService.RegisterUserAsync(user);
-        return Ok(newUser);
-    }
-
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] UserDto loginUser)
+    public async Task<IActionResult> Login([FromBody] TelegramUserDto loginUser)
     {
-        var user = await _userService.GetUserByLoginAsync(loginUser.Login);
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        var token = await _authService.LoginUserAsync(user, loginUser.HashPassword);
+        var token = await _authService.LoginUserAsync(loginUser);
         HttpContext.Response.Cookies.Append("MySecretCookies", token);
         return Ok(new { token });
     }

@@ -1,10 +1,7 @@
 ﻿namespace Application.Services;
 
-using Application.Interfaces;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Interfaces;
 
 public class EventService : IEventService
 {
@@ -68,7 +65,8 @@ public class EventService : IEventService
         return await _eventRepository.GetEventsByPriceRangeAsync(minPrice, maxPrice);
     }
 
-    public async Task<List<Event>> GetEventsByPriceRangeAndDateRangeAsync(int minPrice, int maxPrice, DateTime startDate, DateTime endDate)
+    public async Task<List<Event>> GetEventsByPriceRangeAndDateRangeAsync(int minPrice, int maxPrice,
+        DateTime startDate, DateTime endDate)
     {
         return await _eventRepository.GetEventsByPriceRangeAndDateRangeAsync(minPrice, maxPrice, startDate, endDate);
     }
