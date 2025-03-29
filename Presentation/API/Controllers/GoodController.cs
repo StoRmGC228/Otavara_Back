@@ -1,11 +1,12 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    public class GoodController : Controller
+    public class GoodController : ControllerBase
     {
         private readonly IGoodService _goodService;
         public GoodController(IGoodService goodService)
@@ -13,87 +14,78 @@ namespace API.Controllers
             _goodService = goodService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllGoods()
+        {
+            var allGoods = await _goodService.GetAllGoods();
+            return Ok(allGoods);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetGoodById(Guid id)
+        {
+            var searchedGood = await _goodService.GetGoodById(id);
+            return Ok(searchedGood);
+        }
+
+
+
         [HttpPost]
-        public async Task<IActionResult> CreateGood([FromBody] Good good)
+        public async Task<IActionResult> CreateGood([FromBody] Good newGood)
         {
-            var createdGood = await _goodService.CreateGood(good);
-            return Ok(createdGood);
+            var createdGood = await _goodService.CreateGood(newGood);
+            return CreatedAtAction(nameof(GetGoodById), new { id = createdGood.Id }, createdGood);
         }
 
-
-        // GET: GoodController
-        public ActionResult Index()
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateGood(Guid id,[FromBody] Good updatedGood)
         {
-            return View();
-        }
-
-        // GET: GoodController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: GoodController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: GoodController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
+            if(id != updatedGood.Id)
             {
-                return RedirectToAction(nameof(Index));
+                return BadRequest();
             }
-            catch
+            var searchedGood = await _goodService.GetGoodById(id);
+            if(searchedGood == null)
             {
-                return View();
+                return NotFound();
             }
+            var result = await _goodService.UpdateGood(id, updatedGood);
+            return Ok(result);
         }
 
-        // GET: GoodController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteGood(Guid id)
         {
-            return View();
+            var seachedGood = await _goodService.GetGoodById(id);
+            if(seachedGood == null)
+            {
+                return NotFound();
+            }
+            await _goodService.DeleteGood(id);
+            return NoContent();
         }
 
-        // POST: GoodController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [HttpGet("sorted/name")]
+        public async Task<IActionResult> GetGoodsSortedByName([FromQuery] bool ascending = true)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var goods = await _goodService.GetAllSortedByNameAsync(ascending);
+            return Ok(goods);
         }
 
-        // GET: GoodController/Delete/5
-        public ActionResult Delete(int id)
+        [HttpGet("sorted/quantity")]
+        public async Task<IActionResult> GetGoodsSortedByQuantity([FromQuery] bool ascending = true)
         {
-            return View();
+            var goods = await _goodService.GetAllSortedByQuantityAsync(ascending);
+            return Ok(goods);
         }
 
-        // POST: GoodController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [HttpGet("sorted/time")]
+        public async Task<IActionResult> GetGoodsSortedByTime([FromQuery] bool ascending = true)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var goods = _goodService.GetAllSortedByTimeAsync(ascending);
+            return Ok(goods);
         }
     }
 }
