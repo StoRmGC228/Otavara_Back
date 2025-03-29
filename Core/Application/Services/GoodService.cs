@@ -31,6 +31,21 @@ namespace Application.Services
             return await _goodRepository.GetAllAsync();
         }
 
+        public async Task<IEnumerable<Good>> GetAllSortedByNameAsync(bool ascending)
+        {
+            return await _goodRepository.GetAllSortedByNameAsync(ascending);
+        }
+
+        public async Task<IEnumerable<Good>> GetAllSortedByQuantityAsync(bool ascending)
+        {
+            return await _goodRepository.GetAllSortedByQuantityAsync(ascending);
+        }
+
+        public async Task<IEnumerable<Good>> GetAllSortedByTimeAsync(bool ascending)
+        {
+            return await _goodRepository.GetAllSortedByTimeAsync(ascending);
+        }
+
         public async Task<Good> GetGoodById(Guid goodId)
         {
             return await _goodRepository.GetByIdAsync(goodId);

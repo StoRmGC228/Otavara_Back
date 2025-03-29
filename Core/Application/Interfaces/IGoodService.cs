@@ -15,6 +15,9 @@ namespace Application.Interfaces
         Task DeleteGood(Guid Id);
         //Task<Good> GetGoodByName(string goodName);
         Task<IEnumerable<Good>> GetAllGoods();
+        Task<IEnumerable<Good>> GetAllSortedByNameAsync(bool ascending);
+        Task<IEnumerable<Good>> GetAllSortedByQuantityAsync(bool ascending);
+        Task<IEnumerable<Good>> GetAllSortedByTimeAsync(bool ascending);
 
     }
 }
