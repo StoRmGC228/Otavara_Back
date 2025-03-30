@@ -1,6 +1,7 @@
 ﻿namespace API.Configurations;
 
 using System.Text;
+using API.BackgroundServices;
 using Application.Interfaces;
 using Application.Providers;
 using Application.Services;
@@ -43,6 +44,8 @@ public static class ApplicationConfiguration
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IEventService, EventService>();
         services.AddScoped<IJwtProvider, JwtProvider>();
+        services.AddScoped<IBookingService, BookingService>();
+        services.AddHostedService<BookingExpirationService>();
         return services;
     }
 }
