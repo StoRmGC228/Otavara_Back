@@ -30,6 +30,7 @@ public static class ApplicationConfiguration
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IJwtProvider, JwtProvider>();
+        services.AddScoped<IGoodService, GoodService>();
         return services;
     }
 }
