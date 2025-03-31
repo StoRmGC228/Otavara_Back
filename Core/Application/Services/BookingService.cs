@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 public class BookingService : IBookingService
 {
     private readonly IBookingRepository _bookingRepository;
-    private readonly int _bookingExpirationHours = 24;
+    private readonly int _bookingExpirationHours = 168;
 
     public BookingService(IBookingRepository bookingRepository)
     {
