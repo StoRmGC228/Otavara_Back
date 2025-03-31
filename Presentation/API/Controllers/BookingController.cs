@@ -18,7 +18,6 @@ public class BookingController : ControllerBase
     }
 
     [HttpGet("user")]
-    [Authorize]
     public async Task<IActionResult> GetUserBookings()
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -27,7 +26,6 @@ public class BookingController : ControllerBase
     }
 
     [HttpPost("{goodId}")]
-    [Authorize]
     public async Task<IActionResult> BookGood(Guid goodId)
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -36,7 +34,6 @@ public class BookingController : ControllerBase
     }
 
     [HttpDelete("{goodId}")]
-    [Authorize]
     public async Task<IActionResult> CancelBooking(Guid goodId)
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
