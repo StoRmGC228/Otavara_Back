@@ -55,5 +55,9 @@ public class OtavaraDbContext : DbContext
             .HasOne(bg => bg.Good)
             .WithMany(g => g.Bookers)
             .HasForeignKey(g => g.GoodId);
+
+        modelBuilder.Entity<BookedGood>()
+            .Property(bg => bg.BookingExpirationDate)
+            .IsRequired();
     }
 }

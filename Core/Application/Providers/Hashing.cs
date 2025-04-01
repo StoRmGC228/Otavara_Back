@@ -3,18 +3,25 @@ using System.Text;
 
 public static class Hashing
 {
-    public static string HashPassword(string password)
+    public static string HashDataCheckString(string dataCheckString)
     {
+        string? botToken = Environment.GetEnvironmentVariable("BOT_TOKEN");
+
+        if (string.IsNullOrEmpty(botToken))
+        {
+            throw new InvalidOperationException("BOT_TOKEN is not set in environment variables.");
+        }
+
         using (var sha256 = SHA256.Create())
         {
-            var bytes = Encoding.UTF8.GetBytes(password);
+            byte[] secretKey = sha256.ComputeHash(Encoding.UTF8.GetBytes(botToken));
 
-            var hashBytes = sha256.ComputeHash(bytes);
+            using (var hmac = new HMACSHA256(secretKey))
+            {
+                byte[] hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(dataCheckString));
 
-            var builder = new StringBuilder();
-            foreach (var b in hashBytes) builder.Append(b.ToString("x2"));
-
-            return builder.ToString();
+                return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace API.Configurations;
 
 using System.Text;
+using API.BackgroundServices;
 using Application.Interfaces;
 using Application.Providers;
 using Application.Services;
@@ -24,13 +25,27 @@ public static class ApplicationConfiguration
                     IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes(configuration.GetSection("JwtSettings").Get<JwtOptions>().SecretKey))
                 };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        if (context.Request.Cookies.ContainsKey("MySecretCookies"))
+                        {
+                            context.Token = context.Request.Cookies["MySecretCookies"];
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
             });
         services.AddAuthorization();
         services.Configure<JwtOptions>(configuration.GetSection("JwtSettings"));
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IEventService, EventService>();
         services.AddScoped<IJwtProvider, JwtProvider>();
-        services.AddScoped<IGoodService, GoodService>();
+        services.AddScoped<IBookingService, BookingService>();
+        services.AddHostedService<BookingExpirationService>();
         return services;
     }
 }
