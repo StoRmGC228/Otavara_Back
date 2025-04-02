@@ -1,12 +1,20 @@
 ﻿namespace Domain.DtoEntities;
 
+using System.Text.Json.Serialization;
+
 public class TelegramUserDto
 {
     public int Id { get; set; }
-    public string? First_name { get; set; }
-    public string? Last_name { get; set; }
+
+    [JsonPropertyName("first_name")] public string? FirstName { get; set; }
+
+    [JsonPropertyName("last_name")] public string? LastName { get; set; }
+
     public string? Username { get; set; }
-    public string Photo_url { get; set; }
+
+    [JsonPropertyName("photo_url")] public string PhotoUrl { get; set; }
+
     public string Hash { get; set; }
-    public int Auth_date { get; set; }
+
+    [JsonPropertyName("auth_date")] public int AuthDate { get; set; }
 }
