@@ -8,60 +8,50 @@ using Interfaces;
 public class AuthService : IAuthService
 {
     private readonly IJwtProvider _jwtProvider;
-    private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
+    private readonly IUserRepository _userRepository;
 
-    public AuthService(IUserRepository userRepository, IJwtProvider jwtProvider,IMapper mapper)
+    public AuthService(IUserRepository userRepository, IJwtProvider jwtProvider, IMapper mapper)
     {
         _jwtProvider = jwtProvider;
         _userRepository = userRepository;
         _mapper = mapper;
     }
 
-    public async Task<bool> VerifyDataCheckStringAsync(string telegramHash,string botTokenHash)
+    public async Task<bool> VerifyDataCheckStringAsync(string telegramHash, string botTokenHash)
     {
         return telegramHash == botTokenHash;
     }
 
- 
 
     public async Task<string> LoginUserAsync(TelegramUserDto loginUser)
     {
-        var data = new SortedDictionary<string, string>()
+        var data = new SortedDictionary<string, string>
         {
-            { "auth_date", loginUser.Auth_date.ToString() },
-            { "first_name", loginUser.First_name },
+            { "auth_date", loginUser.AuthDate.ToString() },
+            { "first_name", loginUser.FirstName },
             { "id", loginUser.Id.ToString() },
-            { "last_name", loginUser.Last_name },
-            { "photo_url", loginUser.Photo_url },
+            { "last_name", loginUser.LastName },
+            { "photo_url", loginUser.PhotoUrl },
             { "username", loginUser.Username }
-
         };
-        string hashMaterial = string.Join("\n", data
-            .Where(kv => kv.Value != null) 
+        var hashMaterial = string.Join("\n", data
+            .Where(kv => kv.Value != null)
             .OrderBy(kv => kv.Key)
             .Select(kv => $"{kv.Key}={kv.Value}"));
 
 
         var botTokenHash = Hashing.HashDataCheckString(hashMaterial);
-        var result = await VerifyDataCheckStringAsync(loginUser.Hash,botTokenHash);
+        var result = await VerifyDataCheckStringAsync(loginUser.Hash, botTokenHash);
         if (result == false)
         {
             throw new Exception("something went wrong with authorization");
         }
 
-        var user = new User()
-        {
-            First_name = loginUser.First_name,
-            Last_name = loginUser.Last_name,
-            TelegramId = loginUser.Id,
-            Photo_url = loginUser.Photo_url,
-            Username = loginUser.Username
-
-        };
+        var user = _mapper.Map<User>(loginUser);
         var isExisting = await _userRepository.IsUserExisting(user);
 
-        if (isExisting==false)
+        if (isExisting == false)
         {
             await _userRepository.AddUserAsync(user);
         }

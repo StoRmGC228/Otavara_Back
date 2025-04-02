@@ -3,7 +3,6 @@
 using Application.Interfaces;
 using AutoMapper;
 using Domain.DtoEntities;
-using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]

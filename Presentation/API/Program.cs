@@ -13,7 +13,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy(myAllowSpecificOrigins,
         policy =>
         {
-            policy.WithOrigins("https://otavara-60887440e467.herokuapp.com").AllowAnyHeader().AllowAnyMethod()
+            policy.WithOrigins("https://otavara-60887440e467.herokuapp.com", "http://localhost:5173").AllowAnyHeader()
+                .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials();
         });

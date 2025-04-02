@@ -5,7 +5,7 @@ public static class Hashing
 {
     public static string HashDataCheckString(string dataCheckString)
     {
-        string? botToken = Environment.GetEnvironmentVariable("BOT_TOKEN");
+        var botToken = Environment.GetEnvironmentVariable("BOT_TOKEN");
 
         if (string.IsNullOrEmpty(botToken))
         {
@@ -14,11 +14,11 @@ public static class Hashing
 
         using (var sha256 = SHA256.Create())
         {
-            byte[] secretKey = sha256.ComputeHash(Encoding.UTF8.GetBytes(botToken));
+            var secretKey = sha256.ComputeHash(Encoding.UTF8.GetBytes(botToken));
 
             using (var hmac = new HMACSHA256(secretKey))
             {
-                byte[] hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(dataCheckString));
+                var hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(dataCheckString));
 
                 return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
             }

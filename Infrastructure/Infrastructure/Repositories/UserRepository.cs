@@ -26,6 +26,6 @@ public class UserRepository : BaseRepository<User>, IUserRepository
 
     public async Task<bool> IsUserExisting(User user)
     {
-        return await _userDb.AnyAsync(u=>u.TelegramId==user.TelegramId);
+        return await _userDb.AnyAsync(u => u.TelegramId == user.TelegramId);
     }
 }

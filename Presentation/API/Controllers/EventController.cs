@@ -2,8 +2,9 @@
 
 using System.Security.Claims;
 using Application.Interfaces;
+using AutoMapper;
+using Domain.DtoEntities;
 using Domain.Entities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
@@ -11,9 +12,11 @@ using Microsoft.AspNetCore.Mvc;
 public class EventController : ControllerBase
 {
     private readonly IEventService _eventService;
+    private readonly IMapper _mapper;
 
-    public EventController(IEventService eventService)
+    public EventController(IEventService eventService, IMapper mapper)
     {
+        _mapper = mapper;
         _eventService = eventService;
     }
 
@@ -21,7 +24,8 @@ public class EventController : ControllerBase
     public async Task<IActionResult> GetAllEvents()
     {
         var events = await _eventService.GetAllAsync();
-        return Ok(events);
+        var mappedEvents = _mapper.Map<List<EventCreationDto>>(events);
+        return Ok(mappedEvents);
     }
 
     [HttpGet("{id}")]
@@ -37,15 +41,14 @@ public class EventController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
-    public async Task<IActionResult> CreateEvent([FromBody] Event newEvent)
+    public async Task<IActionResult> CreateEvent([FromBody] EventCreationDto newEvent)
     {
-        var result = await _eventService.AddAsync(newEvent);
-        return CreatedAtAction(nameof(GetEventById), new { id = result.Id }, result);
+        var createdEvent = _mapper.Map<Event>(newEvent);
+        var result = await _eventService.AddAsync(createdEvent);
+        return Ok(result);
     }
 
     [HttpPut("{id}")]
-    [Authorize]
     public async Task<IActionResult> UpdateEvent(Guid id, [FromBody] Event updatedEvent)
     {
         if (id != updatedEvent.Id)
@@ -64,7 +67,6 @@ public class EventController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize]
     public async Task<IActionResult> DeleteEvent(Guid id)
     {
         var existingEvent = await _eventService.GetByIdAsync(id);
@@ -85,7 +87,6 @@ public class EventController : ControllerBase
     }
 
     [HttpPost("{id}/participants")]
-    [Authorize]
     public async Task<IActionResult> AddParticipant(Guid id)
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -94,7 +95,6 @@ public class EventController : ControllerBase
     }
 
     [HttpDelete("{id}/participants")]
-    [Authorize]
     public async Task<IActionResult> RemoveParticipant(Guid id)
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
