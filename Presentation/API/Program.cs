@@ -1,5 +1,6 @@
 using API.Configurations;
 using API.DtoProfile;
+using API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -22,6 +23,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddInfrastructureConfigurations(builder.Configuration);
 builder.Services.AddApplicationConfigurations(builder.Configuration);
 
+builder.Services.AddDataSeeders();
+builder.Services.AddScoped<DatabaseSeedService>();
 var app = builder.Build();
 
 
@@ -37,4 +40,5 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 app.MapControllers();
+await app.SeedDatabaseAsync();
 app.Run();
