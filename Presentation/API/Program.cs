@@ -1,6 +1,7 @@
 using API.Configurations;
 using API.Converters;
 using API.DtoProfile;
+using API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -33,6 +34,7 @@ builder.Services.AddApiConfigurations(builder.Configuration);
 
 var app = builder.Build();
 
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
