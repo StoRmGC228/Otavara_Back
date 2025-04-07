@@ -1,6 +1,6 @@
 using API.Configurations;
 using API.DtoProfile;
-using API.Services;
+using Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var myAllowSpecificOrigins = "_myAllowSpecificOrigins";

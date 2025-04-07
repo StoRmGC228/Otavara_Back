@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Configurations;
+using Application.Interfaces;
 
 namespace Infrastructure.Seed;
 

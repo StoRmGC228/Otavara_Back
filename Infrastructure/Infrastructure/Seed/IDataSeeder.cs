@@ -9,7 +9,3 @@ public interface IDataSeeder
     Task<bool> HasDataAsync(OtavaraDbContext dbContext);
 }
 
-public interface IDataSeederOrchestrator
-{
-    Task SeedAllAsync();
-}

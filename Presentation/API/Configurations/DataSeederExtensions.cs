@@ -2,6 +2,7 @@
 using Infrastructure.Configurations;
 using Infrastructure.Seed;
 using Infrastructure.Seed.Seeders;
+using Application.Interfaces;
 
 namespace API.Configurations;
 
@@ -27,7 +28,7 @@ public static class DataSeederExtensions
         }
 
         services.AddScoped<IDataSeederOrchestrator, DataSeederOrchestrator>();
-        services.AddScoped<API.Services.DatabaseSeedService>();
+        services.AddScoped<Application.Services.DatabaseSeedService>();
 
         return services;
     }
