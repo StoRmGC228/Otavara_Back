@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities;
 
-public class Good : BaseEntity
+public class Good : IBaseEntity
 {
     public Guid Id { get; set; }
     public Guid CustomerId { get; set; }

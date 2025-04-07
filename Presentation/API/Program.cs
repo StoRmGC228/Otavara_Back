@@ -5,14 +5,8 @@ using API.DtoProfile;
 var builder = WebApplication.CreateBuilder(args);
 var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
-        options.JsonSerializerOptions.Converters.Add(new TimeOnlyConverter());
-        options.JsonSerializerOptions.Converters.Add(new DateOnlyConverter());
-    });
-
+builder.Services.AddControllers();
+    
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(DtoProfile));

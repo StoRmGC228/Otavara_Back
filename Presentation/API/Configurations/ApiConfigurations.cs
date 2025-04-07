@@ -1,5 +1,6 @@
 ﻿namespace API.Configurations;
 
+using System.Text.Json.Serialization;
 using Converters;
 using Microsoft.AspNetCore.Http.Json;
 
@@ -8,12 +9,15 @@ public static class ApiConfigurations
     public static IServiceCollection AddApiConfigurations(this IServiceCollection services,
         IConfiguration configurations)
     {
-        services.Configure<JsonOptions>(opt =>
+        
+        services.AddControllers().AddJsonOptions(options =>
         {
-            opt.SerializerOptions.Converters.Add(new DateTimeConverter());
-            opt.SerializerOptions.Converters.Add(new TimeOnlyConverter());
-            opt.SerializerOptions.Converters.Add(new DateOnlyConverter());
+            options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
+            options.JsonSerializerOptions.Converters.Add(new TimeOnlyConverter());
+            options.JsonSerializerOptions.Converters.Add(new DateOnlyConverter());
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         });
+
         return services;
     }
 }

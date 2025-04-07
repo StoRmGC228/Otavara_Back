@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities;
 
-public interface BaseEntity
+public interface IBaseEntity
 {
     public Guid Id { get; set; }
 }
