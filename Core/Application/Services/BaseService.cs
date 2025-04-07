@@ -1,9 +1,10 @@
 ﻿namespace Application.Services;
 
+using Domain.DtoEntities;
 using Domain.Entities;
 using Interfaces;
 
-public class BaseService<T> : IBaseService<T> where T : BaseEntity
+public class BaseService<T> : IBaseService<T> where T : IBaseEntity
 {
     protected readonly IBaseRepository<T> _repository;
 
@@ -15,6 +16,11 @@ public class BaseService<T> : IBaseService<T> where T : BaseEntity
     public async Task<IEnumerable<T>> GetAllAsync()
     {
         return await _repository.GetAllAsync();
+    }
+
+    public async Task<PaginatedDto<T>> GetPaginateAsync(int pageSize, int pageNumber)
+    {
+        return await _repository.GetPaginatedAsync(pageSize, pageNumber);
     }
 
     public async Task<T?> GetByIdAsync(Guid id)

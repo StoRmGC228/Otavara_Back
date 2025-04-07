@@ -2,6 +2,7 @@
 
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 public class OtavaraDbContext : DbContext
 {
@@ -16,6 +17,14 @@ public class OtavaraDbContext : DbContext
     public virtual DbSet<Participant> Participants { get; set; }
 
     public virtual DbSet<BookedGood> BookedGoods { get; set; }
+
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+
+        optionsBuilder.UseLazyLoadingProxies();
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

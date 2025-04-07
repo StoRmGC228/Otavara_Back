@@ -20,12 +20,29 @@ public class EventController : ControllerBase
         _eventService = eventService;
     }
 
+
     [HttpGet]
     public async Task<IActionResult> GetAllEvents()
     {
         var events = await _eventService.GetAllAsync();
         var mappedEvents = _mapper.Map<List<EventCreationDto>>(events);
         return Ok(mappedEvents);
+    }
+
+
+    [HttpGet("paginated")]
+    public async Task<IActionResult> GetPaginated(int pageSize, int pageNumber)
+    {
+        var paginatedEvents = await _eventService.GetPaginateAsync(pageSize, pageNumber);
+
+        var mappedEvents = _mapper.Map<List<EventCreationDto>>(paginatedEvents.PaginatedEntities);
+        var result = new PaginatedEventsDto()
+        {
+            TotalPages = paginatedEvents.TotalPages,
+            PaginatedEntities = mappedEvents
+        };
+
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
@@ -87,9 +104,8 @@ public class EventController : ControllerBase
     }
 
     [HttpPost("{id}/participants")]
-    public async Task<IActionResult> AddParticipant(Guid id)
+    public async Task<IActionResult> AddParticipant(Guid id,Guid userId)
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
         await _eventService.AddParticipantAsync(id, userId);
         return Ok();
     }
