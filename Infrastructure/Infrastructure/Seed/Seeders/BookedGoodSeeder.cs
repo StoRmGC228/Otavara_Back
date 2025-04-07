@@ -2,88 +2,59 @@
 using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Seed.Seeders
+namespace Infrastructure.Seed.Seeders;
+
+public class BookedGoodSeeder : IDataSeeder
 {
-    public class BookedGoodSeeder : IDataSeeder
+    public int Priority => 4;
+
+    public async Task<bool> HasDataAsync(OtavaraDbContext dbContext)
     {
-        public int Priority => 4;
+        return await dbContext.BookedGoods.AnyAsync();
+    }
 
-        public async Task<bool> HasDataAsync(OtavaraDbContext dbContext)
+    public async Task SeedAsync(OtavaraDbContext dbContext)
+    {
+        var users = await dbContext.Users.ToListAsync();
+        var goods = await dbContext.Goods.ToListAsync();
+        var bookedGoods = new List<BookedGood>();
+        HashSet<(Guid UserId, Guid GoodId)> usedCombinations = new HashSet<(Guid, Guid)>();
+
+        int maxBookings = Math.Min(10, users.Count * goods.Count);
+        int attempts = 0;
+        int created = 0;
+
+        while (created < maxBookings && attempts < 100)
         {
-            return await dbContext.BookedGoods.AnyAsync();
-        }
+            attempts++;
+            var userIndex = RandomDataGenerator.GetRandomInt(0, users.Count);
+            var goodIndex = RandomDataGenerator.GetRandomInt(0, goods.Count);
 
-        public async Task SeedAsync(OtavaraDbContext dbContext)
-        {
-            var users = await dbContext.Users.ToListAsync();
-            var goods = await dbContext.Goods.ToListAsync();
+            var userId = users[userIndex].Id;
+            var goodId = goods[goodIndex].Id;
 
-            var bookedGoods = new List<BookedGood>
+            // Check if this combination is already used
+            if (!usedCombinations.Contains((userId, goodId)))
             {
-                new BookedGood
-                {
-                    UserId = users[0].Id,
-                    GoodId = goods[0].Id,
-                    BookingExpirationDate = DateTime.UtcNow.AddDays(3)
-                },
-                new BookedGood
-                {
-                    UserId = users[1].Id,
-                    GoodId = goods[2].Id,
-                    BookingExpirationDate = DateTime.UtcNow.AddDays(5)
-                },
-                new BookedGood
-                {
-                    UserId = users[2].Id,
-                    GoodId = goods[4].Id,
-                    BookingExpirationDate = DateTime.UtcNow.AddDays(7)
-                },
-                new BookedGood
-                {
-                    UserId = users[3].Id,
-                    GoodId = goods[1].Id,
-                    BookingExpirationDate = DateTime.UtcNow.AddDays(2)
-                },
-                new BookedGood
-                {
-                    UserId = users[4].Id,
-                    GoodId = goods[3].Id,
-                    BookingExpirationDate = DateTime.UtcNow.AddDays(6)
-                },
-                new BookedGood
-                {
-                    UserId = users[5].Id,
-                    GoodId = goods[5].Id,
-                    BookingExpirationDate = DateTime.UtcNow.AddDays(8)
-                },
-                new BookedGood
-                {
-                    UserId = users[6].Id,
-                    GoodId = goods[6].Id,
-                    BookingExpirationDate = DateTime.UtcNow.AddDays(4)
-                },
-                new BookedGood
-                {
-                    UserId = users[7].Id,
-                    GoodId = goods[7].Id,
-                    BookingExpirationDate = DateTime.UtcNow.AddDays(10)
-                },
-                new BookedGood
-                {
-                    UserId = users[8].Id,
-                    GoodId = goods[8].Id,
-                    BookingExpirationDate = DateTime.UtcNow.AddDays(1)
-                },
-                new BookedGood
-                {
-                    UserId = users[9].Id,
-                    GoodId = goods[9].Id,
-                    BookingExpirationDate = DateTime.UtcNow.AddDays(9)
-                }
-            };
+                usedCombinations.Add((userId, goodId));
 
-            await dbContext.BookedGoods.AddRangeAsync(bookedGoods);
-            await dbContext.SaveChangesAsync();
+                bookedGoods.Add(new BookedGood
+                {
+                    UserId = userId,
+                    GoodId = goodId,
+                    BookingExpirationDate = RandomDataGenerator.GetRandomDate(
+                        DateTime.UtcNow.AddDays(1),
+                        DateTime.UtcNow.AddDays(10))
+                });
+                created++;
+            }
         }
+
+        foreach (var bookedGood in bookedGoods)
+        {
+            dbContext.BookedGoods.Add(bookedGood);
+        }
+
+        await dbContext.SaveChangesAsync();
     }
 }

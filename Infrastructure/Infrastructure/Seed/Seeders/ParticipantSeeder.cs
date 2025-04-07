@@ -2,43 +2,39 @@
 using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Seed.Seeders
+namespace Infrastructure.Seed.Seeders;
+
+public class ParticipantSeeder : IDataSeeder
 {
-    public class ParticipantSeeder : IDataSeeder
+    public int Priority => 3;
+
+    public async Task<bool> HasDataAsync(OtavaraDbContext dbContext)
     {
-        
-        public int Priority => 3;
+        return await dbContext.Participants.AnyAsync();
+    }
 
-        public async Task<bool> HasDataAsync(OtavaraDbContext dbContext)
+    public async Task SeedAsync(OtavaraDbContext dbContext)
+    {
+        var users = await dbContext.Users.ToListAsync();
+        var events = await dbContext.Events.ToListAsync();
+        var participants = new List<Participant>();
+
+        foreach (var evt in events)
         {
-            return await dbContext.Participants.AnyAsync();
-        }
+            int participantsCount = RandomDataGenerator.GetRandomInt(1, 5);
+            var shuffledUsers = users.OrderBy(x => Guid.NewGuid()).Take(participantsCount);
 
-        public async Task SeedAsync(OtavaraDbContext dbContext)
-        {
-
-            var users = await dbContext.Users.ToListAsync();
-            var events = await dbContext.Events.ToListAsync();
-
-            var participants = new List<Participant>();
-
-            foreach (var evt in events)
+            foreach (var user in shuffledUsers)
             {
-                var randomUsers = users.OrderBy(x => Guid.NewGuid()).Take(new Random().Next(1, 4));
-
-                foreach (var user in randomUsers)
+                participants.Add(new Participant
                 {
-                    participants.Add(new Participant
-                    {
-                        UserId = user.Id,
-                        EventId = evt.Id
-                    });
-                }
+                    UserId = user.Id,
+                    EventId = evt.Id
+                });
             }
-
-            await dbContext.Participants.AddRangeAsync(participants);
-            await dbContext.SaveChangesAsync();
-
         }
+
+        await dbContext.Participants.AddRangeAsync(participants);
+        await dbContext.SaveChangesAsync();
     }
 }

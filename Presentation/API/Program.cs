@@ -40,5 +40,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 app.MapControllers();
-await app.SeedDatabaseAsync();
+
+await app.EnsureDatabaseCreatedAsync();
+
 app.Run();

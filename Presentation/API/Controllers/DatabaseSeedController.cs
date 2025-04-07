@@ -1,33 +1,32 @@
 ﻿using API.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers
+namespace API.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class DatabaseSeedController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class DatabaseSeedController : ControllerBase
+    private readonly DatabaseSeedService _seedService;
+    private readonly IHostEnvironment _environment;
+
+    public DatabaseSeedController(
+        DatabaseSeedService seedService,
+        IHostEnvironment environment)
     {
-        private readonly DatabaseSeedService _seedService;
-        private readonly IHostEnvironment _environment;
+        _seedService = seedService;
+        _environment = environment;
+    }
 
-        public DatabaseSeedController(
-            DatabaseSeedService seedService,
-            IHostEnvironment environment)
+    [HttpPost("seed")]
+    public async Task<IActionResult> SeedDatabase()
+    {
+        if (!_environment.IsDevelopment())
         {
-            _seedService = seedService;
-            _environment = environment;
+            return StatusCode(403);
         }
 
-        [HttpPost("seed")]
-        public async Task<IActionResult> SeedDatabase()
-        {
-            if (!_environment.IsDevelopment())
-            {
-                return StatusCode(403);
-            }
-
-            await _seedService.SeedDatabaseAsync();
-            return Ok();
-        }
+        await _seedService.SeedDatabaseAsync();
+        return Ok();
     }
 }
