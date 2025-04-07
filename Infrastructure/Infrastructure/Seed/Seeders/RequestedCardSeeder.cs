@@ -1,22 +1,33 @@
 ﻿using Domain.Entities;
 using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
+using Application.Interfaces;
 
 namespace Infrastructure.Seed.Seeders;
+
 public class RequestedCardSeeder : IDataSeeder
 {
-    public int Priority => 3;
-    public async Task<bool> HasDataAsync(OtavaraDbContext dbContext)
+    private readonly OtavaraDbContext _dbContext;
+
+    public RequestedCardSeeder(OtavaraDbContext dbContext)
     {
-        return await dbContext.Cards.AnyAsync();
+        _dbContext = dbContext;
     }
-    public async Task SeedAsync(OtavaraDbContext dbContext)
+
+    public int Priority => 3;
+
+    public async Task<bool> HasDataAsync()
     {
-        var users = await dbContext.Users.ToListAsync();
-        var events = await dbContext.Events.Where(e => e.Game == "Magic: The Gathering").ToListAsync();
+        return await _dbContext.Cards.AnyAsync();
+    }
+
+    public async Task SeedAsync()
+    {
+        var users = await _dbContext.Users.ToListAsync();
+        var events = await _dbContext.Events.Where(e => e.Game == "Magic: The Gathering").ToListAsync();
         if (!events.Any())
         {
-            events = await dbContext.Events.ToListAsync();
+            events = await _dbContext.Events.ToListAsync();
         }
 
         if (users.Count == 0 || events.Count == 0)
@@ -42,7 +53,7 @@ public class RequestedCardSeeder : IDataSeeder
             });
         }
 
-        await dbContext.Cards.AddRangeAsync(cards);
-        await dbContext.SaveChangesAsync();
+        await _dbContext.Cards.AddRangeAsync(cards);
+        await _dbContext.SaveChangesAsync();
     }
 }

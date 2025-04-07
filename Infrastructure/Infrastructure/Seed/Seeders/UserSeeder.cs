@@ -1,19 +1,27 @@
 ﻿using Domain.Entities;
 using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
+using Application.Interfaces;
 
 namespace Infrastructure.Seed.Seeders;
 
 public class UserSeeder : IDataSeeder
 {
-    public int Priority => 1;
+    private readonly OtavaraDbContext _dbContext;
 
-    public async Task<bool> HasDataAsync(OtavaraDbContext dbContext)
+    public UserSeeder(OtavaraDbContext dbContext)
     {
-        return await dbContext.Users.AnyAsync();
+        _dbContext = dbContext;
     }
 
-    public async Task SeedAsync(OtavaraDbContext dbContext)
+    public int Priority => 1;
+
+    public async Task<bool> HasDataAsync()
+    {
+        return await _dbContext.Users.AnyAsync();
+    }
+
+    public async Task SeedAsync()
     {
         var users = new List<User>();
         for (int i = 0; i < 8; i++)
@@ -32,7 +40,7 @@ public class UserSeeder : IDataSeeder
             });
         }
 
-        await dbContext.Users.AddRangeAsync(users);
-        await dbContext.SaveChangesAsync();
+        await _dbContext.Users.AddRangeAsync(users);
+        await _dbContext.SaveChangesAsync();
     }
 }

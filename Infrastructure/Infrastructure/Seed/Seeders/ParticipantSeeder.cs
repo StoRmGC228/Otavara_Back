@@ -1,22 +1,30 @@
 ﻿using Domain.Entities;
 using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
+using Application.Interfaces;
 
 namespace Infrastructure.Seed.Seeders;
 
 public class ParticipantSeeder : IDataSeeder
 {
-    public int Priority => 3;
+    private readonly OtavaraDbContext _dbContext;
 
-    public async Task<bool> HasDataAsync(OtavaraDbContext dbContext)
+    public ParticipantSeeder(OtavaraDbContext dbContext)
     {
-        return await dbContext.Participants.AnyAsync();
+        _dbContext = dbContext;
     }
 
-    public async Task SeedAsync(OtavaraDbContext dbContext)
+    public int Priority => 3;
+
+    public async Task<bool> HasDataAsync()
     {
-        var users = await dbContext.Users.ToListAsync();
-        var events = await dbContext.Events.ToListAsync();
+        return await _dbContext.Participants.AnyAsync();
+    }
+
+    public async Task SeedAsync()
+    {
+        var users = await _dbContext.Users.ToListAsync();
+        var events = await _dbContext.Events.ToListAsync();
         var participants = new List<Participant>();
 
         foreach (var evt in events)
@@ -34,7 +42,7 @@ public class ParticipantSeeder : IDataSeeder
             }
         }
 
-        await dbContext.Participants.AddRangeAsync(participants);
-        await dbContext.SaveChangesAsync();
+        await _dbContext.Participants.AddRangeAsync(participants);
+        await _dbContext.SaveChangesAsync();
     }
 }
