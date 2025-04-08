@@ -3,7 +3,6 @@
 using AutoMapper;
 using Domain.DtoEntities;
 using Domain.Entities;
-using Infrastructure.Repositories;
 
 public class DtoProfile : Profile
 {
@@ -23,8 +22,13 @@ public class DtoProfile : Profile
             .ForMember(dest => dest.EventTime,
                 opt => opt.MapFrom(src => TimeOnly.FromDateTime(src.EventStartTime)));
         CreateMap<ParticipantForEventDto, Participant>()
-            .ForMember(dest=>dest.UserId,opt=>opt.MapFrom(src=>src.Id));
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id));
         CreateMap<Participant, ParticipantForEventDto>()
-            .ForMember(dest=>dest.Id,opt=>opt.MapFrom(src=>src.UserId));
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.UserId));
+
+        CreateMap<Announcement, AnnouncementDto>()
+            .ForMember(dest => dest.Card, opt => opt.MapFrom(src => src.Card));
+        CreateMap<AnnouncementDto, Announcement>()
+            .ForMember(dest => dest.Card, opt => opt.MapFrom(src => src.Card));
     }
 }

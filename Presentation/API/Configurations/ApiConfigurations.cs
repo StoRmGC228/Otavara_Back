@@ -2,14 +2,13 @@
 
 using System.Text.Json.Serialization;
 using Converters;
-using Microsoft.AspNetCore.Http.Json;
 
 public static class ApiConfigurations
 {
     public static IServiceCollection AddApiConfigurations(this IServiceCollection services,
         IConfiguration configurations)
     {
-        
+
         services.AddControllers().AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());

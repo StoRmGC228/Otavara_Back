@@ -1,7 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -10,7 +9,7 @@ namespace API.Controllers
     {
         private readonly IBaseService<Good> _baseService;
         private readonly IGoodService _goodService;
-        public GoodController(IBaseService<Good> baseService,IGoodService goodService)
+        public GoodController(IBaseService<Good> baseService, IGoodService goodService)
         {
             _baseService = baseService;
             _goodService = goodService;
@@ -39,14 +38,14 @@ namespace API.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> UpdateGoodAsync(Guid id,[FromBody] Good updatedGood)
+        public async Task<IActionResult> UpdateGoodAsync(Guid id, [FromBody] Good updatedGood)
         {
-            if(id != updatedGood.Id)
+            if (id != updatedGood.Id)
             {
                 return BadRequest();
             }
             var searchedGood = await _baseService.GetByIdAsync(id);
-            if(searchedGood == null)
+            if (searchedGood == null)
             {
                 return NotFound();
             }
@@ -59,7 +58,7 @@ namespace API.Controllers
         public async Task<IActionResult> DeleteGoodAsync(Guid id)
         {
             var seachedGood = await _baseService.GetByIdAsync(id);
-            if(seachedGood == null)
+            if (seachedGood == null)
             {
                 return NotFound();
             }

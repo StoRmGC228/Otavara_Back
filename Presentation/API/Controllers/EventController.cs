@@ -104,7 +104,7 @@ public class EventController : ControllerBase
     }
 
     [HttpPost("{id}/participants")]
-    public async Task<IActionResult> AddParticipant(Guid id,Guid userId)
+    public async Task<IActionResult> AddParticipant(Guid id, Guid userId)
     {
         await _eventService.AddParticipantAsync(id, userId);
         return Ok();

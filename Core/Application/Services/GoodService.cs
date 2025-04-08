@@ -1,14 +1,9 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
-    public class GoodService :BaseService<Good>, IGoodService
+    public class GoodService : BaseService<Good>, IGoodService
     {
         private readonly IGoodRepository _goodRepository;
         public GoodService(IGoodRepository goodRepository) : base(goodRepository)
