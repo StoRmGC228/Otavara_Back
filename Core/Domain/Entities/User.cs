@@ -2,7 +2,7 @@
 
 using System.Text.Json.Serialization;
 
-public class User : BaseEntity
+public class User : IBaseEntity
 {
     public int TelegramId { get; set; }
     public string? FirstName { get; set; }

@@ -1,19 +1,15 @@
 using API.Configurations;
 using API.Converters;
 using API.DtoProfile;
-using API.Middleware;
+using API.Middlewar;
+using Application.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
-        options.JsonSerializerOptions.Converters.Add(new TimeOnlyConverter());
-        options.JsonSerializerOptions.Converters.Add(new DateOnlyConverter());
-    });
-
+builder.Services.AddControllers();
+    
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(DtoProfile));
@@ -32,6 +28,8 @@ builder.Services.AddInfrastructureConfigurations(builder.Configuration);
 builder.Services.AddApplicationConfigurations(builder.Configuration);
 builder.Services.AddApiConfigurations(builder.Configuration);
 
+builder.Services.AddDataSeeders();
+builder.Services.AddScoped<DatabaseSeedService>();
 var app = builder.Build();
 
 app.UseMiddleware<ErrorHandlerMiddleware>();
@@ -48,4 +46,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 app.MapControllers();
+
+await app.EnsureDatabaseCreatedAsync();
+
 app.Run();

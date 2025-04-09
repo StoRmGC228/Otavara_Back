@@ -9,11 +9,13 @@ public class ParticipantsRepository : IParticipantsRepository
 {
     private readonly OtavaraDbContext _context;
     private readonly DbSet<Participant> _participantDb;
+    private readonly DbSet<User> _userDb;
 
     public ParticipantsRepository(OtavaraDbContext context)
     {
         _context = context;
         _participantDb = context.Set<Participant>();
+        _userDb = context.Set<User>();
     }
 
     public async Task<List<User>> GetEventParticipantsAsync(Guid eventId)
@@ -34,7 +36,8 @@ public class ParticipantsRepository : IParticipantsRepository
 
     public async Task AddParticipantAsync(Guid eventId, Guid userId)
     {
-        var participant = new Participant { EventId = eventId, UserId = userId };
+        var user =  _userDb.FirstOrDefault(u => u.Id == userId);
+        var participant = new Participant { EventId = eventId, UserId = userId, PhotoUrl = user.PhotoUrl,Username =user.Username};
         await _participantDb.AddAsync(participant);
         await _context.SaveChangesAsync();
     }

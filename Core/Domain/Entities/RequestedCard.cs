@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities;
 
-public class RequestedCard : BaseEntity
+public class RequestedCard : IBaseEntity
 {
     public Guid RequesterId { get; set; }
     public Guid EventId { get; set; }
