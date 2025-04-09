@@ -1,7 +1,9 @@
 using API.Configurations;
 using API.Converters;
 using API.DtoProfile;
+using API.Middlewar;
 using Application.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -30,6 +32,7 @@ builder.Services.AddDataSeeders();
 builder.Services.AddScoped<DatabaseSeedService>();
 var app = builder.Build();
 
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
