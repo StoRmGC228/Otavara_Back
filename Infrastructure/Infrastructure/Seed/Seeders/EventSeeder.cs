@@ -35,7 +35,8 @@ public class EventSeeder : IDataSeeder
                 Price = RandomDataGenerator.GetRandomInt(0, 2000),
                 Format = RandomDataGenerator.GenerateEventFormat(),
                 Game = RandomDataGenerator.GenerateGameName(),
-                EventStartTime = RandomDataGenerator.GetRandomDate(startDate, startDate.AddDays(14))
+                EventStartTime = RandomDataGenerator.GetRandomDate(startDate, startDate.AddDays(14)),
+                Image = RandomDataGenerator.GenerateEventImage()
             });
         }
 
