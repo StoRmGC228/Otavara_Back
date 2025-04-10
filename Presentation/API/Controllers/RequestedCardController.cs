@@ -105,33 +105,15 @@ public class RequestedCardController : ControllerBase
         return Ok(requestedCards);
     }
 
-    //RequestedCardService methods : Custom methods
-    [HttpPost]
-    public async Task<IActionResult> CreateRequestedCard(Guid requesterId, Guid eventId, string link, string code, int number)
-    {
-        var result = await _requestedCardService.AddRequestedCardAsync(requesterId, eventId, link, code, number);
-        return CreatedAtAction(nameof(GetRequestedCardById), new { id = result.Id }, result);
-    }
+ 
     
-    [HttpPost]
-    public async Task<IActionResult> CancelRequestedCard(Guid requestedCardId)
-    {
-        var result = await _requestedCardService.CancelRequestedCardAsync(requestedCardId);
-        return Ok(result);
-    }
-    
-    [HttpGet("{code}")]
+    [HttpGet("isExist/{code}")]
     public async Task<IActionResult> IsRequestedCardExists(string code)
     {
         var result = await _requestedCardService.IsRequestedCardExistsAsync(code);
         return Ok(result);
     }
     
-    [HttpGet("{code}")]
-    public async Task<IActionResult> IsRequestedCardUsed(string code)
-    {
-        var result = await _requestedCardService.IsRequestedCardUsedAsync(code);
-        return Ok(result);
-    }
+  
 }
 
