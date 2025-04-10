@@ -2,9 +2,10 @@
 
 using Application.Interfaces;
 using Domain.Entities;
+using Domain.DtoEntities;
 using Microsoft.EntityFrameworkCore;
 
-public class BaseRepository<T> : IBaseRepository<T> where T : class, BaseEntity
+public class BaseRepository<T> : IBaseRepository<T> where T :class, IBaseEntity
 {
     private readonly DbContext _context;
     private readonly DbSet<T> _dbSet;
@@ -13,6 +14,22 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, BaseEntity
     {
         _context = context;
         _dbSet = context.Set<T>();
+    }
+
+    public async Task<PaginatedDto<T>> GetPaginatedAsync(int pageSize, int pageNumber)
+    {
+        var query = _dbSet.AsQueryable();
+
+       
+
+        var totalItems = await query.CountAsync();
+        var items = Queryable.Take(Queryable.Skip(query, (pageNumber - 1) * pageSize), pageSize).ToList();
+
+        return new PaginatedDto<T>
+        {
+            PaginatedEntities = items,
+            TotalPages = (int)Math.Ceiling((double)totalItems / pageSize)
+        };
     }
 
     public async Task<IEnumerable<T>> GetAllAsync()
