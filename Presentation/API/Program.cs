@@ -1,7 +1,7 @@
 using API.Configurations;
 using API.Converters;
 using API.DtoProfile;
-using API.Middlewar;
+using API.Middleware;
 using Application.Services;
 
 
