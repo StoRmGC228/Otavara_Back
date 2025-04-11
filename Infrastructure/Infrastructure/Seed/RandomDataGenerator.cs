@@ -187,4 +187,21 @@ public static class RandomDataGenerator
         string[] codes = new[] { "DOM", "WAR", "MH1", "THB", "ELD", "MH2" };
         return GetRandomItem(codes);
     }
+
+    public static string GenerateEventImage()
+    {
+        string[] imagePaths = new[]
+        {
+        "src/assets/images/Modern.png",
+        "src/assets/images/Pioner.png",
+        "src/assets/images/Standart.png",
+        "src/assets/images/Commander.png",
+        "src/assets/images/Pauper.png",
+        "src/assets/images/Lorcana.png",
+        "src/assets/images/Pocemon.png",
+        "src/assets/images/Draft.png",
+        "src/assets/images/Sealed.png"
+        };
+        return GetRandomItem(imagePaths);
+    }
 }
