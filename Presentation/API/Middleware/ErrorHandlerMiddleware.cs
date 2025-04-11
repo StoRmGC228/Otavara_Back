@@ -20,6 +20,11 @@ namespace API.Middleware
 
         public async Task Invoke(HttpContext context)
         {
+            if(context.Request.Path.StartsWithSegments("/swagger"))
+            {
+                await _next(context);
+                return;
+            }
             try
             {
                 await _next(context);
