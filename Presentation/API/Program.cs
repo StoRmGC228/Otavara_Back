@@ -12,15 +12,18 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(DtoProfile));
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(myAllowSpecificOrigins,
-        policy =>
-        {
-            policy.WithOrigins("https://otavara-60887440e467.herokuapp.com", "http://localhost:5173").AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials();
-        });
+    options.AddPolicy("MyAllowSpecificOrigins", policy =>
+    {
+        policy.WithOrigins(
+                "https://otavara-60887440e467.herokuapp.com",
+                "http://localhost:5173"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
 });
+
 builder.Services.AddInfrastructureConfigurations(builder.Configuration);
 builder.Services.AddApplicationConfigurations(builder.Configuration);
 builder.Services.AddApiConfigurations(builder.Configuration);
@@ -35,7 +38,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors(myAllowSpecificOrigins);
+app.UseCors("MyAllowSpecificOrigins");
 app.UseAuthentication();
 
 app.UseAuthorization();
