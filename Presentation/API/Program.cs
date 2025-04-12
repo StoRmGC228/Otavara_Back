@@ -15,7 +15,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("MyAllowSpecificOrigins", policy =>
     {
         policy.WithOrigins(
-                "https://otavara-60887440e467.herokuapp.com",
+                "https://otavara-60887440e467.herokuapp.com/",
                 "http://localhost:5173"
             )
             .AllowAnyHeader()
