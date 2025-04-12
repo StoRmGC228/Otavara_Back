@@ -5,6 +5,7 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.DtoEntities;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
@@ -29,7 +30,7 @@ public class EventController : ControllerBase
         return Ok(mappedEvents);
     }
 
-
+    //[Authorize]
     [HttpGet("paginated")]
     public async Task<IActionResult> GetPaginated(int pageSize, int pageNumber)
     {
