@@ -4,7 +4,7 @@ using System.Text;
 using Application.Interfaces;
 using Application.Providers;
 using Application.Services;
-using BackgroundServices;
+//using BackgroundServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -52,7 +52,8 @@ public static class ApplicationConfiguration
         services.AddScoped<IEventService, EventService>();
         services.AddScoped<IJwtProvider, JwtProvider>();
         services.AddScoped<IBookingService, BookingService>();
-        services.AddHostedService<BookingExpirationService>();
+        services.AddScoped<IGoodService, GoodService>();
+        //services.AddHostedService<BookingExpirationService>();
         return services;
     }
 }

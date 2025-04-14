@@ -1,39 +1,40 @@
-﻿namespace Infrastructure.Repositories;
-
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
+namespace Infrastructure.Repositories;
+
+using Configurations;
+
 public class GoodRepository : BaseRepository<Good>, IGoodRepository
 {
-    private readonly DbContext _context;
+    private readonly OtavaraDbContext _context;
+    private readonly DbSet<Good> _goods;
 
-    public GoodRepository(DbContext context) : base(context)
+    public GoodRepository(OtavaraDbContext context) : base(context)
     {
         _context = context;
+        _goods = context.Goods;
     }
 
     public async Task<IEnumerable<Good>> GetAllSortedByNameAsync(bool ascending)
     {
-        var goodSet = _context.Set<Good>();
         return ascending
-            ? await goodSet.OrderBy(x => x.Name).ToListAsync()
-            : await goodSet.OrderByDescending(x => x.Name).ToListAsync();
+            ? await _goods.OrderBy(x => x.Name).ToListAsync()
+            : await _goods.OrderByDescending(x => x.Name).ToListAsync();
     }
 
     public async Task<IEnumerable<Good>> GetAllSortedByQuantityAsync(bool ascending)
     {
-        var goodSet = _context.Set<Good>();
         return ascending
-            ? await goodSet.OrderBy(x => x.QuantityInStock).ToListAsync()
-            : await goodSet.OrderByDescending(x => x.QuantityInStock).ToListAsync();
+            ? await _goods.OrderBy(x => x.QuantityInStock).ToListAsync()
+            : await _goods.OrderByDescending(x => x.QuantityInStock).ToListAsync();
     }
 
     public async Task<IEnumerable<Good>> GetAllSortedByTimeAsync(bool ascending)
     {
-        var goodSet = _context.Set<Good>();
         return ascending
-            ? await goodSet.OrderBy(x => x.CreatedAt).ToListAsync()
-            : await goodSet.OrderByDescending(x => x.CreatedAt).ToListAsync();
+            ? await _goods.OrderBy(x => x.CreatedAt).ToListAsync()
+            : await _goods.OrderByDescending(x => x.CreatedAt).ToListAsync();
     }
 }
