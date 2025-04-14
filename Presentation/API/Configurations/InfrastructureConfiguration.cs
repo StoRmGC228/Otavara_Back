@@ -22,7 +22,7 @@ public static class InfrastructureConfiguration
         string connectionString = rawConnectionString;
 
         // Якщо строка у форматі URI (як на Render), перетвори її
-        if (connectionString.StartsWith("postgres://"))
+        if (connectionString.StartsWith("postgresql://"))
         {
             var uri = new Uri(connectionString);
             var userInfo = uri.UserInfo.Split(':');
@@ -30,10 +30,10 @@ public static class InfrastructureConfiguration
             var builder = new NpgsqlConnectionStringBuilder
             {
                 Host = uri.Host,
-                Port = uri.Port,
+                Port = uri.Port == -1 ? 5432 : uri.Port, // якщо порт не вказано, використовується стандартний 5432
                 Username = userInfo[0],
                 Password = userInfo[1],
-                Database = uri.AbsolutePath.Trim('/'),
+                Database = uri.AbsolutePath.TrimStart('/'),
                 SslMode = SslMode.Require,
                 TrustServerCertificate = true
             };
