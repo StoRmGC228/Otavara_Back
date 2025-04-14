@@ -49,7 +49,6 @@ public class AuthService : IAuthService
         }
 
         var user = _mapper.Map<User>(loginUser);
-        user.Role = "User";
 
         var isExisting = await _userRepository.IsUserExisting(user);
         if (isExisting == false)

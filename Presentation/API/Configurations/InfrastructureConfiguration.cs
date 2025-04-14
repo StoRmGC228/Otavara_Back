@@ -17,12 +17,7 @@ public static class InfrastructureConfiguration
         services.AddScoped<IEventRepository, EventRepository>();
         services.AddScoped<IParticipantsRepository, ParticipantsRepository>();
         services.AddScoped<IBookingRepository, BookingRepository>();
-        services.AddAuthorization(options =>
-        {
-            options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
-            options.AddPolicy("ModeratorAndAbove", policy => policy.RequireRole("Admin", "Moderator"));
-            options.AddPolicy("UserPolicy", policy => policy.RequireRole("Admin", "Moderator", "User"));
-        });
+       
         return services;
     }
 }
