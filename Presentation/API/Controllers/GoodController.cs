@@ -7,34 +7,32 @@ using Microsoft.AspNetCore.Mvc;
 
 public class GoodController : ControllerBase
 {
-    private readonly IBaseService<Good> _baseService;
     private readonly IGoodService _goodService;
 
     public GoodController(IBaseService<Good> baseService, IGoodService goodService)
     {
-        _baseService = baseService;
         _goodService = goodService;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAllGoodsAsync()
     {
-        var allGoods = await _baseService.GetAllAsync();
+        var allGoods = await _goodService.GetAllAsync();
         return Ok(allGoods);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetGoodByIdAsync(Guid id)
     {
-        var searchedGood = await _baseService.GetByIdAsync(id);
+        var searchedGood = await _goodService.GetByIdAsync(id);
         return Ok(searchedGood);
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateGoodAsync([FromBody] Good newGood)
     {
-        var createdGood = await _baseService.AddAsync(newGood);
-        return CreatedAtAction(nameof(GetGoodByIdAsync), new { id = createdGood.Id }, createdGood);
+        var createdGood = await _goodService.AddAsync(newGood);
+        return Ok(createdGood);
     }
 
     [HttpPut("{id}")]
@@ -46,13 +44,13 @@ public class GoodController : ControllerBase
             return BadRequest();
         }
 
-        var searchedGood = await _baseService.GetByIdAsync(id);
+        var searchedGood = await _goodService.GetByIdAsync(id);
         if (searchedGood == null)
         {
             return NotFound();
         }
 
-        var result = await _baseService.UpdateAsync(updatedGood);
+        var result = await _goodService.UpdateAsync(updatedGood);
         return Ok(result);
     }
 
@@ -60,13 +58,13 @@ public class GoodController : ControllerBase
     [Authorize]
     public async Task<IActionResult> DeleteGoodAsync(Guid id)
     {
-        var seachedGood = await _baseService.GetByIdAsync(id);
+        var seachedGood = await _goodService.GetByIdAsync(id);
         if (seachedGood == null)
         {
             return NotFound();
         }
 
-        await _baseService.DeleteAsync(id);
+        await _goodService.DeleteAsync(id);
         return NoContent();
     }
 
