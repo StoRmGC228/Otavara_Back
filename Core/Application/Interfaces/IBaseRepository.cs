@@ -5,7 +5,6 @@ using Domain.Entities;
 
 public interface IBaseRepository<T> where T : IBaseEntity
 {
-
     Task<IEnumerable<T>> GetAllAsync();
     Task<T?> GetByIdAsync(Guid id);
     Task<PaginatedDto<T>> GetPaginatedAsync(int pageSize, int pageNumber);

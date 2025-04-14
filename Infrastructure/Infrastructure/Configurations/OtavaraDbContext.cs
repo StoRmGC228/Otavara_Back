@@ -2,7 +2,6 @@
 
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 
 public class OtavaraDbContext : DbContext
 {

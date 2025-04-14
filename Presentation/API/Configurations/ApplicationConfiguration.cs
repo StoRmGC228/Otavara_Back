@@ -1,10 +1,10 @@
 ﻿namespace API.Configurations;
 
 using System.Text;
-using API.BackgroundServices;
 using Application.Interfaces;
 using Application.Providers;
 using Application.Services;
+using BackgroundServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 

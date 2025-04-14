@@ -1,11 +1,11 @@
 ﻿namespace Infrastructure.Repositories;
 
 using Application.Interfaces;
-using Domain.Entities;
 using Domain.DtoEntities;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-public class BaseRepository<T> : IBaseRepository<T> where T :class, IBaseEntity
+public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
 {
     private readonly DbContext _context;
     private readonly DbSet<T> _dbSet;
@@ -20,10 +20,9 @@ public class BaseRepository<T> : IBaseRepository<T> where T :class, IBaseEntity
     {
         var query = _dbSet.AsQueryable();
 
-       
 
         var totalItems = await query.CountAsync();
-        var items = Queryable.Take(Queryable.Skip(query, (pageNumber - 1) * pageSize), pageSize).ToList();
+        var items = query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
         return new PaginatedDto<T>
         {

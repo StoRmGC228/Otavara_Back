@@ -1,7 +1,5 @@
 ﻿namespace Domain.Entities;
 
-using System.Text.Json.Serialization;
-
 public class User : IBaseEntity
 {
     public int TelegramId { get; set; }

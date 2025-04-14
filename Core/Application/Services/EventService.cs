@@ -3,12 +3,13 @@
 using Domain.Entities;
 using Interfaces;
 
-public class EventService : BaseService<Event>,IEventService
+public class EventService : BaseService<Event>, IEventService
 {
     private readonly IEventRepository _eventRepository;
     private readonly IParticipantsRepository _participantsRepository;
 
-    public EventService(IEventRepository eventRepository, IParticipantsRepository participantsRepository):base(eventRepository)
+    public EventService(IEventRepository eventRepository, IParticipantsRepository participantsRepository) : base(
+        eventRepository)
     {
         _eventRepository = eventRepository;
         _participantsRepository = participantsRepository;

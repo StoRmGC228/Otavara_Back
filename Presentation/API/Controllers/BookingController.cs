@@ -1,9 +1,7 @@
 ﻿namespace API.Controllers;
-using System;
+
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Application.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]

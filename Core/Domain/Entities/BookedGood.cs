@@ -1,4 +1,5 @@
 ﻿namespace Domain.Entities;
+
 public class BookedGood
 {
     public Guid UserId { get; set; }

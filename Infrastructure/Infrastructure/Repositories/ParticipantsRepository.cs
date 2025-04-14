@@ -36,8 +36,9 @@ public class ParticipantsRepository : IParticipantsRepository
 
     public async Task AddParticipantAsync(Guid eventId, Guid userId)
     {
-        var user =  _userDb.FirstOrDefault(u => u.Id == userId);
-        var participant = new Participant { EventId = eventId, UserId = userId, PhotoUrl = user.PhotoUrl,Username =user.Username};
+        var user = _userDb.FirstOrDefault(u => u.Id == userId);
+        var participant = new Participant
+            { EventId = eventId, UserId = userId, PhotoUrl = user.PhotoUrl, Username = user.Username };
         await _participantDb.AddAsync(participant);
         await _context.SaveChangesAsync();
     }

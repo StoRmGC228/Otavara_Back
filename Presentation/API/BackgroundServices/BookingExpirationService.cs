@@ -1,15 +1,11 @@
 ﻿namespace API.BackgroundServices;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+
 using Application.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 public class BookingExpirationService : BackgroundService
 {
-    private readonly IServiceProvider _serviceProvider;
     private readonly TimeSpan _checkInterval = TimeSpan.FromHours(1);
+    private readonly IServiceProvider _serviceProvider;
 
     public BookingExpirationService(
         IServiceProvider serviceProvider)

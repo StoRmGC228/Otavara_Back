@@ -5,7 +5,6 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.DtoEntities;
 using Domain.Entities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
@@ -37,7 +36,7 @@ public class EventController : ControllerBase
         var paginatedEvents = await _eventService.GetPaginateAsync(pageSize, pageNumber);
 
         var mappedEvents = _mapper.Map<List<EventCreationDto>>(paginatedEvents.PaginatedEntities);
-        var result = new PaginatedEventsDto()
+        var result = new PaginatedEventsDto
         {
             TotalPages = paginatedEvents.TotalPages,
             PaginatedEntities = mappedEvents
@@ -105,7 +104,7 @@ public class EventController : ControllerBase
     }
 
     [HttpPost("{id}/participants")]
-    public async Task<IActionResult> AddParticipant(Guid id,Guid userId)
+    public async Task<IActionResult> AddParticipant(Guid id, Guid userId)
     {
         await _eventService.AddParticipantAsync(id, userId);
         return Ok();

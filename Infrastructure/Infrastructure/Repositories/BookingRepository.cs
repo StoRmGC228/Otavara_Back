@@ -1,17 +1,14 @@
 ﻿namespace Infrastructure.Repositories;
+
 using Application.Interfaces;
 using Configurations;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 public class BookingRepository : IBookingRepository
 {
-    private readonly OtavaraDbContext _context;
     private readonly DbSet<BookedGood> _bookedGoodDb;
+    private readonly OtavaraDbContext _context;
     private readonly DbSet<Good> _goodDb;
 
     public BookingRepository(OtavaraDbContext context)
