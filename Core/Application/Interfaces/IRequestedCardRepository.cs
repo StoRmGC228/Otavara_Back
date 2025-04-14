@@ -2,11 +2,8 @@
 
 namespace Application.Interfaces
 {
-    public interface IRequestedCardRepository : IBaseRepository<RequestedCard>
+    public interface IRequestedCardRepository : IBaseRepository<Card>
     {
-        Task<IEnumerable<RequestedCard>> GetByRequesterIdAsync(Guid requesterId);
-        Task<IEnumerable<RequestedCard>> GetByEventIdAsync(Guid eventId);
-        Task<RequestedCard?> GetByCodeAsync(string code);
-        Task<RequestedCard?> GetByLinkAsync(string link);
+        Task<Card> GetByCodeAsync(string code);
     }
 }

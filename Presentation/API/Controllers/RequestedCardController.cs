@@ -16,7 +16,7 @@ public class RequestedCardController : ControllerBase
 
     //BaseService methods
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateRequestedCard(Guid id, [FromBody] RequestedCard updatedRequestedCard)
+    public async Task<IActionResult> UpdateRequestedCard(Guid id, [FromBody] Card updatedRequestedCard)
     {
         if (id != updatedRequestedCard.Id)
         {
@@ -62,7 +62,7 @@ public class RequestedCardController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateRequestedCard([FromBody] RequestedCard newRequestedCard)
+    public async Task<IActionResult> CreateRequestedCard([FromBody] Card newRequestedCard)
     {
         var result = await _requestedCardService.AddAsync(newRequestedCard);
         return CreatedAtAction(nameof(GetRequestedCardById), new { id = result.Id }, result);
@@ -78,34 +78,7 @@ public class RequestedCardController : ControllerBase
             return NotFound();
         }
         return Ok(requestedCard);
-    }
-    
-    [HttpGet("{link}")]
-    public async Task<IActionResult> GetRequestedCardByLink(string link)
-    {
-        var requestedCard = await _requestedCardService.GetByLinkAsync(link);
-        if (requestedCard == null)
-        {
-            return NotFound();
-        }
-        return Ok(requestedCard);
-    }
-    
-    [HttpGet("{requesterId}")]
-    public async Task<IActionResult> GetRequestedCardByRequesterId(Guid requesterId)
-    {
-        var requestedCards = await _requestedCardService.GetByRequesterIdAsync(requesterId);
-        return Ok(requestedCards);
-    }
-    
-    [HttpGet("{eventId}")]
-    public async Task<IActionResult> GetRequestedCardByEventId(Guid eventId)
-    {
-        var requestedCards = await _requestedCardService.GetByEventIdAsync(eventId);
-        return Ok(requestedCards);
-    }
-
- 
+    } 
     
     [HttpGet("isExist/{code}")]
     public async Task<IActionResult> IsRequestedCardExists(string code)

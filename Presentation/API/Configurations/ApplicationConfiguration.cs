@@ -42,6 +42,7 @@ public static class ApplicationConfiguration
         services.Configure<JwtOptions>(configuration.GetSection("JwtSettings"));
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IRequestedCardService, RequestedCardService>();
         services.AddScoped<IAnnouncementService, AnnouncementService>();
         services.AddScoped<IEventService, EventService>();
         services.AddScoped<IJwtProvider, JwtProvider>();

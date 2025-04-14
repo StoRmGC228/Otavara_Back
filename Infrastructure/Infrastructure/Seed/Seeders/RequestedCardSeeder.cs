@@ -35,25 +35,13 @@ public class RequestedCardSeeder : IDataSeeder
             return;
         }
 
-        var cards = new List<RequestedCard>();
+        var cards = new List<Card>();
 
         for (int i = 0; i < 8; i++)
         {
-            cards.Add(new RequestedCard
-            {
-                Id = Guid.NewGuid(),
-                RequesterId = users[RandomDataGenerator.GetRandomInt(0, users.Count - 1)].Id,
-                EventId = events[RandomDataGenerator.GetRandomInt(0, events.Count - 1)].Id,
-                Link = RandomDataGenerator.GenerateCardLink(),
-                Code = RandomDataGenerator.GenerateCardCode(),
-                Number = RandomDataGenerator.GetRandomInt(1, 100),
-                RequestedDate = RandomDataGenerator.GetRandomDateOnly(
-                    DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-30)),
-                    DateOnly.FromDateTime(DateTime.UtcNow))
-            });
         }
 
-        await _dbContext.Cards.AddRangeAsync(cards);
-        await _dbContext.SaveChangesAsync();
+        //await _dbContext.Cards.AddRangeAsync(cards);
+        //await _dbContext.SaveChangesAsync();
     }
 }

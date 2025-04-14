@@ -7,6 +7,6 @@ namespace Domain.DtoEntities
         public int Count { get; set; }
         public DateOnly RequestedDate { get; set; }
         public Guid RequesterId { get; set; }
-        public Card Card { get; set; }
+        public CardDto Card { get; set; }
     }
 }
