@@ -13,17 +13,22 @@ public static class ApplicationConfiguration
     public static IServiceCollection AddApplicationConfigurations(this IServiceCollection services,
         IConfiguration configuration)
     {
+        var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
+        var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+        var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(configuration.GetSection("JwtSettings").Get<JwtOptions>().SecretKey))
+                    ValidIssuer = jwtIssuer,
+                    ValidAudience = jwtAudience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret!))
                 };
                 options.Events = new JwtBearerEvents
                 {
@@ -38,7 +43,9 @@ public static class ApplicationConfiguration
                     }
                 };
             });
+
         services.AddAuthorization();
+
         services.Configure<JwtOptions>(configuration.GetSection("JwtSettings"));
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();

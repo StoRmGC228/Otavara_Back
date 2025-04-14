@@ -10,7 +10,8 @@ public static class InfrastructureConfiguration
     public static IServiceCollection AddInfrastructureConfigurations(this IServiceCollection services,
         IConfiguration configuration)
     {
-        var connectionString = configuration.GetValue<string>("ConnectionString");
+        //var connectionString = configuration.GetValue<string>("ConnectionString");
+        var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
         services.AddDbContext<OtavaraDbContext>(options => options.UseNpgsql(connectionString));
         services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
         services.AddScoped<IUserRepository, UserRepository>();
