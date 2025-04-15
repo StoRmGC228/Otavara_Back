@@ -38,7 +38,7 @@ if (app.Environment.IsDevelopment()||app.Environment.IsProduction())
 }
 if (app.Environment.IsProduction())
 {
-    var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+    var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
     app.Urls.Add($"http://*:{port}");
 }
 
