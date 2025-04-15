@@ -24,6 +24,8 @@ public class UserSeeder : IDataSeeder
     public async Task SeedAsync()
     {
         var users = new List<User>();
+        string[] roles = { "User", "User", "User", "User", "User", "User", "Moderator", "Admin" };
+
         for (int i = 0; i < 8; i++)
         {
             var firstName = RandomDataGenerator.GenerateFirstName();
@@ -36,7 +38,8 @@ public class UserSeeder : IDataSeeder
                 FirstName = firstName,
                 LastName = lastName,
                 Username = RandomDataGenerator.GenerateUsername(firstName, lastName),
-                PhotoUrl = RandomDataGenerator.GeneratePhotoUrl()
+                PhotoUrl = RandomDataGenerator.GeneratePhotoUrl(),
+                Role = roles[i]
             });
         }
 

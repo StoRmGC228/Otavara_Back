@@ -49,11 +49,19 @@ public class AuthService : IAuthService
         }
 
         var user = _mapper.Map<User>(loginUser);
-        var isExisting = await _userRepository.IsUserExisting(user);
 
+        var isExisting = await _userRepository.IsUserExisting(user);
         if (isExisting == false)
         {
             await _userRepository.AddUserAsync(user);
+        }
+        else
+        {
+            var existingUser = await _userRepository.GetUserByTelegramUserNameAsync(user.Username);
+            if (existingUser != null)
+            {
+                user = existingUser;
+            }
         }
 
         var token = await _jwtProvider.GenerateTokenAsync(user);
