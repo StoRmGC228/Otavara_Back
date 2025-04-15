@@ -26,11 +26,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddInfrastructureConfigurations(builder.Configuration);
 builder.Services.AddApplicationConfigurations(builder.Configuration);
 builder.Services.AddApiConfigurations(builder.Configuration);
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(int.Parse(port));
-});
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+builder.WebHost.UseUrls($"http://*:{Environment.GetEnvironmentVariable("PORT") ?? "5000"}");
 
 var app = builder.Build();
 
@@ -41,7 +38,6 @@ if (app.Environment.IsDevelopment()||app.Environment.IsProduction())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 app.UseCors("MyAllowSpecificOrigins");
 app.UseAuthentication();
 
