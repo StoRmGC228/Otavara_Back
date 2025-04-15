@@ -9,7 +9,7 @@ public class GoodController : ControllerBase
 {
     private readonly IGoodService _goodService;
 
-    public GoodController( IGoodService goodService)
+    public GoodController(IGoodService goodService)
     {
         _goodService = goodService;
     }
