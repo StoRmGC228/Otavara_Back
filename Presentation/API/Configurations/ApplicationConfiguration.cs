@@ -46,7 +46,6 @@ public static class ApplicationConfiguration
 
         services.AddAuthorization();
 
-        services.Configure<JwtOptions>(configuration.GetSection("JwtSettings"));
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IEventService, EventService>();
