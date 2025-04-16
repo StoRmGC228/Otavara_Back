@@ -1,7 +1,4 @@
 ﻿namespace Domain.Entities;
-
-using System.Text.Json.Serialization;
-
 public class Event : IBaseEntity
 {
     public string Name { get; set; }
@@ -12,8 +9,5 @@ public class Event : IBaseEntity
     public string Game { get; set; }
     public DateTime EventStartTime { get; set; }
     public virtual List<Participant> Participants { get; set; }
-
-    [JsonIgnore] public virtual List<RequestedCard> RequestedCards { get; set; }
-
     public Guid Id { get; set; }
 }

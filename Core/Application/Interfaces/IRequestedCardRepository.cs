@@ -2,10 +2,10 @@
 
 using Domain.Entities;
 
-public interface IRequestedCardRepository : IBaseRepository<RequestedCard>
+namespace Application.Interfaces
 {
-    Task<IEnumerable<RequestedCard>> GetByRequesterIdAsync(Guid requesterId);
-    Task<IEnumerable<RequestedCard>> GetByEventIdAsync(Guid eventId);
-    Task<RequestedCard?> GetByCodeAsync(string code);
-    Task<RequestedCard?> GetByLinkAsync(string link);
+    public interface IRequestedCardRepository : IBaseRepository<Card>
+    {
+        Task<Card> GetByCodeAsync(string code);
+    }
 }

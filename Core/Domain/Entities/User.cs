@@ -1,5 +1,4 @@
 ﻿namespace Domain.Entities;
-
 public class User : IBaseEntity
 {
     public int TelegramId { get; set; }
@@ -8,7 +7,8 @@ public class User : IBaseEntity
     public string? Username { get; set; }
     public string PhotoUrl { get; set; }
     public virtual List<Participant> SubscribedEvents { get; set; }
-    public virtual List<RequestedCard> WishedCards { get; set; }
+    public virtual List<Announcement> Announcements { get; set; }
     public virtual List<BookedGood> BookedGoods { get; set; }
+    public string Role { get; set; } = "User";
     public Guid Id { get; set; }
 }

@@ -10,7 +10,8 @@ public class OtavaraDbContext : DbContext
     }
 
     public virtual DbSet<User> Users { get; set; }
-    public virtual DbSet<RequestedCard> Cards { get; set; }
+    public virtual DbSet<Card> Cards { get; set; }
+    public virtual DbSet<Announcement> Announcements { get; set; }
     public virtual DbSet<Good> Goods { get; set; }
     public virtual DbSet<Event> Events { get; set; }
     public virtual DbSet<Participant> Participants { get; set; }
@@ -41,15 +42,10 @@ public class OtavaraDbContext : DbContext
             .WithMany(e => e.Participants)
             .HasForeignKey(ue => ue.EventId);
 
-        modelBuilder.Entity<RequestedCard>()
+        modelBuilder.Entity<Announcement>()
             .HasOne(c => c.Requester)
-            .WithMany(u => u.WishedCards)
+            .WithMany(u => u.Announcements)
             .HasForeignKey(c => c.RequesterId);
-
-        modelBuilder.Entity<RequestedCard>()
-            .HasOne(c => c.RequestedEvent)
-            .WithMany(ev => ev.RequestedCards)
-            .HasForeignKey(c => c.EventId);
 
         modelBuilder.Entity<BookedGood>()
             .HasKey(ug => new { ug.GoodId, ug.UserId });

@@ -45,6 +45,8 @@ public static class InfrastructureConfiguration
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IEventRepository, EventRepository>();
         services.AddScoped<IParticipantsRepository, ParticipantsRepository>();
+        services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
+        services.AddScoped<IRequestedCardRepository, RequestedCardRepository>();
         services.AddScoped<IBookingRepository, BookingRepository>();
         services.AddScoped<IGoodRepository, GoodRepository>();
         return services;

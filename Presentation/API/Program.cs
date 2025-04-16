@@ -1,5 +1,8 @@
 using API.Configurations;
 using API.DtoProfile;
+using API.Middleware;
+using Application.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -27,9 +30,11 @@ builder.Services.AddInfrastructureConfigurations(builder.Configuration);
 builder.Services.AddApplicationConfigurations(builder.Configuration);
 builder.Services.AddApiConfigurations(builder.Configuration);
 
-
+builder.Services.AddDataSeeders();
+builder.Services.AddScoped<DatabaseSeedService>();
 var app = builder.Build();
 
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 if (app.Environment.IsDevelopment()||app.Environment.IsProduction())
 {
@@ -48,4 +53,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 app.MapControllers();
+
+await app.EnsureDatabaseCreatedAsync();
+
 app.Run();
