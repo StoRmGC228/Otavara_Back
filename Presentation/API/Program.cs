@@ -1,5 +1,4 @@
 using API.Configurations;
-using API.Converters;
 using API.DtoProfile;
 using API.Middleware;
 using Application.Services;
@@ -9,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 builder.Services.AddControllers();
-    
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(DtoProfile));

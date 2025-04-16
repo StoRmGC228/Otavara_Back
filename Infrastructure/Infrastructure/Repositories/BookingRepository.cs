@@ -1,12 +1,12 @@
 ﻿namespace Infrastructure.Repositories;
-using Application.Interfaces;
-using Configurations;
-using Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Interfaces;
+using Configurations;
+using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 public class BookingRepository : IBookingRepository
 {

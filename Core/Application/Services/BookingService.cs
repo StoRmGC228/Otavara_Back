@@ -1,9 +1,9 @@
 ﻿namespace Application.Services;
-using Domain.Entities;
-using Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Domain.Entities;
+using Interfaces;
 
 public class BookingService : IBookingService
 {

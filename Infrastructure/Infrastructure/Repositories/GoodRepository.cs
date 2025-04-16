@@ -1,11 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
@@ -21,8 +16,8 @@ namespace Infrastructure.Repositories
         {
             var goodSet = _context.Set<Good>();
             return ascending
-                ? await goodSet.OrderBy(x => x.Name).ToListAsync() 
-                : await goodSet.OrderByDescending(x => x.Name).ToListAsync() ;
+                ? await goodSet.OrderBy(x => x.Name).ToListAsync()
+                : await goodSet.OrderByDescending(x => x.Name).ToListAsync();
         }
 
         public async Task<IEnumerable<Good>> GetAllSortedByQuantityAsync(bool ascending)
@@ -38,7 +33,7 @@ namespace Infrastructure.Repositories
             var goodSet = _context.Set<Good>();
             return ascending
                 ? await goodSet.OrderBy(x => x.CreatedAt).ToListAsync()
-                : await goodSet.OrderByDescending(x => x.CreatedAt).ToListAsync(); 
+                : await goodSet.OrderByDescending(x => x.CreatedAt).ToListAsync();
         }
     }
 }
