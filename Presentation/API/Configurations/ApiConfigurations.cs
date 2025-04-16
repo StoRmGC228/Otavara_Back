@@ -8,7 +8,6 @@ public static class ApiConfigurations
     public static IServiceCollection AddApiConfigurations(this IServiceCollection services,
         IConfiguration configurations)
     {
-
         services.AddControllers().AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());

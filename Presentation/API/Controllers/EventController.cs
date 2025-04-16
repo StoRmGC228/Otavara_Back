@@ -29,14 +29,14 @@ public class EventController : ControllerBase
         return Ok(mappedEvents);
     }
 
-
+    //[Authorize]
     [HttpGet("paginated")]
     public async Task<IActionResult> GetPaginated(int pageSize, int pageNumber)
     {
         var paginatedEvents = await _eventService.GetPaginateAsync(pageSize, pageNumber);
 
         var mappedEvents = _mapper.Map<List<EventCreationDto>>(paginatedEvents.PaginatedEntities);
-        var result = new PaginatedEventsDto()
+        var result = new PaginatedEventsDto
         {
             TotalPages = paginatedEvents.TotalPages,
             PaginatedEntities = mappedEvents

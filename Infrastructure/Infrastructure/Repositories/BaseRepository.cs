@@ -21,9 +21,8 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
         var query = _dbSet.AsQueryable();
 
 
-
         var totalItems = await query.CountAsync();
-        var items = Queryable.Take(Queryable.Skip(query, (pageNumber - 1) * pageSize), pageSize).ToList();
+        var items = query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
         return new PaginatedDto<T>
         {

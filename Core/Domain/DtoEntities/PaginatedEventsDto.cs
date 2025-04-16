@@ -1,8 +1,7 @@
-﻿namespace Domain.DtoEntities
+﻿namespace Domain.DtoEntities;
+
+public class PaginatedEventsDto
 {
-    public class PaginatedEventsDto
-    {
-        public int TotalPages { get; set; }
-        public List<EventCreationDto> PaginatedEntities { get; set; }
-    }
+    public int TotalPages { get; set; }
+    public List<EventCreationDto> PaginatedEntities { get; set; }
 }

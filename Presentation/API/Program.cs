@@ -14,15 +14,18 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(DtoProfile));
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(myAllowSpecificOrigins,
-        policy =>
-        {
-            policy.WithOrigins("https://otavara-60887440e467.herokuapp.com", "http://localhost:5173").AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials();
-        });
+    options.AddPolicy("MyAllowSpecificOrigins", policy =>
+    {
+        policy.WithOrigins(
+                "https://otavara-60887440e467.herokuapp.com",
+                "http://localhost:5173"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
 });
+
 builder.Services.AddInfrastructureConfigurations(builder.Configuration);
 builder.Services.AddApplicationConfigurations(builder.Configuration);
 builder.Services.AddApiConfigurations(builder.Configuration);
@@ -33,14 +36,19 @@ var app = builder.Build();
 
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment()||app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+if (app.Environment.IsProduction())
+{
+    var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
+    app.Urls.Add($"http://*:{port}");
+}
 
-app.UseHttpsRedirection();
-app.UseCors(myAllowSpecificOrigins);
+
+app.UseCors("MyAllowSpecificOrigins");
 app.UseAuthentication();
 
 app.UseAuthorization();

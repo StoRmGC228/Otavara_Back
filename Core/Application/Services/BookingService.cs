@@ -1,14 +1,12 @@
 ﻿namespace Application.Services;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+
 using Domain.Entities;
 using Interfaces;
 
 public class BookingService : IBookingService
 {
-    private readonly IBookingRepository _bookingRepository;
     private readonly int _bookingExpirationHours = 168;
+    private readonly IBookingRepository _bookingRepository;
 
     public BookingService(IBookingRepository bookingRepository)
     {
