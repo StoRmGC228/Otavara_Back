@@ -9,6 +9,7 @@ namespace Application.Providers;
 
 public class JwtProvider : IJwtProvider
 {
+
     public async Task<string> GenerateTokenAsync(User user)
     {
         var secret = Environment.GetEnvironmentVariable("JWT_SECRET");
@@ -37,5 +38,6 @@ public class JwtProvider : IJwtProvider
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
+
     }
 }

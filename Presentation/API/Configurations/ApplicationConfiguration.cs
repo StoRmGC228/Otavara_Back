@@ -43,13 +43,14 @@ public static class ApplicationConfiguration
                     }
                 };
             });
+
+
         services.AddAuthorization(options =>
         {
             options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
             options.AddPolicy("ModeratorAndAbove", policy => policy.RequireRole("Admin", "Moderator"));
             options.AddPolicy("UserPolicy", policy => policy.RequireRole("Admin", "Moderator", "User"));
         });
-        services.Configure<JwtOptions>(configuration.GetSection("JwtSettings"));
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IRequestedCardService, RequestedCardService>();
