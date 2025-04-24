@@ -34,5 +34,10 @@ public class DtoProfile : Profile
 
         CreateMap<Announcement, AnnouncementDto>()
             .ForMember(dest => dest.Card, opt => opt.MapFrom(src => src.Card));
+
+        CreateMap<Good, GoodCreationDto>().ReverseMap().ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
+        CreateMap<Good, Good>().ForMember(dest => dest.CreatedAt, opt => opt.Ignore()).ForMember(dest => dest.Id, opt => opt.Ignore());
+        CreateMap<Event, Event>().ForMember(dest => dest.Id, opt => opt.Ignore()); ;
+        CreateMap<Announcement, Announcement>().ForMember(dest => dest.Id, opt => opt.Ignore()); ;
     }
 }

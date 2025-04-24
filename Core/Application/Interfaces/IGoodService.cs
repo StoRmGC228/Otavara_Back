@@ -1,5 +1,6 @@
 ﻿namespace Application.Interfaces;
 
+using Domain.DtoEntities;
 using Domain.Entities;
 
 public interface IGoodService:IBaseService<Good>

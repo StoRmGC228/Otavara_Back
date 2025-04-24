@@ -36,7 +36,6 @@ public class GoodSeeder : IDataSeeder
             goods.Add(new Good
             {
                 Id = Guid.NewGuid(),
-                CustomerId = users[RandomDataGenerator.GetRandomInt(0, users.Count - 1)].Id,
                 Name = RandomDataGenerator.GenerateGoodName(),
                 Description = RandomDataGenerator.GenerateGoodDescription(),
                 Price = Math.Round(RandomDataGenerator.GetRandomDouble(100, 2000), 2),
