@@ -1,5 +1,6 @@
 ﻿namespace Application.Services;
 
+using AutoMapper;
 using Domain.DtoEntities;
 using Domain.Entities;
 using Interfaces;
@@ -7,10 +8,12 @@ using Interfaces;
 public class BaseService<T> : IBaseService<T> where T : IBaseEntity
 {
     protected readonly IBaseRepository<T> _repository;
+    private readonly IMapper _mapper;
 
-    public BaseService(IBaseRepository<T> repository)
+    public BaseService(IBaseRepository<T> repository, IMapper mapper)
     {
         _repository = repository;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<T>> GetAllAsync()
@@ -33,9 +36,39 @@ public class BaseService<T> : IBaseService<T> where T : IBaseEntity
         return await _repository.AddAsync(entity);
     }
 
-    public async Task<T> UpdateAsync(T entity)
+    //public async Task<T> UpdateAsync(T entity)
+    //{
+    //    return await _repository.UpdateAsync(entity);
+    //}
+
+    public async Task UpdateAsync(T entity)
     {
-        return await _repository.UpdateAsync(entity);
+        var dbEntity = await _repository.GetByIdAsync(entity.Id);
+
+        if (dbEntity == null)
+        {
+            return;
+        }
+
+        _mapper.Map(entity, dbEntity);
+
+        _repository.Update(dbEntity);
+        await _repository.SaveChangesAsync();
+    }
+
+    public async Task UpdateAsync(T entity, Guid id)
+    {
+        var dbEntity = await _repository.GetByIdAsync(id);
+
+        if (dbEntity == null)
+        {
+            return;
+        }
+
+        _mapper.Map(entity, dbEntity);
+
+        _repository.Update(dbEntity);
+        await _repository.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Guid id)

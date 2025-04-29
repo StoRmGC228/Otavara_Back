@@ -68,19 +68,8 @@ public class EventController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateEvent(Guid id, [FromBody] Event updatedEvent)
     {
-        if (id != updatedEvent.Id)
-        {
-            return BadRequest();
-        }
-
-        var existingEvent = await _eventService.GetByIdAsync(id);
-        if (existingEvent == null)
-        {
-            return NotFound();
-        }
-
-        var result = await _eventService.UpdateAsync(updatedEvent);
-        return Ok(result);
+        await _eventService.UpdateAsync(updatedEvent, id);
+        return Ok();
     }
 
     [HttpDelete("{id}")]

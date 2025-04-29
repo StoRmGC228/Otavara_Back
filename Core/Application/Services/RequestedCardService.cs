@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using AutoMapper;
 using Domain.DtoEntities;
 using Domain.Entities;
 
@@ -7,9 +8,12 @@ namespace Application.Services;
 public class RequestedCardService : BaseService<Card>, IRequestedCardService
 {
     private readonly IRequestedCardRepository _requestedCardRepository;
-    public RequestedCardService(IRequestedCardRepository requestedCardRepository) : base(requestedCardRepository)
+    private readonly IMapper _mapper;
+
+    public RequestedCardService(IRequestedCardRepository requestedCardRepository, IMapper mapper) : base(requestedCardRepository, mapper)
     {
         _requestedCardRepository = requestedCardRepository;
+        _mapper = mapper;
     }
 
     public async Task<Card> GetByCodeAsync(string code)

@@ -3,14 +3,15 @@
 using Application.Interfaces;
 using Domain.DtoEntities;
 using Domain.Entities;
+using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
 {
-    private readonly DbContext _context;
+    private readonly OtavaraDbContext _context;
     private readonly DbSet<T> _dbSet;
 
-    public BaseRepository(DbContext context)
+    public BaseRepository(OtavaraDbContext context)
     {
         _context = context;
         _dbSet = context.Set<T>();
@@ -50,9 +51,16 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
 
     public async Task<T> UpdateAsync(T entity)
     {
-        _dbSet.Update(entity);
+        _context.Attach(entity);
+        _context.Entry(entity).State = EntityState.Modified;
         await _context.SaveChangesAsync();
         return entity;
+    }
+
+    public void Update(T entity)
+    {
+        _context.Attach(entity);
+        _context.Entry(entity).State = EntityState.Modified;
     }
 
     public async Task DeleteAsync(Guid id)
@@ -63,5 +71,10 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
             _dbSet.Remove(entity);
             await _context.SaveChangesAsync();
         }
+    }
+
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.SaveChangesAsync(cancellationToken);
     }
 }

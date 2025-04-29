@@ -1,5 +1,6 @@
 ﻿namespace Application.Services;
 
+using AutoMapper;
 using Domain.Entities;
 using Interfaces;
 
@@ -7,12 +8,14 @@ public class EventService : BaseService<Event>, IEventService
 {
     private readonly IEventRepository _eventRepository;
     private readonly IParticipantsRepository _participantsRepository;
+    private readonly IMapper _mapper;
 
-    public EventService(IEventRepository eventRepository, IParticipantsRepository participantsRepository) : base(
-        eventRepository)
+    public EventService(IEventRepository eventRepository, IParticipantsRepository participantsRepository, IMapper mapper) : base(
+        eventRepository, mapper)
     {
         _eventRepository = eventRepository;
         _participantsRepository = participantsRepository;
+        _mapper = mapper;
     }
 
     public async Task<Event> AddAsync(Event entity)
