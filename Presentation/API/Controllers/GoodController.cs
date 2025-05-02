@@ -55,7 +55,6 @@ public class GoodController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize]
     public async Task<IActionResult> DeleteGoodAsync(Guid id)
     {
         var seachedGood = await _goodService.GetByIdAsync(id);

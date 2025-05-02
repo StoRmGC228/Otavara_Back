@@ -108,10 +108,17 @@ public class EventController : ControllerBase
     }
 
     [HttpDelete("{id}/participants")]
-    public async Task<IActionResult> RemoveParticipant(Guid id)
+    public async Task<IActionResult> UnsubscribeFromEvent(Guid id)
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
         await _eventService.RemoveParticipantAsync(id, userId);
+        return NoContent();
+    }
+
+    [HttpDelete("{userId}/{eventId}/admin/participants")]
+    public async Task<IActionResult> RemovePartisipantAsAdmin(Guid userId, Guid eventId)
+    {
+        await _eventService.RemoveParticipantAsync(eventId, userId);
         return NoContent();
     }
 
@@ -142,4 +149,5 @@ public class EventController : ControllerBase
             searchedEvent.EndDate);
         return Ok(response);
     }
+
 }
