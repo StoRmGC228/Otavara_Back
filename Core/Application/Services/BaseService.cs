@@ -36,11 +36,6 @@ public class BaseService<T> : IBaseService<T> where T : IBaseEntity
         return await _repository.AddAsync(entity);
     }
 
-    //public async Task<T> UpdateAsync(T entity)
-    //{
-    //    return await _repository.UpdateAsync(entity);
-    //}
-
     public async Task UpdateAsync(T entity)
     {
         var dbEntity = await _repository.GetByIdAsync(entity.Id);

@@ -19,7 +19,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
 
     public async Task<PaginatedDto<T>> GetPaginatedAsync(int pageSize, int pageNumber)
     {
-        var query = _dbSet.AsQueryable();
+        var query = _dbSet.AsQueryable().OrderBy(e=>e.Id);
 
 
         var totalItems = await query.CountAsync();
@@ -49,7 +49,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
         return result.Entity;
     }
 
-    public async Task<T> UpdateAsync(T entity)
+    public async Task<T> UpdateAsync(Guid id,T entity)
     {
         _context.Attach(entity);
         _context.Entry(entity).State = EntityState.Modified;

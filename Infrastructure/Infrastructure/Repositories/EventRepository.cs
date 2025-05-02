@@ -2,6 +2,7 @@
 
 using Application.Interfaces;
 using Configurations;
+using Domain.DtoEntities;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,21 @@ public class EventRepository : BaseRepository<Event>, IEventRepository
     {
         _context = context;
         _eventDb = context.Set<Event>();
+    }
+
+    public async Task<PaginatedDto<Event>> GetPaginatedAsync(int pageSize, int pageNumber)
+    {
+        var query = _eventDb.AsQueryable().OrderByDescending(e => e.EventStartTime);
+
+
+        var totalItems = await query.CountAsync();
+        var items = query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+        return new PaginatedDto<Event>
+        {
+            PaginatedEntities = items,
+            TotalPages = (int)Math.Ceiling((double)totalItems / pageSize)
+        };
     }
 
     public async Task<List<Event>> GetEventsSortedByDateAsync(bool ascending = true)
@@ -60,6 +76,28 @@ public class EventRepository : BaseRepository<Event>, IEventRepository
     {
         return await _eventDb
             .Where(e => e.Game.ToLower().Contains(game.ToLower()))
+            .ToListAsync();
+    }
+
+    public async Task<List<Event>>? GetEventsByNameAndDateRangeAsync(string name, DateTime? startDate,
+        DateTime? endDate)
+    {
+        if (startDate == null && endDate == null)
+        {
+            var result = await _eventDb.Where(e => e.Name == name).ToListAsync();
+            return result;
+        }
+
+        if (endDate == null)
+        {
+            var timeLimit= startDate.Value.AddHours(23).AddMinutes(59);
+            return await _eventDb
+                .Where(e => e.Name == name && e.EventStartTime > startDate && e.EventStartTime < timeLimit)
+                .ToListAsync();
+        }
+
+        
+        return await _eventDb.Where(e => e.Name == name && e.EventStartTime >= startDate && e.EventStartTime <= endDate)
             .ToListAsync();
     }
 }

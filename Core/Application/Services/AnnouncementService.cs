@@ -45,5 +45,10 @@ namespace Application.Services
         {
             return await _requestedCardRepository.GetByRequesterIdAsync(userId);
         }
+
+        public async Task<Announcement> UpdateAsync(Guid id, Announcement entity)
+        {
+            return await _requestedCardRepository.UpdateAsync(id,entity);
+        }
     }
 }

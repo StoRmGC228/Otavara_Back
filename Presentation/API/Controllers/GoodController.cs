@@ -45,8 +45,20 @@ public class GoodController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateGoodAsync(Guid id, [FromBody] Good updatedGood)
     {
-        await _goodService.UpdateAsync(updatedGood, id);
-        return Ok();
+        if (id != updatedGood.Id)
+        {
+            return BadRequest();
+        }
+
+        var searchedGood = await _goodService.GetByIdAsync(id);
+        if (searchedGood == null)
+        {
+            return NotFound();
+        }
+
+        var result = await _goodService.UpdateAsync(id,updatedGood);
+        return Ok(result);
+
     }
 
     [HttpDelete("{id}")]

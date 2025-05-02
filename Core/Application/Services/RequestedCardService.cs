@@ -65,9 +65,9 @@ public class RequestedCardService : BaseService<Card>, IRequestedCardService
         return await IsRequestedCardExistsAsync(entity.Code) ? entity : await _requestedCardRepository.AddAsync(entity);
     }
 
-    public async Task<Card> UpdateAsync(Card entity)
+    public async Task<Card> UpdateAsync(Guid id,Card entity)
     {
-        return await _requestedCardRepository.UpdateAsync(entity);
+        return await _requestedCardRepository.UpdateAsync(id, entity);
     }
 }
 

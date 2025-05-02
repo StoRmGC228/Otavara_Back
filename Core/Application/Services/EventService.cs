@@ -38,9 +38,9 @@ public class EventService : BaseService<Event>, IEventService
         return await _eventRepository.GetByIdAsync(id);
     }
 
-    public async Task<Event> UpdateAsync(Event entity)
+    public async Task<Event> UpdateAsync(Guid id, Event entity)
     {
-        return await _eventRepository.UpdateAsync(entity);
+        return await _eventRepository.UpdateAsync(id, entity);
     }
 
     // Event-specific methods
@@ -103,5 +103,10 @@ public class EventService : BaseService<Event>, IEventService
     public async Task<List<Event>> GetUserEventsAsync(Guid userId)
     {
         return await _participantsRepository.GetUserEventsAsync(userId);
+    }
+
+    public async Task<List<Event>>? GetEventsByNameAndDateRangeAsync(string name, DateTime? startDate, DateTime? endDate)
+    {
+        return await _eventRepository.GetEventsByNameAndDateRangeAsync(name, startDate, endDate);
     }
 }

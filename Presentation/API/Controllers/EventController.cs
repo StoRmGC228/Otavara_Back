@@ -66,10 +66,17 @@ public class EventController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateEvent(Guid id, [FromBody] Event updatedEvent)
+    public async Task<IActionResult> UpdateEvent(Guid id, [FromBody] EventCreationDto updatedEvent)
     {
-        await _eventService.UpdateAsync(updatedEvent, id);
-        return Ok();
+        var existingEvent = await _eventService.GetByIdAsync(id);
+        if (existingEvent == null)
+        {
+            return NotFound();
+        }
+
+        var updatedEntity = _mapper.Map<Event>(updatedEvent);
+        var result = await _eventService.UpdateAsync(id,updatedEntity);
+        return Ok(result);
     }
 
     [HttpDelete("{id}")]
@@ -119,5 +126,19 @@ public class EventController : ControllerBase
     {
         var events = await _eventService.GetEventsByDateAsync(date);
         return Ok(events);
+    }
+
+    [HttpGet("name/date")]
+    public async Task<IActionResult> GetEventsByNameAndDate([FromQuery] SearchEventDto searchedEvent)
+    {
+        searchedEvent.StartDate = searchedEvent.StartDate.Value.Date;
+        if (searchedEvent.EndDate != null)
+        {
+            var date = searchedEvent.EndDate.Value.Date;
+            searchedEvent.EndDate = date.AddHours(23).AddMinutes(59).AddSeconds(59).AddMilliseconds(999);
+        }
+        var response = await _eventService.GetEventsByNameAndDateRangeAsync(searchedEvent.Name, searchedEvent.StartDate,
+            searchedEvent.EndDate);
+        return Ok(response);
     }
 }

@@ -13,4 +13,6 @@ public interface IEventRepository : IBaseRepository<Event>
         DateTime endDate);
 
     Task<List<Event>> GetEventsByGameAsync(string game);
+
+    Task<List<Event>>? GetEventsByNameAndDateRangeAsync(string name, DateTime? startDate, DateTime? endDate);
 }
