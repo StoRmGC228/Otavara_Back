@@ -12,8 +12,6 @@ public class EventCreationDto
     public string? Format { get; set; }
     public string Game { get; set; }
     [JsonPropertyName("participants")] public List<ParticipantForEventDto>? Participants { get; set; }
-
     [JsonPropertyName("date")] public DateOnly EventDate { get; set; }
-
     [JsonPropertyName("time")] public TimeOnly EventTime { get; set; }
 }
