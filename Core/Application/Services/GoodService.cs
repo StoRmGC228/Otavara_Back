@@ -1,5 +1,8 @@
 ﻿namespace Application.Services;
 
+using System.Threading;
+using AutoMapper;
+using Domain.DtoEntities;
 using Domain.Entities;
 using Interfaces;
 
@@ -7,9 +10,12 @@ public class GoodService : BaseService<Good>, IGoodService
 {
     private readonly IGoodRepository _goodRepository;
 
-    public GoodService(IGoodRepository goodRepository) : base(goodRepository)
+    private readonly IMapper _mapper;
+
+    public GoodService(IGoodRepository goodRepository, IMapper mapper) : base(goodRepository, mapper)
     {
         _goodRepository = goodRepository;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<Good>> GetAllSortedByNameAsync(bool ascending)

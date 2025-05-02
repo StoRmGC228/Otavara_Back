@@ -1,17 +1,23 @@
 ﻿namespace API.Controllers;
 
 using Application.Interfaces;
+using AutoMapper;
+using Domain.DtoEntities;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+[Route("api/[controller]")]
+[ApiController]
 public class GoodController : ControllerBase
 {
     private readonly IGoodService _goodService;
+    private readonly IMapper _mapper;
 
-    public GoodController(IGoodService goodService)
+    public GoodController(IGoodService goodService, IMapper mapper)
     {
         _goodService = goodService;
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -29,14 +35,14 @@ public class GoodController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateGoodAsync([FromBody] Good newGood)
+    public async Task<IActionResult> CreateGoodAsync([FromBody] GoodCreationDto newGood)
     {
-        var createdGood = await _goodService.AddAsync(newGood);
+        var receivedGood = _mapper.Map<Good>(newGood);
+        var createdGood = await _goodService.AddAsync(receivedGood);
         return Ok(createdGood);
     }
 
     [HttpPut("{id}")]
-    [Authorize]
     public async Task<IActionResult> UpdateGoodAsync(Guid id, [FromBody] Good updatedGood)
     {
         if (id != updatedGood.Id)
@@ -52,6 +58,7 @@ public class GoodController : ControllerBase
 
         var result = await _goodService.UpdateAsync(id,updatedGood);
         return Ok(result);
+
     }
 
     [HttpDelete("{id}")]
@@ -64,7 +71,7 @@ public class GoodController : ControllerBase
         }
 
         await _goodService.DeleteAsync(id);
-        return NoContent();
+        return Ok();
     }
 
     [HttpGet("sorted/name")]
@@ -84,7 +91,7 @@ public class GoodController : ControllerBase
     [HttpGet("sorted/time")]
     public async Task<IActionResult> GetGoodsSortedByTimeAsync([FromQuery] bool ascending = true)
     {
-        var goods = _goodService.GetAllSortedByTimeAsync(ascending);
+        var goods = await _goodService.GetAllSortedByTimeAsync(ascending);
         return Ok(goods);
     }
 }

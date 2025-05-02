@@ -1,16 +1,19 @@
 ﻿using Application.Interfaces;
+using AutoMapper;
 using Domain.DtoEntities;
 using Domain.Entities;
 
 namespace Application.Services
 {
-    public class AnnouncementService : IAnnouncementService
+    public class AnnouncementService : BaseService<Announcement>, IAnnouncementService
     {
         private readonly IAnnouncementRepository _requestedCardRepository;
+        private readonly IMapper _mapper;
 
-        public AnnouncementService(IAnnouncementRepository requestedCardRepository)
+        public AnnouncementService(IAnnouncementRepository requestedCardRepository, IMapper mapper) : base(requestedCardRepository, mapper)
         {
             _requestedCardRepository = requestedCardRepository;
+            _mapper = mapper;
         }
 
         public async Task<Announcement> AddAsync(Announcement entity)
