@@ -50,7 +50,7 @@ public class GoodController : ControllerBase
             return NotFound();
         }
 
-        var result = await _goodService.UpdateAsync(updatedGood);
+        var result = await _goodService.UpdateAsync(id,updatedGood);
         return Ok(result);
     }
 

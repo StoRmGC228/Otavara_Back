@@ -19,4 +19,6 @@ public interface IEventService : IBaseService<Event>
     Task<int> GetEventParticipantsCountAsync(Guid eventId);
     Task<bool> IsUserParticipantAsync(Guid eventId, Guid userId);
     Task<List<Event>> GetUserEventsAsync(Guid userId);
+
+    Task<List<Event>>? GetEventsByNameAndDateRangeAsync(string name, DateTime? startDate, DateTime? endDate);
 }

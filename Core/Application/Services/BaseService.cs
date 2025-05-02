@@ -33,9 +33,9 @@ public class BaseService<T> : IBaseService<T> where T : IBaseEntity
         return await _repository.AddAsync(entity);
     }
 
-    public async Task<T> UpdateAsync(T entity)
+    public async Task<T> UpdateAsync(Guid id,T entity)
     {
-        return await _repository.UpdateAsync(entity);
+        return await _repository.UpdateAsync(id,entity);
     }
 
     public async Task DeleteAsync(Guid id)

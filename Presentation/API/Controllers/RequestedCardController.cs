@@ -27,7 +27,7 @@ public class RequestedCardController : ControllerBase
         {
             return NotFound();
         }
-        var result = await _requestedCardService.UpdateAsync(updatedRequestedCard);
+        var result = await _requestedCardService.UpdateAsync(id,updatedRequestedCard);
         return Ok(result);
     }
 

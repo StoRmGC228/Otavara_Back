@@ -31,10 +31,9 @@ public class BookingController : ControllerBase
         return Ok();
     }
 
-    [HttpDelete("{goodId}")]
-    public async Task<IActionResult> CancelBooking(Guid goodId)
+    [HttpDelete("{goodId}/{userId}")]
+    public async Task<IActionResult> CancelBooking(Guid goodId,Guid userId)
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
         await _bookingService.CancelBookingAsync(goodId, userId);
         return NoContent();
     }
