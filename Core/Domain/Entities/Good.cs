@@ -12,6 +12,5 @@ public class Good : IBaseEntity
     [JsonIgnore]
     public DateTime CreatedAt { get; set; }
     public virtual List<BookedGood>? Bookers { get; set; }
-    [JsonIgnore]
     public Guid Id { get; set; }
 }

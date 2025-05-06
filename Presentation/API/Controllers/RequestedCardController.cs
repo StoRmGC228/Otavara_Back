@@ -27,8 +27,8 @@ public class RequestedCardController : ControllerBase
         {
             return NotFound();
         }
-        var result=await _requestedCardService.UpdateAsync(updatedRequestedCard);
-        return Ok(result);
+        await _requestedCardService.UpdateAsync(updatedRequestedCard);
+        return Ok();
     }
 
     [HttpDelete("{id}")]

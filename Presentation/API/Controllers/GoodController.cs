@@ -56,8 +56,8 @@ public class GoodController : ControllerBase
             return NotFound();
         }
 
-        var result = await _goodService.UpdateAsync(id,updatedGood);
-        return Ok(result);
+        await _goodService.UpdateAsync(updatedGood, id);
+        return Ok();
 
     }
 
