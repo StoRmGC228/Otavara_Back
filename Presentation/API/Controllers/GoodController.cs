@@ -4,7 +4,6 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.DtoEntities;
 using Domain.Entities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
@@ -56,9 +55,8 @@ public class GoodController : ControllerBase
             return NotFound();
         }
 
-        var result = await _goodService.UpdateAsync(id,updatedGood);
-        return Ok(result);
-
+        await _goodService.UpdateAsync(updatedGood, id);
+        return Ok();
     }
 
     [HttpDelete("{id}")]

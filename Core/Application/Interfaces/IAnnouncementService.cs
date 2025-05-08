@@ -1,9 +1,8 @@
-﻿using Domain.Entities;
+﻿namespace Application.Interfaces;
 
-namespace Application.Interfaces
+using Domain.Entities;
+
+public interface IAnnouncementService : IBaseService<Announcement>
 {
-    public interface IAnnouncementService : IBaseService<Announcement>
-    {
-        Task<IEnumerable<Announcement>> GetUserAnnouncementsAsync(Guid userId);
-    }
+    Task<IEnumerable<Announcement>> GetUserAnnouncementsAsync(Guid userId);
 }

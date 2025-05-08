@@ -7,10 +7,11 @@ using Interfaces;
 public class EventService : BaseService<Event>, IEventService
 {
     private readonly IEventRepository _eventRepository;
-    private readonly IParticipantsRepository _participantsRepository;
     private readonly IMapper _mapper;
+    private readonly IParticipantsRepository _participantsRepository;
 
-    public EventService(IEventRepository eventRepository, IParticipantsRepository participantsRepository, IMapper mapper) : base(
+    public EventService(IEventRepository eventRepository, IParticipantsRepository participantsRepository,
+        IMapper mapper) : base(
         eventRepository, mapper)
     {
         _eventRepository = eventRepository;
@@ -38,21 +39,12 @@ public class EventService : BaseService<Event>, IEventService
         return await _eventRepository.GetByIdAsync(id);
     }
 
-    public async Task<Event> UpdateAsync(Guid id, Event entity)
-    {
-        return await _eventRepository.UpdateAsync(id, entity);
-    }
-
     // Event-specific methods
     public async Task<List<Event>> GetEventsByDateAsync(DateTime date)
     {
         return await _eventRepository.GetEventsByDateAsync(date);
     }
 
-    public async Task<List<Event>> GetEventsByGameAsync(string game)
-    {
-        return await _eventRepository.GetEventsByGameAsync(game);
-    }
 
     public async Task<List<Event>> GetEventsSortedByDateAsync(bool ascending = true)
     {
@@ -105,8 +97,14 @@ public class EventService : BaseService<Event>, IEventService
         return await _participantsRepository.GetUserEventsAsync(userId);
     }
 
-    public async Task<List<Event>>? GetEventsByNameAndDateRangeAsync(string name, DateTime? startDate, DateTime? endDate)
+    public async Task<List<Event>>? GetEventsByNameAndDateRangeAsync(string name, DateTime? startDate,
+        DateTime? endDate)
     {
         return await _eventRepository.GetEventsByNameAndDateRangeAsync(name, startDate, endDate);
+    }
+
+    public async Task<Event> UpdateAsync(Guid id, Event entity)
+    {
+        return await _eventRepository.UpdateAsync(id, entity);
     }
 }

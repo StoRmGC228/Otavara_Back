@@ -1,10 +1,11 @@
-﻿using System.Reflection;
+﻿namespace API.Configurations;
+
+using System.Reflection;
+using Application.Interfaces;
+using Application.Services;
 using Infrastructure.Configurations;
 using Infrastructure.Seed;
 using Infrastructure.Seed.Seeders;
-using Application.Interfaces;
-
-namespace API.Configurations;
 
 public static class DataSeederExtensions
 {
@@ -19,16 +20,13 @@ public static class DataSeederExtensions
             Assembly.GetAssembly(typeof(UserSeeder))
                 ?.GetTypes()
                 .Where(t => !t.IsAbstract && !t.IsInterface && typeof(IDataSeeder).IsAssignableFrom(t))
-                ?? Enumerable.Empty<Type>()
+            ?? Enumerable.Empty<Type>()
         );
 
-        foreach (var seeder in seeders)
-        {
-            services.AddScoped(typeof(IDataSeeder), seeder);
-        }
+        foreach (var seeder in seeders) services.AddScoped(typeof(IDataSeeder), seeder);
 
         services.AddScoped<IDataSeederOrchestrator, DataSeederOrchestrator>();
-        services.AddScoped<Application.Services.DatabaseSeedService>();
+        services.AddScoped<DatabaseSeedService>();
 
         return services;
     }

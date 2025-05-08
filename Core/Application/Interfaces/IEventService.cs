@@ -5,7 +5,6 @@ using Domain.Entities;
 public interface IEventService : IBaseService<Event>
 {
     Task<List<Event>> GetEventsByDateAsync(DateTime date);
-    Task<List<Event>> GetEventsByGameAsync(string game);
     Task<List<Event>> GetEventsSortedByDateAsync(bool ascending = true);
     Task<List<Event>> GetEventsByDateRangeAsync(DateTime startDate, DateTime endDate);
     Task<List<Event>> GetEventsByPriceRangeAsync(int minPrice, int maxPrice);

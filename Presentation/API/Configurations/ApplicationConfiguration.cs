@@ -4,9 +4,9 @@ using System.Text;
 using Application.Interfaces;
 using Application.Providers;
 using Application.Services;
-//using BackgroundServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+//using BackgroundServices;
 
 public static class ApplicationConfiguration
 {

@@ -25,7 +25,7 @@ public class EventController : ControllerBase
     public async Task<IActionResult> GetAllEvents()
     {
         var events = await _eventService.GetAllAsync();
-        var mappedEvents = _mapper.Map<List<EventCreationDto>>(events);
+        var mappedEvents = _mapper.Map<List<EventWithIdDto>>(events);
         return Ok(mappedEvents);
     }
 
@@ -35,7 +35,7 @@ public class EventController : ControllerBase
     {
         var paginatedEvents = await _eventService.GetPaginateAsync(pageSize, pageNumber);
 
-        var mappedEvents = _mapper.Map<List<EventCreationDto>>(paginatedEvents.PaginatedEntities);
+        var mappedEvents = _mapper.Map<List<EventWithIdDto>>(paginatedEvents.PaginatedEntities);
         var result = new PaginatedEventsDto
         {
             TotalPages = paginatedEvents.TotalPages,
@@ -58,7 +58,7 @@ public class EventController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateEvent([FromBody] EventCreationDto newEvent)
+    public async Task<IActionResult> CreateEvent([FromBody] EventWithoutIdDto newEvent)
     {
         var createdEvent = _mapper.Map<Event>(newEvent);
         var result = await _eventService.AddAsync(createdEvent);
@@ -66,7 +66,7 @@ public class EventController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateEvent(Guid id, [FromBody] EventCreationDto updatedEvent)
+    public async Task<IActionResult> UpdateEvent(Guid id, [FromBody] EventWithIdDto updatedEvent)
     {
         var existingEvent = await _eventService.GetByIdAsync(id);
         if (existingEvent == null)
@@ -75,8 +75,8 @@ public class EventController : ControllerBase
         }
 
         var updatedEntity = _mapper.Map<Event>(updatedEvent);
-        var result = await _eventService.UpdateAsync(id,updatedEntity);
-        return Ok(result);
+        await _eventService.UpdateAsync(updatedEntity,id);
+        return Ok();
     }
 
     [HttpDelete("{id}")]
@@ -121,12 +121,6 @@ public class EventController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("game/{game}")]
-    public async Task<IActionResult> GetEventsByGame(string game)
-    {
-        var events = await _eventService.GetEventsByGameAsync(game);
-        return Ok(events);
-    }
 
     [HttpGet("date")]
     public async Task<IActionResult> GetEventsByDate([FromQuery] DateTime date)
@@ -144,8 +138,8 @@ public class EventController : ControllerBase
             var date = searchedEvent.EndDate.Value.Date;
             searchedEvent.EndDate = date.AddHours(23).AddMinutes(59).AddSeconds(59).AddMilliseconds(999);
         }
-        var response = await _eventService.GetEventsByNameAndDateRangeAsync(searchedEvent.Name, searchedEvent.StartDate,
-            searchedEvent.EndDate);
+        var response = _mapper.Map<List<EventWithIdDto>>(await _eventService.GetEventsByNameAndDateRangeAsync(searchedEvent.Name, searchedEvent.StartDate,
+            searchedEvent.EndDate));
         return Ok(response);
     }
 

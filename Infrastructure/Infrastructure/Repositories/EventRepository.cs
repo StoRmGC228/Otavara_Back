@@ -72,12 +72,6 @@ public class EventRepository : BaseRepository<Event>, IEventRepository
             .ToListAsync();
     }
 
-    public async Task<List<Event>> GetEventsByGameAsync(string game)
-    {
-        return await _eventDb
-            .Where(e => e.Game.ToLower().Contains(game.ToLower()))
-            .ToListAsync();
-    }
 
     public async Task<List<Event>>? GetEventsByNameAndDateRangeAsync(string name, DateTime? startDate,
         DateTime? endDate)
@@ -90,13 +84,13 @@ public class EventRepository : BaseRepository<Event>, IEventRepository
 
         if (endDate == null)
         {
-            var timeLimit= startDate.Value.AddHours(23).AddMinutes(59);
+            var timeLimit = startDate.Value.AddHours(23).AddMinutes(59);
             return await _eventDb
                 .Where(e => e.Name == name && e.EventStartTime > startDate && e.EventStartTime < timeLimit)
                 .ToListAsync();
         }
 
-        
+
         return await _eventDb.Where(e => e.Name == name && e.EventStartTime >= startDate && e.EventStartTime <= endDate)
             .ToListAsync();
     }

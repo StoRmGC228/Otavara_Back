@@ -2,6 +2,7 @@
 
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 public class OtavaraDbContext : DbContext
 {
@@ -63,5 +64,14 @@ public class OtavaraDbContext : DbContext
         modelBuilder.Entity<BookedGood>()
             .Property(bg => bg.BookingExpirationDate)
             .IsRequired();
+
+        var dateTimeConverter = new ValueConverter<DateTime, DateTime>(
+            v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified), // при записі
+            v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified) // при читанні
+        );
+
+        modelBuilder.Entity<Event>()
+            .Property(p => p.EventStartTime)
+            .HasColumnType("timestamp without time zone");
     }
 }

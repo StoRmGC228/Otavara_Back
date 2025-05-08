@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(OtavaraDbContext))]
-    partial class OtavaraDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250506144924_RemoveTimeWithTimeZoneFromEventTable")]
+    partial class RemoveTimeWithTimeZoneFromEventTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,7 +64,7 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("BookingExpirationDate")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("GoodId", "UserId");
 
@@ -120,6 +123,10 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Format")
                         .HasColumnType("text");
 
+                    b.Property<string>("Game")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Image")
                         .IsRequired()
                         .HasColumnType("text");
@@ -143,7 +150,7 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()

@@ -1,9 +1,9 @@
 ﻿namespace Infrastructure.Repositories;
 
 using Application.Interfaces;
+using Configurations;
 using Domain.DtoEntities;
 using Domain.Entities;
-using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
@@ -19,7 +19,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
 
     public async Task<PaginatedDto<T>> GetPaginatedAsync(int pageSize, int pageNumber)
     {
-        var query = _dbSet.AsQueryable().OrderBy(e=>e.Id);
+        var query = _dbSet.AsQueryable().OrderBy(e => e.Id);
 
 
         var totalItems = await query.CountAsync();
@@ -49,7 +49,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
         return result.Entity;
     }
 
-    public async Task<T> UpdateAsync(Guid id,T entity)
+    public async Task<T> UpdateAsync(Guid id, T entity)
     {
         _context.Attach(entity);
         _context.Entry(entity).State = EntityState.Modified;
@@ -57,10 +57,11 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
         return entity;
     }
 
-    public void Update(T entity)
+    public async Task Update(T entity)
     {
         _context.Attach(entity);
         _context.Entry(entity).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Guid id)

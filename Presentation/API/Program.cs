@@ -3,7 +3,6 @@ using API.DtoProfile;
 using API.Middleware;
 using Application.Services;
 
-
 var builder = WebApplication.CreateBuilder(args);
 var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -36,11 +35,12 @@ var app = builder.Build();
 
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
-if (app.Environment.IsDevelopment()||app.Environment.IsProduction())
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 if (app.Environment.IsProduction())
 {
     var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";

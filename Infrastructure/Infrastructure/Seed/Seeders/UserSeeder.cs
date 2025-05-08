@@ -1,9 +1,9 @@
-﻿using Domain.Entities;
-using Infrastructure.Configurations;
-using Microsoft.EntityFrameworkCore;
-using Application.Interfaces;
+﻿namespace Infrastructure.Seed.Seeders;
 
-namespace Infrastructure.Seed.Seeders;
+using Application.Interfaces;
+using Configurations;
+using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 public class UserSeeder : IDataSeeder
 {
@@ -26,7 +26,7 @@ public class UserSeeder : IDataSeeder
         var users = new List<User>();
         string[] roles = { "User", "User", "User", "User", "User", "User", "Moderator", "Admin" };
 
-        for (int i = 0; i < 8; i++)
+        for (var i = 0; i < 8; i++)
         {
             var firstName = RandomDataGenerator.GenerateFirstName();
             var lastName = RandomDataGenerator.GenerateLastName();

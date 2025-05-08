@@ -1,73 +1,70 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace API.Middleware;
+
 using System.Net;
 using System.Text.Json;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
-namespace API.Middleware
+public class ErrorHandlerMiddleware
 {
-    public class ErrorHandlerMiddleware
+    private readonly ILogger<ErrorHandlerMiddleware> _logger;
+    private readonly RequestDelegate _next;
+
+    public ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger)
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<ErrorHandlerMiddleware> _logger;
+        _next = next;
+        _logger = logger;
+    }
 
-        public ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger)
+    public async Task Invoke(HttpContext context)
+    {
+        if (context.Request.Path.StartsWithSegments("/swagger"))
         {
-            _next = next;
-            _logger = logger;
+            await _next(context);
+            return;
         }
 
-        public async Task Invoke(HttpContext context)
+        try
         {
-            if(context.Request.Path.StartsWithSegments("/swagger"))
-            {
-                await _next(context);
-                return;
-            }
-            try
-            {
-                await _next(context);
-            }
-            catch (Exception ex)
-            {
-                await HandleExceptionAsync(context, ex);
-            }
+            await _next(context);
         }
-
-        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
+        catch (Exception ex)
         {
-            _logger.LogError(exception, "Unhandled exception caught in middleware");
+            await HandleExceptionAsync(context, ex);
+        }
+    }
 
-            var response = context.Response;
-            response.ContentType = "application/json";
+    private async Task HandleExceptionAsync(HttpContext context, Exception exception)
+    {
+        _logger.LogError(exception, "Unhandled exception caught in middleware");
 
-            var statusCode = exception switch
-            {
-                FluentValidation.ValidationException => HttpStatusCode.BadRequest,
-                UnauthorizedAccessException => HttpStatusCode.Unauthorized,
-                KeyNotFoundException => HttpStatusCode.NotFound,
-                _ => HttpStatusCode.InternalServerError
-            };
+        var response = context.Response;
+        response.ContentType = "application/json";
 
-            response.StatusCode = (int)statusCode;
+        var statusCode = exception switch
+        {
+            ValidationException => HttpStatusCode.BadRequest,
+            UnauthorizedAccessException => HttpStatusCode.Unauthorized,
+            KeyNotFoundException => HttpStatusCode.NotFound,
+            _ => HttpStatusCode.InternalServerError
+        };
 
-            var result = statusCode switch
-            {
-                HttpStatusCode.BadRequest when exception is FluentValidation.ValidationException validationException =>
-                    JsonSerializer.Serialize(new
-                    {
-                        message = "Validation failed",
-                        errors = validationException.Errors.Select(e => new { e.PropertyName, e.ErrorMessage })
-                    }),
+        response.StatusCode = (int)statusCode;
 
-                _ => JsonSerializer.Serialize(new
+        var result = statusCode switch
+        {
+            HttpStatusCode.BadRequest when exception is ValidationException validationException =>
+                JsonSerializer.Serialize(new
                 {
-                    message = "An error occurred while processing your request"
-                })
-            };
+                    message = "Validation failed",
+                    errors = validationException.Errors.Select(e => new { e.PropertyName, e.ErrorMessage })
+                }),
 
-            await response.WriteAsync(result);
-        }
+            _ => JsonSerializer.Serialize(new
+            {
+                message = "An error occurred while processing your request"
+            })
+        };
+
+        await response.WriteAsync(result);
     }
 }

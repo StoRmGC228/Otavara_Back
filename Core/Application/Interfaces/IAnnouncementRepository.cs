@@ -1,9 +1,8 @@
-﻿using Domain.Entities;
+﻿namespace Application.Interfaces;
 
-namespace Application.Interfaces
+using Domain.Entities;
+
+public interface IAnnouncementRepository : IBaseRepository<Announcement>
 {
-    public interface IAnnouncementRepository : IBaseRepository<Announcement>
-    {
-        Task<IEnumerable<Announcement>> GetByRequesterIdAsync(Guid requesterId);
-    }
+    Task<IEnumerable<Announcement>> GetByRequesterIdAsync(Guid requesterId);
 }

@@ -1,10 +1,8 @@
-﻿
+﻿namespace Application.Interfaces;
+
 using Domain.Entities;
 
-namespace Application.Interfaces
+public interface IRequestedCardRepository : IBaseRepository<Card>
 {
-    public interface IRequestedCardRepository : IBaseRepository<Card>
-    {
-        Task<Card> GetByCodeAsync(string code);
-    }
+    Task<Card> GetByCodeAsync(string code);
 }
