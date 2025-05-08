@@ -1,9 +1,9 @@
-﻿using Domain.Entities;
-using Infrastructure.Configurations;
-using Microsoft.EntityFrameworkCore;
-using Application.Interfaces;
+﻿namespace Infrastructure.Seed.Seeders;
 
-namespace Infrastructure.Seed.Seeders;
+using Application.Interfaces;
+using Configurations;
+using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 public class ParticipantSeeder : IDataSeeder
 {
@@ -29,17 +29,15 @@ public class ParticipantSeeder : IDataSeeder
 
         foreach (var evt in events)
         {
-            int participantsCount = RandomDataGenerator.GetRandomInt(1, 5);
+            var participantsCount = RandomDataGenerator.GetRandomInt(1, 5);
             var shuffledUsers = users.OrderBy(x => Guid.NewGuid()).Take(participantsCount);
 
             foreach (var user in shuffledUsers)
-            {
                 participants.Add(new Participant
                 {
                     UserId = user.Id,
                     EventId = evt.Id
                 });
-            }
         }
 
         await _dbContext.Participants.AddRangeAsync(participants);

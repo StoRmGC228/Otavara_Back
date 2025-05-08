@@ -1,6 +1,6 @@
-﻿using Application.Interfaces;
+﻿namespace Infrastructure.Seed;
 
-namespace Infrastructure.Seed;
+using Application.Interfaces;
 
 public class DataSeederOrchestrator : IDataSeederOrchestrator
 {

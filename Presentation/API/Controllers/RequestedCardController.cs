@@ -1,14 +1,15 @@
-﻿using Application.Interfaces;
+﻿namespace API.Controllers;
+
+using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-
-namespace API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 public class RequestedCardController : ControllerBase
 {
     private readonly IRequestedCardService _requestedCardService;
+
     public RequestedCardController(IRequestedCardService requestedCardService)
     {
         _requestedCardService = requestedCardService;
@@ -22,11 +23,13 @@ public class RequestedCardController : ControllerBase
         {
             return BadRequest();
         }
+
         var existingRequestedCard = await _requestedCardService.GetByIdAsync(id);
         if (existingRequestedCard == null)
         {
             return NotFound();
         }
+
         await _requestedCardService.UpdateAsync(updatedRequestedCard);
         return Ok();
     }
@@ -39,6 +42,7 @@ public class RequestedCardController : ControllerBase
         {
             return NotFound();
         }
+
         await _requestedCardService.DeleteAsync(id);
         return NoContent();
     }
@@ -58,6 +62,7 @@ public class RequestedCardController : ControllerBase
         {
             return NotFound();
         }
+
         return Ok(requestedCard);
     }
 
@@ -77,16 +82,14 @@ public class RequestedCardController : ControllerBase
         {
             return NotFound();
         }
+
         return Ok(requestedCard);
-    } 
-    
+    }
+
     [HttpGet("isExist/{code}")]
     public async Task<IActionResult> IsRequestedCardExists(string code)
     {
         var result = await _requestedCardService.IsRequestedCardExistsAsync(code);
         return Ok(result);
     }
-    
-  
 }
-

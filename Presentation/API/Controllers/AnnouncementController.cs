@@ -1,82 +1,82 @@
-﻿using Application.Interfaces;
-using Application.Services;
+﻿namespace API.Controllers;
+
+using Application.Interfaces;
 using AutoMapper;
 using Domain.DtoEntities;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
-namespace API.Controllers
+[Route("api/[controller]")]
+[ApiController]
+public class AnnouncementController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AnnouncementController : ControllerBase
+    private readonly IAnnouncementService _announcementService;
+    private readonly IMapper _mapper;
+    private readonly IRequestedCardService _requestedCardService;
+
+    public AnnouncementController(IAnnouncementService announcementService, IMapper mapper,
+        IRequestedCardService requestedCardService)
     {
-        private readonly IAnnouncementService _announcementService;
-        private readonly IRequestedCardService _requestedCardService;
-        private readonly IMapper _mapper;
+        _requestedCardService = requestedCardService;
+        _announcementService = announcementService;
+        _mapper = mapper;
+    }
 
-        public AnnouncementController(IAnnouncementService announcementService, IMapper mapper, IRequestedCardService requestedCardService)
+    [HttpPost]
+    public async Task<IActionResult> CreateAnnouncement([FromBody] AnnouncementDto announcementDto)
+    {
+        var receivedCard = _mapper.Map<Card>(announcementDto.Card);
+        receivedCard = await _requestedCardService.IsRequestedCardExistsAsync(receivedCard.Code)
+            ? await _requestedCardService.GetByCodeAsync(receivedCard.Code)
+            : receivedCard;
+        var announcement = _mapper.Map<Announcement>(announcementDto);
+        announcement.Card = receivedCard;
+        var result = await _announcementService.AddAsync(announcement);
+        return Ok(result);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllAnnouncements()
+    {
+        var announcements = await _announcementService.GetAllAsync();
+        var result = _mapper.Map<List<AnnouncementDto>>(announcements);
+        return Ok(result);
+    }
+
+    [HttpGet("paginated")]
+    public async Task<IActionResult> GetPaginated(int pageSize, int pageNumber)
+    {
+        var paginatedAnnouncements = await _announcementService.GetPaginateAsync(pageSize, pageNumber);
+        var mappedEvents = _mapper.Map<List<AnnouncementDto>>(paginatedAnnouncements.PaginatedEntities);
+        return Ok(new
         {
-            _requestedCardService = requestedCardService;
-            _announcementService = announcementService;
-            _mapper = mapper;
+            paginatedAnnouncements.TotalPages,
+            PaginatedEntities = mappedEvents
+        });
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetAnnouncementById(Guid id)
+    {
+        var announcementEntity = await _announcementService.GetByIdAsync(id);
+        if (announcementEntity == null)
+        {
+            return NotFound();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateAnnouncement([FromBody] AnnouncementDto announcementDto)
+        return Ok(_mapper.Map<AnnouncementDto>(announcementEntity));
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteAnnouncement(Guid id)
+    {
+        var existingEvent = await _announcementService.GetByIdAsync(id);
+        if (existingEvent == null)
         {
-            var receivedCard = _mapper.Map<Card>(announcementDto.Card);
-            receivedCard = await _requestedCardService.IsRequestedCardExistsAsync(receivedCard.Code) ? await _requestedCardService.GetByCodeAsync(receivedCard.Code) : receivedCard;
-            var announcement = _mapper.Map<Announcement>(announcementDto);
-            announcement.Card = receivedCard;
-            var result = await _announcementService.AddAsync(announcement);
-            return Ok(result);
+            return NotFound();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllAnnouncements()
-        {
-            var announcements = await _announcementService.GetAllAsync();
-            var result = _mapper.Map<List<AnnouncementDto>>(announcements);
-            return Ok(result);
-        }
-
-        [HttpGet("paginated")]
-        public async Task<IActionResult> GetPaginated(int pageSize, int pageNumber)
-        {
-            var paginatedAnnouncements = await _announcementService.GetPaginateAsync(pageSize, pageNumber);
-            var mappedEvents = _mapper.Map<List<AnnouncementDto>>(paginatedAnnouncements.PaginatedEntities);
-            return Ok(new
-            {
-                paginatedAnnouncements.TotalPages,
-                PaginatedEntities = mappedEvents
-            });
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetAnnouncementById(Guid id)
-        {
-            var announcementEntity = await _announcementService.GetByIdAsync(id);
-            if (announcementEntity == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(_mapper.Map<AnnouncementDto>(announcementEntity));
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAnnouncement(Guid id)
-        {
-            var existingEvent = await _announcementService.GetByIdAsync(id);
-            if (existingEvent == null)
-            {
-                return NotFound();
-            }
-
-            await _announcementService.DeleteAsync(id);
-            return NoContent();
-        }
+        await _announcementService.DeleteAsync(id);
+        return NoContent();
     }
 }

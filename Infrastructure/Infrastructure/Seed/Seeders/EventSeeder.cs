@@ -1,9 +1,9 @@
-﻿using Domain.Entities;
-using Infrastructure.Configurations;
-using Microsoft.EntityFrameworkCore;
-using Application.Interfaces;
+﻿namespace Infrastructure.Seed.Seeders;
 
-namespace Infrastructure.Seed.Seeders;
+using Application.Interfaces;
+using Configurations;
+using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 public class EventSeeder : IDataSeeder
 {
@@ -25,8 +25,7 @@ public class EventSeeder : IDataSeeder
     {
         var events = new List<Event>();
         var startDate = DateTime.UtcNow;
-        for (int i = 0; i < 8; i++)
-        {
+        for (var i = 0; i < 8; i++)
             events.Add(new Event
             {
                 Id = Guid.NewGuid(),
@@ -34,11 +33,9 @@ public class EventSeeder : IDataSeeder
                 Description = RandomDataGenerator.GenerateEventDescription(),
                 Price = RandomDataGenerator.GetRandomInt(0, 2000),
                 Format = RandomDataGenerator.GenerateEventFormat(),
-                Game = RandomDataGenerator.GenerateGameName(),
                 EventStartTime = RandomDataGenerator.GetRandomDate(startDate, startDate.AddDays(14)),
                 Image = RandomDataGenerator.GenerateEventImage()
             });
-        }
 
         await _dbContext.Events.AddRangeAsync(events);
         await _dbContext.SaveChangesAsync();

@@ -12,11 +12,20 @@ public class DtoProfile : Profile
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
         CreateMap<User, TelegramUserDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.TelegramId));
-        CreateMap<EventCreationDto, Event>()
+        CreateMap<EventWithIdDto, Event>()
             .ForMember(dest => dest.EventStartTime,
                 opt => opt.MapFrom(src => new DateTime(src.EventDate.Year, src.EventDate.Month, src.EventDate.Day,
-                    src.EventTime.Hour, src.EventTime.Minute, src.EventTime.Second).ToUniversalTime()));
-        CreateMap<Event, EventCreationDto>()
+                    src.EventTime.Hour, src.EventTime.Minute, src.EventTime.Second)));
+        CreateMap<Event, EventWithIdDto>()
+            .ForMember(dest => dest.EventDate,
+                opt => opt.MapFrom(src => DateOnly.FromDateTime(src.EventStartTime)))
+            .ForMember(dest => dest.EventTime,
+                opt => opt.MapFrom(src => TimeOnly.FromDateTime(src.EventStartTime)));
+        CreateMap<EventWithoutIdDto, Event>()
+            .ForMember(dest => dest.EventStartTime,
+                opt => opt.MapFrom(src => new DateTime(src.EventDate.Year, src.EventDate.Month, src.EventDate.Day,
+                    src.EventTime.Hour, src.EventTime.Minute, src.EventTime.Second)));
+        CreateMap<Event, EventWithoutIdDto>()
             .ForMember(dest => dest.EventDate,
                 opt => opt.MapFrom(src => DateOnly.FromDateTime(src.EventStartTime)))
             .ForMember(dest => dest.EventTime,
@@ -35,9 +44,13 @@ public class DtoProfile : Profile
         CreateMap<Announcement, AnnouncementDto>()
             .ForMember(dest => dest.Card, opt => opt.MapFrom(src => src.Card));
 
-        CreateMap<Good, GoodCreationDto>().ReverseMap().ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
-        CreateMap<Good, Good>().ForMember(dest => dest.CreatedAt, opt => opt.Ignore()).ForMember(dest => dest.Id, opt => opt.Ignore());
-        CreateMap<Event, Event>().ForMember(dest => dest.Id, opt => opt.Ignore()); ;
-        CreateMap<Announcement, Announcement>().ForMember(dest => dest.Id, opt => opt.Ignore()); ;
+        CreateMap<Good, GoodCreationDto>().ReverseMap()
+            .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
+        CreateMap<Good, Good>().ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+            .ForMember(dest => dest.Id, opt => opt.Ignore());
+        CreateMap<Event, Event>().ForMember(dest => dest.Id, opt => opt.Ignore());
+        ;
+        CreateMap<Announcement, Announcement>().ForMember(dest => dest.Id, opt => opt.Ignore());
+        ;
     }
 }

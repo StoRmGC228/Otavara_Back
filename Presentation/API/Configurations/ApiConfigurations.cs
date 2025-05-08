@@ -8,6 +8,8 @@ public static class ApiConfigurations
     public static IServiceCollection AddApiConfigurations(this IServiceCollection services,
         IConfiguration configurations)
     {
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+        AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
         services.AddControllers().AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());

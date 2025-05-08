@@ -1,8 +1,6 @@
 ﻿namespace Application.Services;
 
-using System.Threading;
 using AutoMapper;
-using Domain.DtoEntities;
 using Domain.Entities;
 using Interfaces;
 

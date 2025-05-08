@@ -1,9 +1,9 @@
-﻿using Domain.Entities;
-using Infrastructure.Configurations;
-using Microsoft.EntityFrameworkCore;
-using Application.Interfaces;
+﻿namespace Infrastructure.Seed.Seeders;
 
-namespace Infrastructure.Seed.Seeders;
+using Application.Interfaces;
+using Configurations;
+using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 public class BookedGoodSeeder : IDataSeeder
 {
@@ -26,10 +26,10 @@ public class BookedGoodSeeder : IDataSeeder
         var users = await _dbContext.Users.ToListAsync();
         var goods = await _dbContext.Goods.ToListAsync();
         var bookedGoods = new List<BookedGood>();
-        HashSet<(Guid UserId, Guid GoodId)> usedCombinations = new HashSet<(Guid, Guid)>();
-        int maxBookings = Math.Min(10, users.Count * goods.Count);
-        int attempts = 0;
-        int created = 0;
+        HashSet<(Guid UserId, Guid GoodId)> usedCombinations = new();
+        var maxBookings = Math.Min(10, users.Count * goods.Count);
+        var attempts = 0;
+        var created = 0;
 
         while (created < maxBookings && attempts < 100)
         {
@@ -55,10 +55,7 @@ public class BookedGoodSeeder : IDataSeeder
             }
         }
 
-        foreach (var bookedGood in bookedGoods)
-        {
-            _dbContext.BookedGoods.Add(bookedGood);
-        }
+        foreach (var bookedGood in bookedGoods) _dbContext.BookedGoods.Add(bookedGood);
 
         await _dbContext.SaveChangesAsync();
     }

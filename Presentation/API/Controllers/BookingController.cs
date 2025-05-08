@@ -32,7 +32,7 @@ public class BookingController : ControllerBase
     }
 
     [HttpDelete("{goodId}/{userId}")]
-    public async Task<IActionResult> CancelBooking(Guid goodId,Guid userId)
+    public async Task<IActionResult> CancelBooking(Guid goodId, Guid userId)
     {
         await _bookingService.CancelBookingAsync(goodId, userId);
         return NoContent();

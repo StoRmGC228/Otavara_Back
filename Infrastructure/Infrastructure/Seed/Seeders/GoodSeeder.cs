@@ -1,9 +1,9 @@
-﻿using Domain.Entities;
-using Infrastructure.Configurations;
-using Microsoft.EntityFrameworkCore;
-using Application.Interfaces;
+﻿namespace Infrastructure.Seed.Seeders;
 
-namespace Infrastructure.Seed.Seeders;
+using Application.Interfaces;
+using Configurations;
+using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 public class GoodSeeder : IDataSeeder
 {
@@ -31,8 +31,7 @@ public class GoodSeeder : IDataSeeder
         }
 
         var goods = new List<Good>();
-        for (int i = 0; i < 8; i++)
-        {
+        for (var i = 0; i < 8; i++)
             goods.Add(new Good
             {
                 Id = Guid.NewGuid(),
@@ -42,7 +41,6 @@ public class GoodSeeder : IDataSeeder
                 QuantityInStock = RandomDataGenerator.GetRandomInt(1, 50),
                 CreatedAt = RandomDataGenerator.GetRandomDate(DateTime.UtcNow.AddDays(-30), DateTime.UtcNow)
             });
-        }
 
         await _dbContext.Goods.AddRangeAsync(goods);
         await _dbContext.SaveChangesAsync();

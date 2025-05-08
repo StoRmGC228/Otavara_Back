@@ -6,8 +6,8 @@ using Interfaces;
 
 public class UserService : BaseService<User>, IUserService
 {
-    private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
+    private readonly IUserRepository _userRepository;
 
     public UserService(IUserRepository userRepository, IMapper mapper) : base(userRepository, mapper)
     {

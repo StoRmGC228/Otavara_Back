@@ -1,9 +1,8 @@
 ﻿namespace Application.Interfaces;
 
-using Domain.DtoEntities;
 using Domain.Entities;
 
-public interface IGoodService:IBaseService<Good>
+public interface IGoodService : IBaseService<Good>
 {
     Task<IEnumerable<Good>> GetAllSortedByNameAsync(bool ascending);
     Task<IEnumerable<Good>> GetAllSortedByQuantityAsync(bool ascending);

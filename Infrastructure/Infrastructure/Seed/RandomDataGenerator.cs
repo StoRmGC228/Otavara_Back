@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Infrastructure.Seed;
+﻿namespace Infrastructure.Seed;
 
 public static class RandomDataGenerator
 {
-    private static readonly Random _random = new Random();
+    private static readonly Random _random = new();
 
     public static string GetRandomItem(string[] items)
     {
@@ -19,7 +16,7 @@ public static class RandomDataGenerator
 
     public static double GetRandomDouble(double min, double max)
     {
-        return min + (_random.NextDouble() * (max - min));
+        return min + _random.NextDouble() * (max - min);
     }
 
     public static DateTime GetRandomDate(DateTime from, DateTime to)
@@ -68,7 +65,7 @@ public static class RandomDataGenerator
 
     public static string GeneratePhotoUrl()
     {
-        int imageNumber = _random.Next(1, 10);
+        var imageNumber = _random.Next(1, 10);
         return $"https://example.com/photos/avatar{imageNumber}.jpg";
     }
 
@@ -176,8 +173,8 @@ public static class RandomDataGenerator
     public static string GenerateCardLink()
     {
         string[] sets = new[] { "dom", "war", "mh1", "thb", "eld", "mh2" };
-        int number = _random.Next(1, 100);
-        string set = GetRandomItem(sets);
+        var number = _random.Next(1, 100);
+        var set = GetRandomItem(sets);
 
         return $"https://scryfall.com/card/{set}/{number}/card-name";
     }
@@ -192,15 +189,15 @@ public static class RandomDataGenerator
     {
         string[] imagePaths = new[]
         {
-        "src/assets/images/Modern.png",
-        "src/assets/images/Pioner.png",
-        "src/assets/images/Standart.png",
-        "src/assets/images/Commander.png",
-        "src/assets/images/Pauper.png",
-        "src/assets/images/Lorcana.png",
-        "src/assets/images/Pocemon.png",
-        "src/assets/images/Draft.png",
-        "src/assets/images/Sealed.png"
+            "src/assets/images/Modern.png",
+            "src/assets/images/Pioner.png",
+            "src/assets/images/Standart.png",
+            "src/assets/images/Commander.png",
+            "src/assets/images/Pauper.png",
+            "src/assets/images/Lorcana.png",
+            "src/assets/images/Pocemon.png",
+            "src/assets/images/Draft.png",
+            "src/assets/images/Sealed.png"
         };
         return GetRandomItem(imagePaths);
     }

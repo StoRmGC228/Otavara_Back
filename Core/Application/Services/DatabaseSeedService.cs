@@ -1,5 +1,7 @@
-﻿using Application.Interfaces;
-namespace Application.Services;
+﻿namespace Application.Services;
+
+using Interfaces;
+
 public class DatabaseSeedService
 {
     private readonly IDataSeederOrchestrator _orchestrator;

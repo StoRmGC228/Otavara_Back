@@ -7,8 +7,8 @@ using Interfaces;
 
 public class BaseService<T> : IBaseService<T> where T : IBaseEntity
 {
-    protected readonly IBaseRepository<T> _repository;
     private readonly IMapper _mapper;
+    protected readonly IBaseRepository<T> _repository;
 
     public BaseService(IBaseRepository<T> repository, IMapper mapper)
     {
@@ -55,15 +55,9 @@ public class BaseService<T> : IBaseService<T> where T : IBaseEntity
     {
         var dbEntity = await _repository.GetByIdAsync(id);
 
-        if (dbEntity == null)
-        {
-            return;
-        }
-
         _mapper.Map(entity, dbEntity);
 
         _repository.Update(dbEntity);
-        await _repository.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Guid id)

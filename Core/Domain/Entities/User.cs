@@ -1,4 +1,5 @@
 ﻿namespace Domain.Entities;
+
 public class User : IBaseEntity
 {
     public int TelegramId { get; set; }

@@ -1,10 +1,9 @@
-﻿using Application.Interfaces;
+﻿namespace Infrastructure.Repositories;
+
+using Application.Interfaces;
+using Configurations;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-
-namespace Infrastructure.Repositories;
-
-using Configurations;
 
 public class GoodRepository : BaseRepository<Good>, IGoodRepository
 {

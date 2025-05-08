@@ -1,16 +1,17 @@
-﻿using Application.Interfaces;
+﻿namespace Application.Services;
+
 using AutoMapper;
 using Domain.DtoEntities;
 using Domain.Entities;
-
-namespace Application.Services;
+using Interfaces;
 
 public class RequestedCardService : BaseService<Card>, IRequestedCardService
 {
-    private readonly IRequestedCardRepository _requestedCardRepository;
     private readonly IMapper _mapper;
+    private readonly IRequestedCardRepository _requestedCardRepository;
 
-    public RequestedCardService(IRequestedCardRepository requestedCardRepository, IMapper mapper) : base(requestedCardRepository, mapper)
+    public RequestedCardService(IRequestedCardRepository requestedCardRepository, IMapper mapper) : base(
+        requestedCardRepository, mapper)
     {
         _requestedCardRepository = requestedCardRepository;
         _mapper = mapper;
@@ -21,24 +22,6 @@ public class RequestedCardService : BaseService<Card>, IRequestedCardService
         return await _requestedCardRepository.GetByCodeAsync(code);
     }
 
-    public async Task<Card> AddRequestedCardAsync(CardDto card)
-    {
-        if (!await IsRequestedCardExistsAsync(card.Code))
-        {
-            throw new InvalidOperationException("A request for this card already exists.");
-        }
-        var requestedCard = new Card
-        {
-            Id = new Guid(),
-            Code = card.Code,
-            CardMarketLink = card.CardMarketLink,
-            CardHoarderLink = card.CardHoarderLink,
-            ImageLink = card.ImageLink,
-            Name = card.Name,
-            TcgPlayerLink = card.TcgPlayerLink,
-        };
-        return await _requestedCardRepository.AddAsync(requestedCard);
-    }
     public async Task<bool> IsRequestedCardExistsAsync(string code)
     {
         var existingRequestedCard = await _requestedCardRepository.GetByCodeAsync(code);
@@ -65,9 +48,28 @@ public class RequestedCardService : BaseService<Card>, IRequestedCardService
         return await IsRequestedCardExistsAsync(entity.Code) ? entity : await _requestedCardRepository.AddAsync(entity);
     }
 
-    public async Task<Card> UpdateAsync(Guid id,Card entity)
+    public async Task<Card> AddRequestedCardAsync(CardDto card)
+    {
+        if (!await IsRequestedCardExistsAsync(card.Code))
+        {
+            throw new InvalidOperationException("A request for this card already exists.");
+        }
+
+        var requestedCard = new Card
+        {
+            Id = new Guid(),
+            Code = card.Code,
+            CardMarketLink = card.CardMarketLink,
+            CardHoarderLink = card.CardHoarderLink,
+            ImageLink = card.ImageLink,
+            Name = card.Name,
+            TcgPlayerLink = card.TcgPlayerLink
+        };
+        return await _requestedCardRepository.AddAsync(requestedCard);
+    }
+
+    public async Task<Card> UpdateAsync(Guid id, Card entity)
     {
         return await _requestedCardRepository.UpdateAsync(id, entity);
     }
 }
-

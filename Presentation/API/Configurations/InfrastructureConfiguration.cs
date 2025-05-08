@@ -17,9 +17,11 @@ public static class InfrastructureConfiguration
                                   ?? Environment.GetEnvironmentVariable("DATABASE_URL");
 
         if (string.IsNullOrEmpty(rawConnectionString))
+        {
             throw new InvalidOperationException("Database connection string is not set in environment variables.");
+        }
 
-        string connectionString = rawConnectionString;
+        var connectionString = rawConnectionString;
 
         // Якщо строка у форматі URI (як на Render), перетвори її
         if (connectionString.StartsWith("postgresql://"))
@@ -40,6 +42,7 @@ public static class InfrastructureConfiguration
 
             connectionString = builder.ConnectionString;
         }
+
         services.AddDbContext<OtavaraDbContext>(options => options.UseNpgsql(connectionString));
         services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
         services.AddScoped<IUserRepository, UserRepository>();

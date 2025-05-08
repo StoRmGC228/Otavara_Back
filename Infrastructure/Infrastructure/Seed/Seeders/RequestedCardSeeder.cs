@@ -1,9 +1,9 @@
-﻿using Domain.Entities;
-using Infrastructure.Configurations;
-using Microsoft.EntityFrameworkCore;
-using Application.Interfaces;
+﻿namespace Infrastructure.Seed.Seeders;
 
-namespace Infrastructure.Seed.Seeders;
+using Application.Interfaces;
+using Configurations;
+using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 public class RequestedCardSeeder : IDataSeeder
 {
@@ -24,7 +24,7 @@ public class RequestedCardSeeder : IDataSeeder
     public async Task SeedAsync()
     {
         var users = await _dbContext.Users.ToListAsync();
-        var events = await _dbContext.Events.Where(e => e.Game == "Magic: The Gathering").ToListAsync();
+        var events = await _dbContext.Events.ToListAsync();
         if (!events.Any())
         {
             events = await _dbContext.Events.ToListAsync();
@@ -37,7 +37,7 @@ public class RequestedCardSeeder : IDataSeeder
 
         var cards = new List<Card>();
 
-        for (int i = 0; i < 8; i++)
+        for (var i = 0; i < 8; i++)
         {
         }
 

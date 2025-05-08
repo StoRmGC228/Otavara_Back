@@ -1,21 +1,21 @@
-﻿using Application.Interfaces;
+﻿namespace Infrastructure.Repositories;
+
+using Application.Interfaces;
+using Configurations;
 using Domain.Entities;
-using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repositories
+public class AnnouncementRepository : BaseRepository<Announcement>, IAnnouncementRepository
 {
-    public class AnnouncementRepository : BaseRepository<Announcement>, IAnnouncementRepository
-    {
-        private readonly DbSet<Announcement> _requestedCardDb;
-        public AnnouncementRepository(OtavaraDbContext context) : base(context)
-        {
-            _requestedCardDb = context.Set<Announcement>();
-        }
+    private readonly DbSet<Announcement> _requestedCardDb;
 
-        public async Task<IEnumerable<Announcement>> GetByRequesterIdAsync(Guid requesterId)
-        {
-            return await _requestedCardDb.Where(a => a.RequesterId == requesterId).ToListAsync();
-        }
+    public AnnouncementRepository(OtavaraDbContext context) : base(context)
+    {
+        _requestedCardDb = context.Set<Announcement>();
+    }
+
+    public async Task<IEnumerable<Announcement>> GetByRequesterIdAsync(Guid requesterId)
+    {
+        return await _requestedCardDb.Where(a => a.RequesterId == requesterId).ToListAsync();
     }
 }

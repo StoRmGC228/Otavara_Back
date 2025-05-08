@@ -9,8 +9,10 @@ public class Good : IBaseEntity
     public string TypeOfItem { get; set; }
     public double Price { get; set; }
     public int QuantityInStock { get; set; }
-    [JsonIgnore]
-    public DateTime CreatedAt { get; set; }
+
+    [JsonIgnore] public DateTime CreatedAt { get; set; }
+
     public virtual List<BookedGood>? Bookers { get; set; }
-    public Guid Id { get; set; }
+
+    [JsonIgnore] public Guid Id { get; set; }
 }
