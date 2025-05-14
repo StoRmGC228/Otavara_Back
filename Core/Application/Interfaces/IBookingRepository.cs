@@ -8,7 +8,7 @@ public interface IBookingRepository
     Task<List<BookedGood>> GetGoodBookingsAsync(Guid goodId);
     Task<bool> IsGoodAvailableAsync(Guid goodId);
     Task<bool> IsGoodBookedByUserAsync(Guid goodId, Guid userId);
-    Task BookGoodAsync(Guid goodId, Guid userId, DateTime expirationDate);
+    Task BookGoodAsync(Guid goodId, Guid userId, DateTime expirationDate, int count);
     Task CancelBookingAsync(Guid goodId, Guid userId);
     Task<int> GetAvailableQuantityAsync(Guid goodId);
     Task RemoveExpiredBookingsAsync(DateTime currentDate);

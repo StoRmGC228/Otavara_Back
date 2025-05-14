@@ -36,4 +36,18 @@ public class GoodRepository : BaseRepository<Good>, IGoodRepository
             ? await _goods.OrderBy(x => x.CreatedAt).ToListAsync()
             : await _goods.OrderByDescending(x => x.CreatedAt).ToListAsync();
     }
+
+    public async Task<bool> DecreaseGoodQuantityAsync(Guid goodId, int count)
+    {
+        var good = await _context.Goods.FindAsync(goodId);
+        if (good == null || good.QuantityInStock < count)
+        {
+            return false;
+        }
+
+        good.QuantityInStock -= count;
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
 }

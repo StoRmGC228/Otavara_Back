@@ -75,8 +75,8 @@ public class EventController : ControllerBase
         }
 
         var updatedEntity = _mapper.Map<Event>(updatedEvent);
-        var result = await _eventService.UpdateAsync(id,updatedEntity);
-        return Ok(result);
+        await _eventService.UpdateAsync(updatedEntity, id);
+        return Ok();
     }
 
     [HttpDelete("{id}")]

@@ -1,24 +1,33 @@
-﻿namespace Application.Services;
+﻿using Domain.DtoEntities;
 
+namespace Application.Services;
+
+using AutoMapper;
 using Domain.Entities;
 using Interfaces;
 
 public class BookingService : IBookingService
 {
     private readonly int _bookingExpirationHours = 168;
+    private readonly IMapper _mapper;
     private readonly IBookingRepository _bookingRepository;
+    private readonly IGoodRepository _goodRepository;
 
-    public BookingService(IBookingRepository bookingRepository)
+    public BookingService(IBookingRepository bookingRepository, IMapper mapper, IGoodRepository goodRepository)
     {
         _bookingRepository = bookingRepository;
+        _mapper = mapper;
+        _goodRepository = goodRepository;
     }
 
-    public async Task<List<BookedGood>> GetUserBookingsAsync(Guid userId)
+    public async Task<List<BookedGoodDto>> GetUserBookingsAsync(Guid userId)
     {
-        return await _bookingRepository.GetUserBookingsAsync(userId);
+        var userBooking = await _bookingRepository.GetUserBookingsAsync(userId);
+        var bookedGoodDtos = _mapper.Map<List<BookedGoodDto>>(userBooking);
+        return bookedGoodDtos;
     }
 
-    public async Task<bool> BookGoodAsync(Guid goodId, Guid userId)
+    public async Task<bool> BookGoodAsync(Guid goodId, Guid userId, int count)
     {
         if (!await _bookingRepository.IsGoodAvailableAsync(goodId))
         {
@@ -31,7 +40,8 @@ public class BookingService : IBookingService
         }
 
         var expirationDate = DateTime.UtcNow.AddHours(_bookingExpirationHours);
-        await _bookingRepository.BookGoodAsync(goodId, userId, expirationDate);
+        await _bookingRepository.BookGoodAsync(goodId, userId, expirationDate, count);
+        await _goodRepository.DecreaseGoodQuantityAsync(goodId, count);
 
         return true;
     }

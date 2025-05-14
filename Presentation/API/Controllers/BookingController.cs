@@ -15,27 +15,41 @@ public class BookingController : ControllerBase
         _bookingService = bookingService;
     }
 
-    [HttpGet("user")]
-    public async Task<IActionResult> GetUserBookings()
+    [HttpGet("user/{id}")]
+    public async Task<IActionResult> GetUserBookings(Guid id)
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        var bookings = await _bookingService.GetUserBookingsAsync(userId);
-        return Ok(bookings);
+        var isAdmin = User.IsInRole("Admin");
+        var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+        if (currentUserId == id || isAdmin)
+        {
+            var bookings = await _bookingService.GetUserBookingsAsync(id);
+            return Ok(bookings);
+        }
+
+        return Forbid();
     }
 
     [HttpPost("{goodId}")]
-    public async Task<IActionResult> BookGood(Guid goodId)
+    public async Task<IActionResult> BookGood(Guid goodId, int count)
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        var result = await _bookingService.BookGoodAsync(goodId, userId);
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        await _bookingService.BookGoodAsync(goodId, userId, count);
         return Ok();
     }
 
     [HttpDelete("{goodId}/{userId}")]
     public async Task<IActionResult> CancelBooking(Guid goodId, Guid userId)
     {
-        await _bookingService.CancelBookingAsync(goodId, userId);
-        return NoContent();
+        var isAdmin = User.IsInRole("Admin");
+        var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+        if (currentUserId == userId || isAdmin)
+        {
+            await _bookingService.CancelBookingAsync(goodId, userId);
+        }
+
+        return Ok();
     }
 
     [HttpGet("{goodId}/available")]
