@@ -36,14 +36,7 @@ public class BookingRepository : IBookingRepository
 
     public async Task<bool> IsGoodAvailableAsync(Guid goodId)
     {
-        var good = await _goodDb.FindAsync(goodId);
-        if (good == null)
-        {
-            return false;
-        }
-
-        var bookedCount = await _bookedGoodDb.CountAsync(bg => bg.GoodId == goodId);
-        return good.QuantityInStock > bookedCount;
+        return await GetAvailableQuantityAsync(goodId) > 0;
     }
 
     public async Task<bool> IsGoodBookedByUserAsync(Guid goodId, Guid userId)
@@ -51,14 +44,16 @@ public class BookingRepository : IBookingRepository
         return await _bookedGoodDb.AnyAsync(bg => bg.GoodId == goodId && bg.UserId == userId);
     }
 
-    public async Task BookGoodAsync(Guid goodId, Guid userId, DateTime expirationDate)
+    public async Task BookGoodAsync(Guid goodId, Guid userId, DateTime expirationDate, int count)
     {
         var booking = new BookedGood
         {
             GoodId = goodId,
             UserId = userId,
-            BookingExpirationDate = expirationDate
+            BookingExpirationDate = expirationDate,
+            Count = count
         };
+
 
         await _bookedGoodDb.AddAsync(booking);
         await _context.SaveChangesAsync();
@@ -84,8 +79,7 @@ public class BookingRepository : IBookingRepository
             return 0;
         }
 
-        var bookedCount = await _bookedGoodDb.CountAsync(bg => bg.GoodId == goodId);
-        return good.QuantityInStock - bookedCount;
+        return good.QuantityInStock;
     }
 
     public async Task RemoveExpiredBookingsAsync(DateTime currentDate)

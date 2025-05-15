@@ -49,8 +49,9 @@ public class DtoProfile : Profile
         CreateMap<Good, Good>().ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
             .ForMember(dest => dest.Id, opt => opt.Ignore());
         CreateMap<Event, Event>().ForMember(dest => dest.Id, opt => opt.Ignore());
-        ;
+        
         CreateMap<Announcement, Announcement>().ForMember(dest => dest.Id, opt => opt.Ignore());
-        ;
+        CreateMap<BookedGood, BookedGoodDto>();
+        CreateMap<User, BookerDto>();
     }
 }

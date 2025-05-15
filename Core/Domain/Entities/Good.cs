@@ -1,6 +1,6 @@
-﻿namespace Domain.Entities;
+﻿using System.Text.Json.Serialization;
 
-using System.Text.Json.Serialization;
+namespace Domain.Entities;
 
 public class Good : IBaseEntity
 {
@@ -9,10 +9,7 @@ public class Good : IBaseEntity
     public string TypeOfItem { get; set; }
     public double Price { get; set; }
     public int QuantityInStock { get; set; }
-
     [JsonIgnore] public DateTime CreatedAt { get; set; }
-
     public virtual List<BookedGood>? Bookers { get; set; }
-
     [JsonIgnore] public Guid Id { get; set; }
 }
