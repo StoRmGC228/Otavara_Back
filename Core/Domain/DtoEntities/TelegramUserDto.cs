@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 public class TelegramUserDto
 {
-    public int Id { get; set; }
+    [JsonPropertyName("id")] public int TelegramId { get; set; }
 
     [JsonPropertyName("first_name")] public string? FirstName { get; set; }
 

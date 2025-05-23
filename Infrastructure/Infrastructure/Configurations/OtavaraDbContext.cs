@@ -58,7 +58,7 @@ public class OtavaraDbContext : DbContext
 
         modelBuilder.Entity<BookedGood>()
             .HasOne(bg => bg.Good)
-            .WithMany(g => g.Bookers)
+            .WithMany(g => g.Bookings)
             .HasForeignKey(g => g.GoodId);
 
         modelBuilder.Entity<BookedGood>()

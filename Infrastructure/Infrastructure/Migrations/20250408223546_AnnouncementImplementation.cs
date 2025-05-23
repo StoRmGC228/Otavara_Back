@@ -93,13 +93,13 @@ namespace Infrastructure.Migrations
                         name: "FK_Announcements_Cards_CardId",
                         column: x => x.CardId,
                         principalTable: "Cards",
-                        principalColumn: "Id",
+                        principalColumn: "TelegramId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Announcements_Users_RequesterId",
                         column: x => x.RequesterId,
                         principalTable: "Users",
-                        principalColumn: "Id",
+                        principalColumn: "TelegramId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -184,7 +184,7 @@ namespace Infrastructure.Migrations
                 table: "Cards",
                 column: "EventId",
                 principalTable: "Events",
-                principalColumn: "Id",
+                principalColumn: "TelegramId",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
@@ -192,7 +192,7 @@ namespace Infrastructure.Migrations
                 table: "Cards",
                 column: "RequesterId",
                 principalTable: "Users",
-                principalColumn: "Id",
+                principalColumn: "TelegramId",
                 onDelete: ReferentialAction.Cascade);
         }
     }

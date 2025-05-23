@@ -23,31 +23,49 @@ public class GoodController : ControllerBase
     public async Task<IActionResult> GetAllGoodsAsync()
     {
         var allGoods = await _goodService.GetAllAsync();
-        return Ok(allGoods);
-    }
 
+        if (User.IsInRole("Admin"))
+        {
+            var mappedGoods = _mapper.Map<IEnumerable<GoodAdminDto>>(allGoods);
+            return Ok(mappedGoods);
+        }
+        else
+        {
+            var mappedGoods = _mapper.Map<IEnumerable<GoodDto>>(allGoods);
+            return Ok(mappedGoods);
+        }
+    }
+    
     [HttpGet("{id}")]
     public async Task<IActionResult> GetGoodByIdAsync(Guid id)
     {
         var searchedGood = await _goodService.GetByIdAsync(id);
-        return Ok(searchedGood);
+
+        if (User.IsInRole("Admin"))
+        {
+            var mappedGood = _mapper.Map<GoodAdminDto>(searchedGood);
+            return Ok(mappedGood);
+        }
+        else
+        {
+            var mappedGood = _mapper.Map<GoodDto>(searchedGood);
+            return Ok(mappedGood);
+        }
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateGoodAsync([FromBody] GoodCreationDto newGood)
+    public async Task<IActionResult> CreateGoodAsync([FromBody] GoodCreationDto newGoodAdmin)
     {
-        var receivedGood = _mapper.Map<Good>(newGood);
+        var receivedGood = _mapper.Map<Good>(newGoodAdmin);
         var createdGood = await _goodService.AddAsync(receivedGood);
         return Ok(createdGood);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateGoodAsync(Guid id, [FromBody] Good updatedGood)
+    public async Task<IActionResult> UpdateGoodAsync(Guid id, [FromBody] GoodAdminDto updatedGood)
     {
         if (id != updatedGood.Id)
-        {
-            return BadRequest();
-        }
+            return NotFound();
 
         var searchedGood = await _goodService.GetByIdAsync(id);
         if (searchedGood == null)
@@ -55,7 +73,8 @@ public class GoodController : ControllerBase
             return NotFound();
         }
 
-        await _goodService.UpdateAsync(updatedGood, id);
+        var mappedGood = _mapper.Map<Good>(updatedGood);
+        await _goodService.UpdateAsync(mappedGood, id);
         return Ok();
     }
 

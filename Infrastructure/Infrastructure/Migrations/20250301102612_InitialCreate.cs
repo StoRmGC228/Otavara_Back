@@ -70,13 +70,13 @@ namespace Infrastructure.Migrations
                         name: "FK_BookedGoods_Goods_GoodId",
                         column: x => x.GoodId,
                         principalTable: "Goods",
-                        principalColumn: "Id",
+                        principalColumn: "TelegramId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_BookedGoods_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id",
+                        principalColumn: "TelegramId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -99,13 +99,13 @@ namespace Infrastructure.Migrations
                         name: "FK_Cards_Events_EventId",
                         column: x => x.EventId,
                         principalTable: "Events",
-                        principalColumn: "Id",
+                        principalColumn: "TelegramId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Cards_Users_RequesterId",
                         column: x => x.RequesterId,
                         principalTable: "Users",
-                        principalColumn: "Id",
+                        principalColumn: "TelegramId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -123,13 +123,13 @@ namespace Infrastructure.Migrations
                         name: "FK_Participants_Events_EventId",
                         column: x => x.EventId,
                         principalTable: "Events",
-                        principalColumn: "Id",
+                        principalColumn: "TelegramId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Participants_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id",
+                        principalColumn: "TelegramId",
                         onDelete: ReferentialAction.Cascade);
                 });
 

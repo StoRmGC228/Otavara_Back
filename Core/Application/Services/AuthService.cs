@@ -30,7 +30,7 @@ public class AuthService : IAuthService
         {
             { "auth_date", loginUser.AuthDate.ToString() },
             { "first_name", loginUser.FirstName },
-            { "id", loginUser.Id.ToString() },
+            { "id", loginUser.TelegramId.ToString() },
             { "last_name", loginUser.LastName },
             { "photo_url", loginUser.PhotoUrl },
             { "username", loginUser.Username }

@@ -47,7 +47,7 @@ public class BaseService<T> : IBaseService<T> where T : IBaseEntity
 
         _mapper.Map(entity, dbEntity);
 
-        _repository.Update(dbEntity);
+        await _repository.Update(dbEntity);
         await _repository.SaveChangesAsync();
     }
 
