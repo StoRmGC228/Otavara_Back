@@ -56,7 +56,7 @@ public class DtoProfile : Profile
             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.Username))
             .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => src.User.PhotoUrl))
             .ForMember(dest => dest.Count, opt => opt.MapFrom(src => src.Count));
-        CreateMap<Good, GoodAdminDto>()
+        CreateMap<Good, GoodAdminDto>().ReverseMap()
             .ForMember(dest => dest.Bookings, opt => opt.MapFrom(src => src.Bookings));
         CreateMap<Good, GoodDto>();
         CreateMap<GoodCreationDto, Good>();
