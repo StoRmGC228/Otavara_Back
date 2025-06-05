@@ -47,7 +47,10 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
                 "https://otavara-60887440e467.herokuapp.com",
-                "http://localhost:5173"
+                "http://localhost:5173",
+                "https://otavara-front.loca.lt",
+                "https://otavara-back.loca.lt",
+                "https://neat-comics-flow.loca.lt"
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
@@ -63,7 +66,7 @@ builder.Services.AddDataSeeders();
 builder.Services.AddScoped<DatabaseSeedService>();
 var app = builder.Build();
 
-app.UseMiddleware<ErrorHandlerMiddleware>();
+//app.UseMiddleware<ErrorHandlerMiddleware>();
 
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {

@@ -60,5 +60,7 @@ public class DtoProfile : Profile
             .ForMember(dest => dest.Bookings, opt => opt.MapFrom(src => src.Bookings));
         CreateMap<Good, GoodDto>();
         CreateMap<GoodCreationDto, Good>();
+        CreateMap<User, UserGetDto>();
+        CreateMap<UserGetDto, User>();
     }
 }
