@@ -65,7 +65,7 @@ builder.Services.AddDataSeeders();
 builder.Services.AddScoped<DatabaseSeedService>();
 var app = builder.Build();
 
-//app.UseMiddleware<ErrorHandlerMiddleware>();
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {

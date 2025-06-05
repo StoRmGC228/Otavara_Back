@@ -2,8 +2,8 @@
 
 public class Participant
 {
-    public virtual string Username { get; set; }
-    public virtual string PhotoUrl { get; set; }
+    public string Username { get; set; }
+    public string PhotoUrl { get; set; }
     public Guid UserId { get; set; }
     public virtual User User { get; set; }
     public Guid EventId { get; set; }

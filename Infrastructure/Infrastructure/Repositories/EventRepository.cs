@@ -23,7 +23,7 @@ public class EventRepository : BaseRepository<Event>, IEventRepository
 
 
         var totalItems = await query.CountAsync();
-        var items = query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+        var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
 
         return new PaginatedDto<Event>
         {
@@ -73,25 +73,26 @@ public class EventRepository : BaseRepository<Event>, IEventRepository
     }
 
 
-    public async Task<List<Event>>? GetEventsByNameAndDateRangeAsync(string name, DateTime? startDate,
-        DateTime? endDate)
+    public async Task<List<Event>> GetEventsByNameAndDateRangeAsync(string name, DateTime? startDate, DateTime? endDate)
     {
-        if (startDate == null && endDate == null)
+        IQueryable<Event> query = _eventDb;
+
+        if (!string.IsNullOrWhiteSpace(name))
         {
-            var result = await _eventDb.Where(e => e.Name == name).ToListAsync();
-            return result;
+            query = query.Where(e => e.Name.ToLower().Contains(name.ToLower()));
         }
 
-        if (endDate == null)
+        if (startDate != null && endDate == null)
         {
-            var timeLimit = startDate.Value.AddHours(23).AddMinutes(59);
-            return await _eventDb
-                .Where(e => e.Name == name && e.EventStartTime > startDate && e.EventStartTime < timeLimit)
-                .ToListAsync();
+            var timeLimit = startDate.Value.Date.AddHours(23).AddMinutes(59);
+            query = query.Where(e => e.EventStartTime >= startDate && e.EventStartTime <= timeLimit);
+        }
+        else if (startDate != null && endDate != null)
+        {
+            query = query.Where(e => e.EventStartTime >= startDate && e.EventStartTime <= endDate);
         }
 
-
-        return await _eventDb.Where(e => e.Name == name && e.EventStartTime >= startDate && e.EventStartTime <= endDate)
-            .ToListAsync();
+        return await query.ToListAsync();
     }
+
 }

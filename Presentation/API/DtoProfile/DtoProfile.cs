@@ -30,10 +30,9 @@ public class DtoProfile : Profile
                 opt => opt.MapFrom(src => DateOnly.FromDateTime(src.EventStartTime)))
             .ForMember(dest => dest.EventTime,
                 opt => opt.MapFrom(src => TimeOnly.FromDateTime(src.EventStartTime)));
-        CreateMap<ParticipantForEventDto, Participant>()
-            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id));
         CreateMap<Participant, ParticipantForEventDto>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.UserId));
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.UserId))
+            .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.User.FirstName + ' ' + src.User.LastName));
 
         CreateMap<Card, CardDto>().ReverseMap();
 
