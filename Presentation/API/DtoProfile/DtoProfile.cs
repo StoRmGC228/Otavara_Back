@@ -59,6 +59,7 @@ public class DtoProfile : Profile
         CreateMap<Good, GoodAdminDto>().ReverseMap()
             .ForMember(dest => dest.Bookings, opt => opt.MapFrom(src => src.Bookings));
         CreateMap<Good, GoodDto>();
-        CreateMap<GoodCreationDto, Good>();
+        CreateMap<GoodCreationDto, Good>().ReverseMap();
+        CreateMap<GoodCreationDto, BookedGoodDto>();
     }
 }
