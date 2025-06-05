@@ -3,5 +3,5 @@
 public class PaginatedEventsDto
 {
     public int TotalPages { get; set; }
-    public List<EventWithIdDto> PaginatedEntities { get; set; }
+    public List<EventDto> PaginatedEntities { get; set; }
 }

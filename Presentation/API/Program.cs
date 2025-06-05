@@ -47,7 +47,9 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
                 "https://otavara-60887440e467.herokuapp.com",
-                "http://localhost:5173"
+                "http://localhost:5173",
+                "https://otavara-frontend.loca.lt",
+                "https://otavara-api.loca.lt"
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
@@ -63,7 +65,7 @@ builder.Services.AddDataSeeders();
 builder.Services.AddScoped<DatabaseSeedService>();
 var app = builder.Build();
 
-app.UseMiddleware<ErrorHandlerMiddleware>();
+//app.UseMiddleware<ErrorHandlerMiddleware>();
 
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
@@ -76,7 +78,6 @@ if (app.Environment.IsProduction())
     var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
     app.Urls.Add($"http://*:{port}");
 }
-
 
 app.UseCors("MyAllowSpecificOrigins");
 app.UseAuthentication();

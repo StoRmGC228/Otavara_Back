@@ -2,8 +2,9 @@
 
 using System.Text.Json.Serialization;
 
-public class EventWithoutIdDto
+public class EventDto
 {
+    public Guid? Id { get; set; }
     public string Name { get; set; }
     public string Image { get; set; }
     public string? Description { get; set; }

@@ -12,7 +12,7 @@ public interface IEventService : IBaseService<Event>
     Task<List<Event>> GetEventsByPriceRangeAndDateRangeAsync(int minPrice, int maxPrice, DateTime startDate,
         DateTime endDate);
 
-    Task<List<User>> GetEventParticipantsAsync(Guid eventId);
+    Task<List<Participant>> GetEventParticipantsAsync(Guid eventId);
     Task AddParticipantAsync(Guid eventId, Guid userId);
     Task RemoveParticipantAsync(Guid eventId, Guid userId);
     Task<int> GetEventParticipantsCountAsync(Guid eventId);
