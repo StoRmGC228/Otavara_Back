@@ -50,7 +50,7 @@ builder.Services.AddCors(options =>
                 "http://localhost:5173",
                 "https://otavara-front.loca.lt",
                 "https://otavara-back.loca.lt",
-                "https://neat-comics-flow.loca.lt"
+                "https://itchy-states-return.loca.lt"
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
