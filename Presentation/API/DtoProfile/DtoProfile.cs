@@ -38,7 +38,8 @@ public class DtoProfile : Profile
 
         CreateMap<AnnouncementDto, Announcement>()
             .ForMember(dest => dest.Card, opt => opt.MapFrom(src => src.Card))
-            .ForMember(dest => dest.CardId, opt => new Guid());
+            .ForMember(dest => dest.CardId, opt => new Guid()).ReverseMap()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
 
         CreateMap<Announcement, AnnouncementDto>()
             .ForMember(dest => dest.Card, opt => opt.MapFrom(src => src.Card));
