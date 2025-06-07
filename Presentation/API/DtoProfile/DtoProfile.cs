@@ -1,8 +1,8 @@
-﻿namespace API.DtoProfile;
-
-using AutoMapper;
+﻿using AutoMapper;
 using Domain.DtoEntities;
 using Domain.Entities;
+
+namespace API.DtoProfile;
 
 public class DtoProfile : Profile
 {
@@ -34,12 +34,17 @@ public class DtoProfile : Profile
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.UserId))
             .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.User.FirstName + ' ' + src.User.LastName));
 
-        CreateMap<Card, CardDto>().ReverseMap();
+        CreateMap<Card, CardDto>().ReverseMap()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.Parse(src.Id)));
 
         CreateMap<AnnouncementDto, Announcement>()
             .ForMember(dest => dest.Card, opt => opt.MapFrom(src => src.Card))
-            .ForMember(dest => dest.CardId, opt => new Guid()).ReverseMap()
+            .ForMember(dest => dest.CardId, opt => opt.MapFrom(src => src.Card.Id)).ReverseMap()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
+
+        CreateMap<AnnouncementCreationDto, Announcement>()
+            .ForMember(dest => dest.Card, opt => opt.MapFrom(src => src.Card))
+            .ForMember(dest => dest.CardId, opt => opt.MapFrom(src => src.Card.Id)).ReverseMap();
 
         CreateMap<Announcement, AnnouncementDto>()
             .ForMember(dest => dest.Card, opt => opt.MapFrom(src => src.Card));
@@ -50,6 +55,7 @@ public class DtoProfile : Profile
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.Participants, opt => opt.Ignore());
 
+        CreateMap<Card, Card>().ForMember(dest => dest.Id, opt => opt.Ignore());
         CreateMap<Announcement, Announcement>().ForMember(dest => dest.Id, opt => opt.Ignore());
         CreateMap<BookedGood, BookedGoodDto>();
         CreateMap<BookedGood, BookerDto>()

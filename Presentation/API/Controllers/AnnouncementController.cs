@@ -27,15 +27,13 @@ public class AnnouncementController : ControllerBase
 
     [Authorize]
     [HttpPost]
-    public async Task<IActionResult> CreateAnnouncement([FromBody] AnnouncementDto announcementDto)
+    public async Task<IActionResult> CreateAnnouncement([FromBody] AnnouncementCreationDto announcementDto)
     {
-        var receivedCard = _mapper.Map<Card>(announcementDto.Card);
-        receivedCard = await _requestedCardService.IsRequestedCardExistsAsync(receivedCard.Code)
-            ? await _requestedCardService.GetByCodeAsync(receivedCard.Code)
-            : receivedCard;
         var announcement = _mapper.Map<Announcement>(announcementDto);
+        announcement.Card = (await _requestedCardService.IsRequestedCardExistsAsync(announcement.Card.Id)
+            ? await _requestedCardService.GetByIdAsync(announcement.Card.Id)
+            : announcement.Card)!;
         announcement.RequesterId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        announcement.Card = receivedCard;
         var result = await _announcementService.AddAsync(announcement);
 
         return Ok(result);
