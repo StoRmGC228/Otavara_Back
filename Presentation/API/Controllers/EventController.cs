@@ -100,10 +100,14 @@ public class EventController : ControllerBase
         var participants = await _eventService.GetEventParticipantsAsync(id);
         return Ok(participants);
     }
-
+    [Authorize]
     [HttpPost("{userId}/{id}/participants")]
     public async Task<IActionResult> AddParticipant(Guid userId, Guid id)
     {
+        if (userId == null)
+        {
+            return Unauthorized();
+        }
         await _eventService.AddParticipantAsync(id, userId);
         return Ok();
     }
@@ -144,6 +148,14 @@ public class EventController : ControllerBase
         var response = _mapper.Map<List<EventWithIdDto>>(await _eventService.GetEventsByNameAndDateRangeAsync(searchedEvent.Name, searchedEvent.StartDate,
             searchedEvent.EndDate));
         return Ok(response);
+    }
+
+    [HttpGet("user/events")]
+    public async Task<IActionResult> GetUserEvents()
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var result = _mapper.Map<List<EventWithIdDto>>(await _eventService.GetUserEventsAsync(userId));
+        return Ok(result);
     }
 
 }
