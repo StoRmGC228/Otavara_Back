@@ -5,6 +5,7 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.DtoEntities;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
@@ -49,12 +50,13 @@ public class EventController : ControllerBase
     public async Task<IActionResult> GetEventById(Guid id)
     {
         var eventEntity = await _eventService.GetByIdAsync(id);
+        var result = _mapper.Map<EventWithIdDto>(eventEntity);
         if (eventEntity == null)
         {
             return NotFound();
         }
 
-        return Ok(eventEntity);
+        return Ok(result);
     }
 
     [HttpPost]
@@ -98,14 +100,19 @@ public class EventController : ControllerBase
         var participants = await _eventService.GetEventParticipantsAsync(id);
         return Ok(participants);
     }
-
-    [HttpPost("{id}/participants")]
-    public async Task<IActionResult> AddParticipant(Guid id, Guid userId)
+    [Authorize]
+    [HttpPost("{userId}/{id}/participants")]
+    public async Task<IActionResult> AddParticipant(Guid userId, Guid id)
     {
+        if (userId == null)
+        {
+            return Unauthorized();
+        }
         await _eventService.AddParticipantAsync(id, userId);
         return Ok();
     }
 
+    [Authorize]
     [HttpDelete("{id}/participants")]
     public async Task<IActionResult> UnsubscribeFromEvent(Guid id)
     {
@@ -141,6 +148,14 @@ public class EventController : ControllerBase
         var response = _mapper.Map<List<EventWithIdDto>>(await _eventService.GetEventsByNameAndDateRangeAsync(searchedEvent.Name, searchedEvent.StartDate,
             searchedEvent.EndDate));
         return Ok(response);
+    }
+
+    [HttpGet("user/events")]
+    public async Task<IActionResult> GetUserEvents()
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var result = _mapper.Map<List<EventWithIdDto>>(await _eventService.GetUserEventsAsync(userId));
+        return Ok(result);
     }
 
 }

@@ -10,6 +10,6 @@ public class Good : IBaseEntity
     public double Price { get; set; }
     public int QuantityInStock { get; set; }
     [JsonIgnore] public DateTime CreatedAt { get; set; }
-    public virtual List<BookedGood>? Bookers { get; set; }
+    public virtual List<BookedGood>? Bookings { get; set; }
     [JsonIgnore] public Guid Id { get; set; }
 }

@@ -11,7 +11,7 @@ public class DtoProfile : Profile
         CreateMap<TelegramUserDto, User>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
         CreateMap<User, TelegramUserDto>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.TelegramId));
+            .ForMember(dest => dest.TelegramId, opt => opt.MapFrom(src => src.TelegramId));
         CreateMap<EventWithIdDto, Event>()
             .ForMember(dest => dest.EventStartTime,
                 opt => opt.MapFrom(src => new DateTime(src.EventDate.Year, src.EventDate.Month, src.EventDate.Day,
@@ -44,14 +44,23 @@ public class DtoProfile : Profile
         CreateMap<Announcement, AnnouncementDto>()
             .ForMember(dest => dest.Card, opt => opt.MapFrom(src => src.Card));
 
-        CreateMap<Good, GoodCreationDto>().ReverseMap()
-            .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
         CreateMap<Good, Good>().ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
             .ForMember(dest => dest.Id, opt => opt.Ignore());
         CreateMap<Event, Event>().ForMember(dest => dest.Id, opt => opt.Ignore());
-        
+
         CreateMap<Announcement, Announcement>().ForMember(dest => dest.Id, opt => opt.Ignore());
         CreateMap<BookedGood, BookedGoodDto>();
-        CreateMap<User, BookerDto>();
+        CreateMap<BookedGood, BookerDto>()
+            .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.User.FirstName))
+            .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.User.LastName))
+            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.Username))
+            .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => src.User.PhotoUrl))
+            .ForMember(dest => dest.Count, opt => opt.MapFrom(src => src.Count));
+        CreateMap<Good, GoodAdminDto>().ReverseMap()
+            .ForMember(dest => dest.Bookings, opt => opt.MapFrom(src => src.Bookings));
+        CreateMap<Good, GoodDto>();
+        CreateMap<GoodCreationDto, Good>();
+        CreateMap<User, UserGetDto>();
+        CreateMap<UserGetDto, User>();
     }
 }

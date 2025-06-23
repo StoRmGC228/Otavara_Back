@@ -27,7 +27,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Announcement", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("TelegramId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -43,7 +43,7 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("RequesterId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("Id");
+                    b.HasKey("TelegramId");
 
                     b.HasIndex("CardId");
 
@@ -75,7 +75,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Card", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("TelegramId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -103,14 +103,14 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("TelegramId");
 
                     b.ToTable("Cards");
                 });
 
             modelBuilder.Entity("Domain.Entities.Event", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("TelegramId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -134,14 +134,14 @@ namespace Infrastructure.Migrations
                     b.Property<int?>("Price")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.HasKey("TelegramId");
 
                     b.ToTable("Events");
                 });
 
             modelBuilder.Entity("Domain.Entities.Good", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("TelegramId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -166,7 +166,7 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("TelegramId");
 
                     b.ToTable("Goods");
                 });
@@ -196,7 +196,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("TelegramId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -220,7 +220,7 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Username")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("TelegramId");
 
                     b.ToTable("Users");
                 });
@@ -247,7 +247,7 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.BookedGood", b =>
                 {
                     b.HasOne("Domain.Entities.Good", "Good")
-                        .WithMany("Bookers")
+                        .WithMany("Bookings")
                         .HasForeignKey("GoodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -289,7 +289,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Good", b =>
                 {
-                    b.Navigation("Bookers");
+                    b.Navigation("Bookings");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>

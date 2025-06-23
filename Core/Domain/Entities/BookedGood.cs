@@ -7,5 +7,5 @@ public class BookedGood
     public Guid GoodId { get; set; }
     public virtual Good Good { get; set; }
     public int Count { get; set; }
-    public virtual DateTime BookingExpirationDate { get; set; }
+    public DateTime BookingExpirationDate { get; set; }
 }
