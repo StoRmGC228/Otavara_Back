@@ -60,15 +60,14 @@ public class EventController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateEvent([FromBody] EventWithoutIdDto newEvent)
+    public async Task<IActionResult> CreateEvent([FromForm] EventForCreationAndUpdateDto newEvent)
     {
-        var createdEvent = _mapper.Map<Event>(newEvent);
-        var result = await _eventService.AddAsync(createdEvent);
-        return Ok(result);
+        var ev = await _eventService.AddAsync(newEvent);
+        return Ok(ev);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateEvent(Guid id, [FromBody] EventWithIdDto updatedEvent)
+    public async Task<IActionResult> UpdateEvent(Guid id, [FromForm] EventForCreationAndUpdateDto updatedEvent)
     {
         var existingEvent = await _eventService.GetByIdAsync(id);
         if (existingEvent == null)
@@ -76,9 +75,8 @@ public class EventController : ControllerBase
             return NotFound();
         }
 
-        var updatedEntity = _mapper.Map<Event>(updatedEvent);
-        await _eventService.UpdateAsync(updatedEntity, id);
-        return Ok();
+        var ev = await _eventService.UpdateAsync(updatedEvent, id);
+        return Ok(ev);
     }
 
     [HttpDelete("{id}")]

@@ -1,6 +1,7 @@
 ﻿namespace API.Configurations;
 
 using System.Text.Json.Serialization;
+using Cloudinary;
 using Converters;
 
 public static class ApiConfigurations
@@ -17,6 +18,7 @@ public static class ApiConfigurations
             options.JsonSerializerOptions.Converters.Add(new DateOnlyConverter());
             options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         });
+        services.AddScoped<IImageUploader, CloudinaryUploader>();
 
         return services;
     }
