@@ -1,27 +1,61 @@
 ﻿namespace Application.Services;
 
 using AutoMapper;
+using Domain.DtoEntities;
 using Domain.Entities;
 using Interfaces;
 
 public class EventService : BaseService<Event>, IEventService
 {
+    private readonly IImageUploader _imageUploader;
     private readonly IEventRepository _eventRepository;
     private readonly IMapper _mapper;
     private readonly IParticipantsRepository _participantsRepository;
 
     public EventService(IEventRepository eventRepository, IParticipantsRepository participantsRepository,
-        IMapper mapper) : base(
+        IMapper mapper, IImageUploader imageUploader) : base(
         eventRepository, mapper)
     {
         _eventRepository = eventRepository;
         _participantsRepository = participantsRepository;
         _mapper = mapper;
+        _imageUploader = imageUploader;
     }
 
-    public async Task<Event> AddAsync(Event entity)
+    public async Task<Event> AddAsync(EventForCreationAndUpdateDto entity)
     {
-        return await _eventRepository.AddAsync(entity);
+        var mappedEvent = _mapper.Map<Event>(entity);
+
+        if (entity.Image != null)
+        {
+            mappedEvent.Image = await _imageUploader.UploadImageAsync(entity.Image);
+        }
+        else if (!string.IsNullOrEmpty(entity.ImageUrl))
+        {
+            mappedEvent.Image = entity.ImageUrl;
+        }
+
+        mappedEvent.Id = Guid.NewGuid();
+        return await _eventRepository.AddAsync(mappedEvent);
+    }
+
+    public async Task<Event> UpdateAsync(EventForCreationAndUpdateDto newEvent, Guid id)
+    {
+        var existing = await _eventRepository.GetByIdAsync(id)
+                       ?? throw new KeyNotFoundException($"Event {id} not found.");
+
+        _mapper.Map(newEvent, existing);
+
+        if (newEvent.Image != null)
+        {
+            existing.Image = await _imageUploader.UploadImageAsync(newEvent.Image);
+        }
+        else if (!string.IsNullOrEmpty(newEvent.ImageUrl))
+        {
+            existing.Image = newEvent.ImageUrl;
+        }
+
+        return await _eventRepository.UpdateAsync(id, existing);
     }
 
     public async Task DeleteAsync(Guid id)

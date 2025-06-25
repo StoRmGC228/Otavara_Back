@@ -62,5 +62,10 @@ public class DtoProfile : Profile
         CreateMap<GoodCreationDto, Good>();
         CreateMap<User, UserGetDto>();
         CreateMap<UserGetDto, User>();
+        CreateMap<EventForCreationAndUpdateDto, Event>()
+            .ForMember(dest => dest.Image, opt => opt.Ignore())
+            .ForMember(dest => dest.EventStartTime,
+                opt => opt.MapFrom(src =>
+                    DateTime.Parse(src.Date.ToString("yyyy-MM-dd") + "T" + src.Time.ToString("HH:mm"))));
     }
 }
