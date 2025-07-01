@@ -50,7 +50,7 @@ builder.Services.AddCors(options =>
                 "http://localhost:5173",
                 "https://otavara-front.loca.lt",
                 "https://otavara-back.loca.lt",
-                "https://silent-hands-grab.loca.lt"
+                "https://v5cqv70l-5173.euw.devtunnels.ms"
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
