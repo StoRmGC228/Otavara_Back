@@ -17,14 +17,9 @@ public class RequestedCardService : BaseService<Card>, IRequestedCardService
         _mapper = mapper;
     }
 
-    public async Task<Card> GetByCodeAsync(string code)
+    public async Task<bool> IsRequestedCardExistsAsync(Guid id)
     {
-        return await _requestedCardRepository.GetByCodeAsync(code);
-    }
-
-    public async Task<bool> IsRequestedCardExistsAsync(string code)
-    {
-        var existingRequestedCard = await _requestedCardRepository.GetByCodeAsync(code);
+        var existingRequestedCard = await _requestedCardRepository.GetByIdAsync(id);
         return existingRequestedCard != null;
     }
 
@@ -45,26 +40,17 @@ public class RequestedCardService : BaseService<Card>, IRequestedCardService
 
     public async Task<Card> AddAsync(Card entity)
     {
-        return await IsRequestedCardExistsAsync(entity.Code) ? entity : await _requestedCardRepository.AddAsync(entity);
+        return await IsRequestedCardExistsAsync(entity.Id) ? entity : await _requestedCardRepository.AddAsync(entity);
     }
 
     public async Task<Card> AddRequestedCardAsync(CardDto card)
     {
-        if (!await IsRequestedCardExistsAsync(card.Code))
+        if (!await IsRequestedCardExistsAsync(Guid.Parse(card.Id)))
         {
             throw new InvalidOperationException("A request for this card already exists.");
         }
 
-        var requestedCard = new Card
-        {
-            Id = new Guid(),
-            Code = card.Code,
-            CardMarketLink = card.CardMarketLink,
-            CardHoarderLink = card.CardHoarderLink,
-            ImageLink = card.ImageLink,
-            Name = card.Name,
-            TcgPlayerLink = card.TcgPlayerLink
-        };
+        var requestedCard = _mapper.Map<Card>(card);
         return await _requestedCardRepository.AddAsync(requestedCard);
     }
 

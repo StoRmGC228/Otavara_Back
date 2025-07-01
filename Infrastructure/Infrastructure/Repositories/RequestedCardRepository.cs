@@ -13,9 +13,4 @@ public class RequestedCardRepository : BaseRepository<Card>, IRequestedCardRepos
     {
         _requestedCardDb = context.Set<Card>();
     }
-
-    public async Task<Card?> GetByCodeAsync(string code)
-    {
-        return await _requestedCardDb.FirstOrDefaultAsync(rc => rc.Code == code);
-    }
 }

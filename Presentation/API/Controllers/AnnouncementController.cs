@@ -1,5 +1,8 @@
-﻿namespace API.Controllers;
+﻿using Microsoft.AspNetCore.Authorization;
 
+namespace API.Controllers;
+
+using System.Security.Claims;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.DtoEntities;
@@ -22,16 +25,17 @@ public class AnnouncementController : ControllerBase
         _mapper = mapper;
     }
 
+    [Authorize]
     [HttpPost]
-    public async Task<IActionResult> CreateAnnouncement([FromBody] AnnouncementDto announcementDto)
+    public async Task<IActionResult> CreateAnnouncement([FromBody] AnnouncementCreationDto announcementDto)
     {
-        var receivedCard = _mapper.Map<Card>(announcementDto.Card);
-        receivedCard = await _requestedCardService.IsRequestedCardExistsAsync(receivedCard.Code)
-            ? await _requestedCardService.GetByCodeAsync(receivedCard.Code)
-            : receivedCard;
         var announcement = _mapper.Map<Announcement>(announcementDto);
-        announcement.Card = receivedCard;
+        announcement.Card = (await _requestedCardService.IsRequestedCardExistsAsync(announcement.Card.Id)
+            ? await _requestedCardService.GetByIdAsync(announcement.Card.Id)
+            : announcement.Card)!;
+        announcement.RequesterId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _announcementService.AddAsync(announcement);
+
         return Ok(result);
     }
 
@@ -40,6 +44,7 @@ public class AnnouncementController : ControllerBase
     {
         var announcements = await _announcementService.GetAllAsync();
         var result = _mapper.Map<List<AnnouncementDto>>(announcements);
+
         return Ok(result);
     }
 
@@ -48,6 +53,7 @@ public class AnnouncementController : ControllerBase
     {
         var paginatedAnnouncements = await _announcementService.GetPaginateAsync(pageSize, pageNumber);
         var mappedEvents = _mapper.Map<List<AnnouncementDto>>(paginatedAnnouncements.PaginatedEntities);
+
         return Ok(new
         {
             paginatedAnnouncements.TotalPages,
@@ -55,6 +61,7 @@ public class AnnouncementController : ControllerBase
         });
     }
 
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetAnnouncementById(Guid id)
     {
@@ -64,9 +71,12 @@ public class AnnouncementController : ControllerBase
             return NotFound();
         }
 
-        return Ok(_mapper.Map<AnnouncementDto>(announcementEntity));
+        var mappedAnnouncement = _mapper.Map<AnnouncementDto>(announcementEntity);
+
+        return Ok(mappedAnnouncement);
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAnnouncement(Guid id)
     {
@@ -77,6 +87,6 @@ public class AnnouncementController : ControllerBase
         }
 
         await _announcementService.DeleteAsync(id);
-        return NoContent();
+        return Ok();
     }
 }

@@ -79,7 +79,6 @@ public class EventService : BaseService<Event>, IEventService
         return await _eventRepository.GetEventsByDateAsync(date);
     }
 
-
     public async Task<List<Event>> GetEventsSortedByDateAsync(bool ascending = true)
     {
         return await _eventRepository.GetEventsSortedByDateAsync(ascending);
@@ -101,7 +100,7 @@ public class EventService : BaseService<Event>, IEventService
         return await _eventRepository.GetEventsByPriceRangeAndDateRangeAsync(minPrice, maxPrice, startDate, endDate);
     }
 
-    public async Task<List<User>> GetEventParticipantsAsync(Guid eventId)
+    public async Task<List<Participant>> GetEventParticipantsAsync(Guid eventId)
     {
         return await _participantsRepository.GetEventParticipantsAsync(eventId);
     }

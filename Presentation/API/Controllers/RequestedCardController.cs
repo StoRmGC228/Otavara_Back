@@ -1,6 +1,9 @@
-﻿namespace API.Controllers;
+﻿using Domain.DtoEntities;
+
+namespace API.Controllers;
 
 using Application.Interfaces;
+using AutoMapper;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +12,12 @@ using Microsoft.AspNetCore.Mvc;
 public class RequestedCardController : ControllerBase
 {
     private readonly IRequestedCardService _requestedCardService;
+    private readonly IMapper _mapper;
 
-    public RequestedCardController(IRequestedCardService requestedCardService)
+    public RequestedCardController(IRequestedCardService requestedCardService, IMapper mapper)
     {
         _requestedCardService = requestedCardService;
+        _mapper = mapper;
     }
 
     //BaseService methods
@@ -51,7 +56,8 @@ public class RequestedCardController : ControllerBase
     public async Task<IActionResult> GetAllRequestedCards()
     {
         var requestedCards = await _requestedCardService.GetAllAsync();
-        return Ok(requestedCards);
+        var mappedCards = _mapper.Map<IEnumerable<CardDto>>(requestedCards);
+        return Ok(mappedCards);
     }
 
     [HttpGet("{id}")]
@@ -62,34 +68,24 @@ public class RequestedCardController : ControllerBase
         {
             return NotFound();
         }
+        var mappedCard = _mapper.Map<CardDto>(requestedCard);
 
-        return Ok(requestedCard);
+        return Ok(mappedCard);
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateRequestedCard([FromBody] Card newRequestedCard)
+    public async Task<IActionResult> CreateRequestedCard([FromBody] CardDto newRequestedCard)
     {
-        var result = await _requestedCardService.AddAsync(newRequestedCard);
-        return CreatedAtAction(nameof(GetRequestedCardById), new { id = result.Id }, result);
+        var mappedCard = _mapper.Map<Card>(newRequestedCard);
+        await _requestedCardService.AddAsync(mappedCard);
+
+        return Ok();
     }
 
-    //RequestedCardService methods : Injected from RequestedCardService
-    [HttpGet("{code}")]
-    public async Task<IActionResult> GetRequestedCardByCode(string code)
+    [HttpGet("isExist/{id}")]
+    public async Task<IActionResult> IsRequestedCardExists(Guid id)
     {
-        var requestedCard = await _requestedCardService.GetByCodeAsync(code);
-        if (requestedCard == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(requestedCard);
-    }
-
-    [HttpGet("isExist/{code}")]
-    public async Task<IActionResult> IsRequestedCardExists(string code)
-    {
-        var result = await _requestedCardService.IsRequestedCardExistsAsync(code);
+        var result = await _requestedCardService.IsRequestedCardExistsAsync(id);
         return Ok(result);
     }
 }
