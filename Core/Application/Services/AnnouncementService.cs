@@ -7,8 +7,8 @@ using Interfaces;
 
 public class AnnouncementService : BaseService<Announcement>, IAnnouncementService
 {
-    private readonly IMapper _mapper;
     private readonly IAnnouncementRepository _announcementRepository;
+    private readonly IMapper _mapper;
 
     public AnnouncementService(IAnnouncementRepository announcementRepository, IMapper mapper) : base(
         announcementRepository, mapper)

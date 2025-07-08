@@ -1,8 +1,8 @@
-﻿using AutoMapper;
+﻿namespace API.DtoProfile;
+
+using AutoMapper;
 using Domain.DtoEntities;
 using Domain.Entities;
-
-namespace API.DtoProfile;
 
 public class DtoProfile : Profile
 {
@@ -63,7 +63,8 @@ public class DtoProfile : Profile
             .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.User.LastName))
             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.Username))
             .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => src.User.PhotoUrl))
-            .ForMember(dest => dest.Count, opt => opt.MapFrom(src => src.Count));
+            .ForMember(dest => dest.Count, opt => opt.MapFrom(src => src.Count))
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.UserId));
         CreateMap<Good, GoodAdminDto>().ReverseMap()
             .ForMember(dest => dest.Bookings, opt => opt.MapFrom(src => src.Bookings));
         CreateMap<Good, GoodDto>();
@@ -71,10 +72,6 @@ public class DtoProfile : Profile
         CreateMap<GoodCreationDto, BookedGoodDto>();
         CreateMap<User, UserGetDto>();
         CreateMap<UserGetDto, User>();
-        CreateMap<EventForCreationAndUpdateDto, Event>()
-            .ForMember(dest => dest.Image, opt => opt.Ignore())
-            .ForMember(dest => dest.EventStartTime,
-                opt => opt.MapFrom(src =>
-                    DateTime.Parse(src.Date.ToString("yyyy-MM-dd") + "T" + src.Time.ToString("HH:mm"))));
+        
     }
 }

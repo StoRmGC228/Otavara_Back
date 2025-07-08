@@ -4,6 +4,7 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.DtoEntities;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
@@ -18,7 +19,7 @@ public class GoodController : ControllerBase
         _goodService = goodService;
         _mapper = mapper;
     }
-
+    [Authorize (Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> GetAllGoodsAsync()
     {
@@ -35,7 +36,7 @@ public class GoodController : ControllerBase
             return Ok(mappedGoods);
         }
     }
-    
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetGoodByIdAsync(Guid id)
     {
@@ -65,7 +66,9 @@ public class GoodController : ControllerBase
     public async Task<IActionResult> UpdateGoodAsync(Guid id, [FromBody] GoodAdminDto updatedGood)
     {
         if (id != updatedGood.Id)
+        {
             return NotFound();
+        }
 
         var searchedGood = await _goodService.GetByIdAsync(id);
         if (searchedGood == null)

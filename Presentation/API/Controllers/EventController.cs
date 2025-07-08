@@ -3,8 +3,8 @@
 using System.Security.Claims;
 using Application.Interfaces;
 using AutoMapper;
+using Cloudinary;
 using Domain.DtoEntities;
-using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,11 +14,13 @@ public class EventController : ControllerBase
 {
     private readonly IEventService _eventService;
     private readonly IMapper _mapper;
+    private readonly CloudinaryUploader _cloudinaryUploader;
 
-    public EventController(IEventService eventService, IMapper mapper)
+    public EventController(IEventService eventService, IMapper mapper, CloudinaryUploader cloudinaryUploader)
     {
         _mapper = mapper;
         _eventService = eventService;
+        _cloudinaryUploader = cloudinaryUploader;
     }
 
     [HttpGet]
@@ -66,7 +68,7 @@ public class EventController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateEvent(Guid id, [FromBody] EventDto updatedEvent)
+    public async Task<IActionResult> UpdateEvent(Guid id, [FromBody] EventCreationDto updatedEvent)
     {
         var existingEvent = await _eventService.GetByIdAsync(id);
         if (existingEvent == null)
@@ -98,6 +100,7 @@ public class EventController : ControllerBase
         var mappedParticipants = _mapper.Map<List<ParticipantForEventDto>>(participants);
         return Ok(mappedParticipants);
     }
+
     [Authorize]
     [HttpPost("{userId}/{id}/participants")]
     public async Task<IActionResult> AddParticipant(Guid userId, Guid id)
@@ -106,6 +109,7 @@ public class EventController : ControllerBase
         {
             return Unauthorized();
         }
+
         await _eventService.AddParticipantAsync(id, userId);
         return Ok();
     }
@@ -142,7 +146,9 @@ public class EventController : ControllerBase
             var date = searchedEvent.EndDate.Value.Date;
             searchedEvent.EndDate = date.AddHours(23).AddMinutes(59).AddSeconds(59).AddMilliseconds(999);
         }
-        var response = _mapper.Map<List<EventDto>>(await _eventService.GetEventsByNameAndDateRangeAsync(searchedEvent.Name, searchedEvent.StartDate,
+
+        var response = _mapper.Map<List<EventDto>>(await _eventService.GetEventsByNameAndDateRangeAsync(
+            searchedEvent.Name, searchedEvent.StartDate,
             searchedEvent.EndDate));
         return Ok(response);
     }
@@ -151,8 +157,10 @@ public class EventController : ControllerBase
     public async Task<IActionResult> GetUserEvents()
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        var result = _mapper.Map<List<EventWithIdDto>>(await _eventService.GetUserEventsAsync(userId));
+        var result = _mapper.Map<List<EventDto>>(await _eventService.GetUserEventsAsync(userId));
         return Ok(result);
     }
+
+    
 
 }
