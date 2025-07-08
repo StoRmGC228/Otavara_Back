@@ -3,8 +3,8 @@
 using System.Security.Claims;
 using Application.Interfaces;
 using AutoMapper;
+using Cloudinary;
 using Domain.DtoEntities;
-using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,19 +14,20 @@ public class EventController : ControllerBase
 {
     private readonly IEventService _eventService;
     private readonly IMapper _mapper;
+    private readonly CloudinaryUploader _cloudinaryUploader;
 
-    public EventController(IEventService eventService, IMapper mapper)
+    public EventController(IEventService eventService, IMapper mapper, CloudinaryUploader cloudinaryUploader)
     {
         _mapper = mapper;
         _eventService = eventService;
+        _cloudinaryUploader = cloudinaryUploader;
     }
-
 
     [HttpGet]
     public async Task<IActionResult> GetAllEvents()
     {
         var events = await _eventService.GetAllAsync();
-        var mappedEvents = _mapper.Map<List<EventWithIdDto>>(events);
+        var mappedEvents = _mapper.Map<List<EventDto>>(events);
         return Ok(mappedEvents);
     }
 
@@ -36,7 +37,7 @@ public class EventController : ControllerBase
     {
         var paginatedEvents = await _eventService.GetPaginateAsync(pageSize, pageNumber);
 
-        var mappedEvents = _mapper.Map<List<EventWithIdDto>>(paginatedEvents.PaginatedEntities);
+        var mappedEvents = _mapper.Map<List<EventDto>>(paginatedEvents.PaginatedEntities);
         var result = new PaginatedEventsDto
         {
             TotalPages = paginatedEvents.TotalPages,
@@ -50,7 +51,7 @@ public class EventController : ControllerBase
     public async Task<IActionResult> GetEventById(Guid id)
     {
         var eventEntity = await _eventService.GetByIdAsync(id);
-        var result = _mapper.Map<EventWithIdDto>(eventEntity);
+        var result = _mapper.Map<EventDto>(eventEntity);
         if (eventEntity == null)
         {
             return NotFound();
@@ -60,14 +61,14 @@ public class EventController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateEvent([FromForm] EventForCreationAndUpdateDto newEvent)
+    public async Task<IActionResult> CreateEvent([FromBody] EventCreationDto newEvent)
     {
         var ev = await _eventService.AddAsync(newEvent);
         return Ok(ev);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateEvent(Guid id, [FromForm] EventForCreationAndUpdateDto updatedEvent)
+    public async Task<IActionResult> UpdateEvent(Guid id, [FromBody] EventCreationDto updatedEvent)
     {
         var existingEvent = await _eventService.GetByIdAsync(id);
         if (existingEvent == null)
@@ -89,15 +90,17 @@ public class EventController : ControllerBase
         }
 
         await _eventService.DeleteAsync(id);
-        return NoContent();
+        return Ok();
     }
 
     [HttpGet("{id}/participants")]
     public async Task<IActionResult> GetEventParticipants(Guid id)
     {
         var participants = await _eventService.GetEventParticipantsAsync(id);
-        return Ok(participants);
+        var mappedParticipants = _mapper.Map<List<ParticipantForEventDto>>(participants);
+        return Ok(mappedParticipants);
     }
+
     [Authorize]
     [HttpPost("{userId}/{id}/participants")]
     public async Task<IActionResult> AddParticipant(Guid userId, Guid id)
@@ -106,6 +109,7 @@ public class EventController : ControllerBase
         {
             return Unauthorized();
         }
+
         await _eventService.AddParticipantAsync(id, userId);
         return Ok();
     }
@@ -116,16 +120,15 @@ public class EventController : ControllerBase
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
         await _eventService.RemoveParticipantAsync(id, userId);
-        return NoContent();
+        return Ok();
     }
 
     [HttpDelete("{userId}/{eventId}/admin/participants")]
-    public async Task<IActionResult> RemovePartisipantAsAdmin(Guid userId, Guid eventId)
+    public async Task<IActionResult> RemoveParticipantAsAdmin(Guid userId, Guid eventId)
     {
         await _eventService.RemoveParticipantAsync(eventId, userId);
         return NoContent();
     }
-
 
     [HttpGet("date")]
     public async Task<IActionResult> GetEventsByDate([FromQuery] DateTime date)
@@ -143,7 +146,9 @@ public class EventController : ControllerBase
             var date = searchedEvent.EndDate.Value.Date;
             searchedEvent.EndDate = date.AddHours(23).AddMinutes(59).AddSeconds(59).AddMilliseconds(999);
         }
-        var response = _mapper.Map<List<EventWithIdDto>>(await _eventService.GetEventsByNameAndDateRangeAsync(searchedEvent.Name, searchedEvent.StartDate,
+
+        var response = _mapper.Map<List<EventDto>>(await _eventService.GetEventsByNameAndDateRangeAsync(
+            searchedEvent.Name, searchedEvent.StartDate,
             searchedEvent.EndDate));
         return Ok(response);
     }
@@ -152,8 +157,10 @@ public class EventController : ControllerBase
     public async Task<IActionResult> GetUserEvents()
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        var result = _mapper.Map<List<EventWithIdDto>>(await _eventService.GetUserEventsAsync(userId));
+        var result = _mapper.Map<List<EventDto>>(await _eventService.GetUserEventsAsync(userId));
         return Ok(result);
     }
+
+    
 
 }

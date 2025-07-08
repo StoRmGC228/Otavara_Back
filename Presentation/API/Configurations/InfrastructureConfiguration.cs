@@ -13,8 +13,7 @@ public static class InfrastructureConfiguration
     {
         //var connectionString = configuration.GetValue<string>("ConnectionString");
         //var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
-        var rawConnectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
-                                  ?? Environment.GetEnvironmentVariable("DATABASE_URL");
+        var rawConnectionString = configuration.GetValue<string>("DB_CONNECTION_STRING");
 
         if (string.IsNullOrEmpty(rawConnectionString))
         {

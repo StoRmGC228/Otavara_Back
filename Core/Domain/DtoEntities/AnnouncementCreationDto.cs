@@ -1,8 +1,7 @@
 ﻿namespace Domain.DtoEntities;
 
-public class AnnouncementDto
+public class AnnouncementCreationDto
 {
-    public Guid Id { get; set; }
     public int Count { get; set; }
     public DateOnly RequestedDate { get; set; }
     public CardDto Card { get; set; }

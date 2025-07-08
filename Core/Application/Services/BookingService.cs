@@ -1,17 +1,15 @@
-﻿using Domain.DtoEntities;
-
-namespace Application.Services;
+﻿namespace Application.Services;
 
 using AutoMapper;
-using Domain.Entities;
+using Domain.DtoEntities;
 using Interfaces;
 
 public class BookingService : IBookingService
 {
     private readonly int _bookingExpirationHours = 168;
-    private readonly IMapper _mapper;
     private readonly IBookingRepository _bookingRepository;
     private readonly IGoodRepository _goodRepository;
+    private readonly IMapper _mapper;
 
     public BookingService(IBookingRepository bookingRepository, IMapper mapper, IGoodRepository goodRepository)
     {

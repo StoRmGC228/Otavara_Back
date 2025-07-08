@@ -7,8 +7,8 @@ using Interfaces;
 
 public class EventService : BaseService<Event>, IEventService
 {
-    private readonly IImageUploader _imageUploader;
     private readonly IEventRepository _eventRepository;
+    private readonly IImageUploader _imageUploader;
     private readonly IMapper _mapper;
     private readonly IParticipantsRepository _participantsRepository;
 
@@ -22,38 +22,28 @@ public class EventService : BaseService<Event>, IEventService
         _imageUploader = imageUploader;
     }
 
-    public async Task<Event> AddAsync(EventForCreationAndUpdateDto entity)
+    public async Task<Event> AddAsync(EventCreationDto entity)
     {
         var mappedEvent = _mapper.Map<Event>(entity);
-
-        if (entity.Image != null)
-        {
-            mappedEvent.Image = await _imageUploader.UploadImageAsync(entity.Image);
-        }
-        else if (!string.IsNullOrEmpty(entity.ImageUrl))
-        {
-            mappedEvent.Image = entity.ImageUrl;
-        }
-
         mappedEvent.Id = Guid.NewGuid();
         return await _eventRepository.AddAsync(mappedEvent);
     }
 
-    public async Task<Event> UpdateAsync(EventForCreationAndUpdateDto newEvent, Guid id)
+    public async Task<Event> UpdateAsync(EventCreationDto newEvent, Guid id)
     {
         var existing = await _eventRepository.GetByIdAsync(id)
                        ?? throw new KeyNotFoundException($"Event {id} not found.");
 
         _mapper.Map(newEvent, existing);
 
-        if (newEvent.Image != null)
-        {
-            existing.Image = await _imageUploader.UploadImageAsync(newEvent.Image);
-        }
-        else if (!string.IsNullOrEmpty(newEvent.ImageUrl))
-        {
-            existing.Image = newEvent.ImageUrl;
-        }
+        //if (newEvent.Image != null)
+        //{
+        //    existing.Image = await _imageUploader.UploadImageAsync(newEvent.Image);
+        //}
+        //else if (!string.IsNullOrEmpty(newEvent.ImageUrl))
+        //{
+        //    existing.Image = newEvent.ImageUrl;
+        //}
 
         return await _eventRepository.UpdateAsync(id, existing);
     }
@@ -74,11 +64,16 @@ public class EventService : BaseService<Event>, IEventService
     }
 
     // Event-specific methods
+
+    public async Task<List<string>> GetEventImagesFromCloudAsync()
+    {
+        return await _imageUploader.GetPublicIdOfAllImagesAsync();
+    }
+
     public async Task<List<Event>> GetEventsByDateAsync(DateTime date)
     {
         return await _eventRepository.GetEventsByDateAsync(date);
     }
-
 
     public async Task<List<Event>> GetEventsSortedByDateAsync(bool ascending = true)
     {
@@ -101,7 +96,7 @@ public class EventService : BaseService<Event>, IEventService
         return await _eventRepository.GetEventsByPriceRangeAndDateRangeAsync(minPrice, maxPrice, startDate, endDate);
     }
 
-    public async Task<List<User>> GetEventParticipantsAsync(Guid eventId)
+    public async Task<List<Participant>> GetEventParticipantsAsync(Guid eventId)
     {
         return await _participantsRepository.GetEventParticipantsAsync(eventId);
     }

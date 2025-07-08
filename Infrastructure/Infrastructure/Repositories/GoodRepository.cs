@@ -49,5 +49,4 @@ public class GoodRepository : BaseRepository<Good>, IGoodRepository
         await _context.SaveChangesAsync();
         return true;
     }
-
 }

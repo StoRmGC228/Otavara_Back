@@ -18,11 +18,10 @@ public class ParticipantsRepository : IParticipantsRepository
         _userDb = context.Set<User>();
     }
 
-    public async Task<List<User>> GetEventParticipantsAsync(Guid eventId)
+    public async Task<List<Participant>> GetEventParticipantsAsync(Guid eventId)
     {
         return await _participantDb
             .Where(p => p.EventId == eventId)
-            .Select(p => p.User)
             .ToListAsync();
     }
 

@@ -8,4 +8,5 @@ public class CardDto
     public string CardMarketLink { get; set; }
     public string CardHoarderLink { get; set; }
     public string Code { get; set; }
+    public string Id { get; set; }
 }

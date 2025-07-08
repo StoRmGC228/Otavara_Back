@@ -4,7 +4,7 @@ using Domain.Entities;
 
 public interface IParticipantsRepository
 {
-    Task<List<User>> GetEventParticipantsAsync(Guid eventId);
+    Task<List<Participant>> GetEventParticipantsAsync(Guid eventId);
     Task<List<Event>> GetUserEventsAsync(Guid userId);
     Task AddParticipantAsync(Guid eventId, Guid userId);
     Task RemoveParticipantAsync(Guid eventId, Guid userId);
