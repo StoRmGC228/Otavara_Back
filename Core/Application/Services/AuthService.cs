@@ -60,6 +60,11 @@ public class AuthService : IAuthService
             var existingUser = await _userRepository.GetUserByTelegramUserNameAsync(user.Username);
             if (existingUser != null)
             {
+                if (existingUser.PhotoUrl != user.PhotoUrl)
+                {
+                    existingUser.PhotoUrl= user.PhotoUrl;
+                    existingUser = await _userRepository.UpdateAsync(existingUser.Id, existingUser);
+                }
                 user = existingUser;
             }
         }
