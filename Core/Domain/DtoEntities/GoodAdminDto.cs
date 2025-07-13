@@ -16,6 +16,6 @@ namespace Domain.DtoEntities
         public string TypeOfItem { get; set; }
         public double Price { get; set; }
         public int QuantityInStock { get; set; }
-        public virtual List<BookerDto>? Bookings { get; set; }
+        public List<BookerDto>? Bookings { get; set; }
     }
 }
