@@ -7,4 +7,5 @@ public class GoodCreationDto
     public double Price { get; set; }
     public int QuantityInStock { get; set; }
     public string TypeOfItem { get; set; }
+    public string Image { get; set; }
 }

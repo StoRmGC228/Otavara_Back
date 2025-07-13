@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
-
-namespace API.Controllers;
+﻿namespace API.Controllers;
 
 using System.Security.Claims;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.DtoEntities;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]

@@ -1,11 +1,11 @@
 ﻿namespace API.Controllers;
 
+using System.Security.Claims;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.DtoEntities;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -40,6 +40,7 @@ public class AuthController : ControllerBase
         // опціонально: не повертай token у тілі відповіді
         return Ok(); // або Ok(new { success = true })
     }
+
     [Authorize]
     [HttpGet("get")]
     public async Task<IActionResult> GetUserById()
@@ -50,10 +51,8 @@ public class AuthController : ControllerBase
         {
             return NotFound();
         }
+
         var response = _mapper.Map<UserGetDto>(user);
         return Ok(response);
-
     }
-
-
 }

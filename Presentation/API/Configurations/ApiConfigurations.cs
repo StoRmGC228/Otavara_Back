@@ -19,6 +19,7 @@ public static class ApiConfigurations
             options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         });
         services.AddScoped<IImageUploader, CloudinaryUploader>();
+        services.AddSingleton<CloudinaryUploader>();
 
         return services;
     }

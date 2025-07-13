@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Domain.DtoEntities;
+﻿namespace Domain.DtoEntities;
 
 public class AnnouncementCreationDto
 {

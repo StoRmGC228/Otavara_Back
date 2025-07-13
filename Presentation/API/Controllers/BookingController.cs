@@ -2,6 +2,7 @@
 
 using System.Security.Claims;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
@@ -37,17 +38,12 @@ public class BookingController : ControllerBase
         await _bookingService.BookGoodAsync(goodId, userId, count);
         return Ok();
     }
-
+    [Authorize(Roles ="Admin")]
     [HttpDelete("{goodId}/{userId}")]
     public async Task<IActionResult> CancelBooking(Guid goodId, Guid userId)
     {
-        var isAdmin = User.IsInRole("Admin");
-        var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-        if (currentUserId == userId || isAdmin)
-        {
             await _bookingService.CancelBookingAsync(goodId, userId);
-        }
 
         return Ok();
     }

@@ -94,5 +94,4 @@ public class EventRepository : BaseRepository<Event>, IEventRepository
 
         return await query.ToListAsync();
     }
-
 }

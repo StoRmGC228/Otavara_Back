@@ -1,9 +1,8 @@
-﻿using Domain.DtoEntities;
-
-namespace API.Controllers;
+﻿namespace API.Controllers;
 
 using Application.Interfaces;
 using AutoMapper;
+using Domain.DtoEntities;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,8 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 [ApiController]
 public class RequestedCardController : ControllerBase
 {
-    private readonly IRequestedCardService _requestedCardService;
     private readonly IMapper _mapper;
+    private readonly IRequestedCardService _requestedCardService;
 
     public RequestedCardController(IRequestedCardService requestedCardService, IMapper mapper)
     {
@@ -68,6 +67,7 @@ public class RequestedCardController : ControllerBase
         {
             return NotFound();
         }
+
         var mappedCard = _mapper.Map<CardDto>(requestedCard);
 
         return Ok(mappedCard);

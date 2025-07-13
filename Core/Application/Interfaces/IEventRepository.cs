@@ -12,6 +12,6 @@ public interface IEventRepository : IBaseRepository<Event>
     Task<List<Event>> GetEventsByPriceRangeAndDateRangeAsync(int minPrice, int maxPrice, DateTime startDate,
         DateTime endDate);
 
-    
+
     Task<List<Event>>? GetEventsByNameAndDateRangeAsync(string name, DateTime? startDate, DateTime? endDate);
 }
