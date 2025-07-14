@@ -6,4 +6,5 @@ public class AnnouncementDto
     public int Count { get; set; }
     public DateOnly RequestedDate { get; set; }
     public CardDto Card { get; set; }
+    public string RequesterTag { get; set; }
 }
