@@ -8,9 +8,7 @@ public interface IEventService : IBaseService<Event>
     Task<Event> AddAsync(EventCreationDto newEvent);
     Task<Event> UpdateAsync(EventCreationDto newEvent, Guid id);
     Task<List<string>> GetEventImagesFromCloudAsync();
-    Task<List<Event>> GetEventsByDateAsync(DateTime date);
-    Task<List<Event>> GetEventsSortedByDateAsync(bool ascending = true);
-    Task<List<Event>> GetEventsByDateRangeAsync(DateTime startDate, DateTime endDate);
+    Task<List<Event>> GetEventsByDateRangeAsync(DateTime? startDate, DateTime? endDate);
     Task<List<Event>> GetEventsByPriceRangeAsync(int minPrice, int maxPrice);
 
     Task<List<Event>> GetEventsByPriceRangeAndDateRangeAsync(int minPrice, int maxPrice, DateTime startDate,

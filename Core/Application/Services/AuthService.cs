@@ -62,9 +62,10 @@ public class AuthService : IAuthService
             {
                 if (existingUser.PhotoUrl != user.PhotoUrl)
                 {
-                    existingUser.PhotoUrl= user.PhotoUrl;
+                    existingUser.PhotoUrl = user.PhotoUrl;
                     existingUser = await _userRepository.UpdateAsync(existingUser.Id, existingUser);
                 }
+
                 user = existingUser;
             }
         }

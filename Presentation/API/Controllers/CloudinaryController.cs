@@ -1,6 +1,5 @@
 ﻿namespace API.Controllers;
 
-using System.ComponentModel.Design;
 using Application.Interfaces;
 using Cloudinary;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +11,7 @@ public class CloudinaryController : ControllerBase
     private readonly CloudinaryUploader _cloudinaryUploader;
     private readonly IEventService _eventService;
 
-    public CloudinaryController(CloudinaryUploader cloudinaryUploader,IEventService eventService)
+    public CloudinaryController(CloudinaryUploader cloudinaryUploader, IEventService eventService)
     {
         _cloudinaryUploader = cloudinaryUploader;
         _eventService = eventService;
@@ -31,6 +30,7 @@ public class CloudinaryController : ControllerBase
         var result = _cloudinaryUploader.GenerateUploadEventSignature();
         return Ok(result);
     }
+
     [HttpGet("goods/signature")]
     public IActionResult GetGoodsSignature()
     {

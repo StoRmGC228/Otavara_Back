@@ -5,6 +5,7 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.DtoEntities;
 using Domain.Entities;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -87,5 +88,13 @@ public class AnnouncementController : ControllerBase
 
         await _announcementService.DeleteAsync(id);
         return Ok();
+    }
+
+    [HttpDelete("deleteJob")]
+    public async Task<IActionResult> DeleteOverdueAnnoucements()
+    {
+        RecurringJob.AddOrUpdate(() => _announcementService.DeleteOverdueAnnouncements(), Cron.Daily);
+
+        return Ok("Recurring job started, mails will send in every minute");
     }
 }

@@ -12,9 +12,9 @@ using Microsoft.AspNetCore.Mvc;
 [ApiController]
 public class EventController : ControllerBase
 {
+    private readonly CloudinaryUploader _cloudinaryUploader;
     private readonly IEventService _eventService;
     private readonly IMapper _mapper;
-    private readonly CloudinaryUploader _cloudinaryUploader;
 
     public EventController(IEventService eventService, IMapper mapper, CloudinaryUploader cloudinaryUploader)
     {
@@ -130,15 +130,29 @@ public class EventController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("date")]
-    public async Task<IActionResult> GetEventsByDate([FromQuery] DateTime date)
+
+    [HttpGet("dateRange")]
+    public async Task<IActionResult> GetEventsByDateRange([FromQuery] SearchedEventsByDateOnlyDto searchedEvents)
     {
-        var events = await _eventService.GetEventsByDateAsync(date);
-        return Ok(events);
+        if (searchedEvents.StartDate == null)
+        {
+            return BadRequest();
+        }
+        searchedEvents.StartDate = searchedEvents.StartDate.Value.Date;
+        if (searchedEvents.EndDate != null)
+        {
+            var date = searchedEvents.EndDate.Value.Date;
+            searchedEvents.EndDate = date.AddHours(23).AddMinutes(59).AddSeconds(59).AddMilliseconds(999);
+        }
+
+        var response =
+            _mapper.Map<List<EventDto>>(
+                await _eventService.GetEventsByDateRangeAsync(searchedEvents.StartDate, searchedEvents.EndDate));
+        return Ok(response);
     }
 
     [HttpGet("name/date")]
-    public async Task<IActionResult> GetEventsByNameAndDate([FromQuery] SearchEventDto searchedEvent)
+    public async Task<IActionResult> GetEventsByNameAndDate([FromQuery] SearchEventByNameAndDateDto searchedEvent)
     {
         searchedEvent.StartDate = searchedEvent.StartDate.Value.Date;
         if (searchedEvent.EndDate != null)
@@ -160,7 +174,4 @@ public class EventController : ControllerBase
         var result = _mapper.Map<List<EventDto>>(await _eventService.GetUserEventsAsync(userId));
         return Ok(result);
     }
-
-    
-
 }

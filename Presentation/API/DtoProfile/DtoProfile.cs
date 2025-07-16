@@ -73,6 +73,5 @@ public class DtoProfile : Profile
         CreateMap<GoodCreationDto, BookedGoodDto>();
         CreateMap<User, UserGetDto>();
         CreateMap<UserGetDto, User>();
-        
     }
 }

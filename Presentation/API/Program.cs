@@ -2,6 +2,7 @@ using API.Configurations;
 using API.DtoProfile;
 using API.Middleware;
 using Application.Services;
+using Hangfire;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,7 +51,7 @@ builder.Services.AddCors(options =>
                 "http://localhost:5173",
                 "https://otavara-front.loca.lt",
                 "https://otavara-back.loca.lt",
-                "https://v5cqv70l-5173.euw.devtunnels.ms"
+                "https://fitting-gar-hideously.ngrok-free.app"
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
@@ -84,6 +85,8 @@ app.UseCors("MyAllowSpecificOrigins");
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseHangfireDashboard("/dashboard");
 app.MapControllers();
 
 await app.EnsureDatabaseCreatedAsync();

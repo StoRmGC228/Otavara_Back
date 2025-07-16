@@ -19,7 +19,8 @@ public class GoodController : ControllerBase
         _goodService = goodService;
         _mapper = mapper;
     }
-    [Authorize (Roles = "Admin")]
+
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> GetAllGoodsAsync()
     {
@@ -35,6 +36,21 @@ public class GoodController : ControllerBase
             var mappedGoods = _mapper.Map<IEnumerable<GoodDto>>(allGoods);
             return Ok(mappedGoods);
         }
+    }
+
+    [HttpGet("paginated")]
+    public async Task<IActionResult> GetPaginatedGoods(int pageNumber, int pageSize)
+    {
+        var paginatedGoods = await _goodService.GetPaginateAsync(pageSize, pageNumber);
+
+        var mappedGoods = _mapper.Map<List<GoodDto>>(paginatedGoods.PaginatedEntities);
+
+        var result = new PaginatedGoodsDto
+        {
+            TotalPages = paginatedGoods.TotalPages,
+            PaginatedGoods = mappedGoods
+        };
+        return Ok(result);
     }
 
     [HttpGet("{id}")]

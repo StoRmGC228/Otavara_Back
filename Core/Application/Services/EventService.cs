@@ -70,17 +70,8 @@ public class EventService : BaseService<Event>, IEventService
         return await _imageUploader.GetPublicIdOfAllImagesAsync();
     }
 
-    public async Task<List<Event>> GetEventsByDateAsync(DateTime date)
-    {
-        return await _eventRepository.GetEventsByDateAsync(date);
-    }
 
-    public async Task<List<Event>> GetEventsSortedByDateAsync(bool ascending = true)
-    {
-        return await _eventRepository.GetEventsSortedByDateAsync(ascending);
-    }
-
-    public async Task<List<Event>> GetEventsByDateRangeAsync(DateTime startDate, DateTime endDate)
+    public async Task<List<Event>> GetEventsByDateRangeAsync(DateTime? startDate, DateTime? endDate)
     {
         return await _eventRepository.GetEventsByDateRangeAsync(startDate, endDate);
     }
