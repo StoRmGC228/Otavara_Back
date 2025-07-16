@@ -47,6 +47,11 @@ public class AnnouncementService : BaseService<Announcement>, IAnnouncementServi
         return await _announcementRepository.GetByRequesterIdAsync(userId);
     }
 
+    public async Task DeleteOverdueAnnouncements()
+    {
+        await _announcementRepository.DeleteOverdueAnnouncements();
+    }
+
     public async Task<Announcement> UpdateAsync(Guid id, Announcement entity)
     {
         return await _announcementRepository.UpdateAsync(id, entity);

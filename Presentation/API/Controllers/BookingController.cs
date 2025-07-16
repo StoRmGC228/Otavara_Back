@@ -38,12 +38,12 @@ public class BookingController : ControllerBase
         await _bookingService.BookGoodAsync(goodId, userId, count);
         return Ok();
     }
-    [Authorize(Roles ="Admin")]
+
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{goodId}/{userId}")]
     public async Task<IActionResult> CancelBooking(Guid goodId, Guid userId)
     {
-
-            await _bookingService.CancelBookingAsync(goodId, userId);
+        await _bookingService.CancelBookingAsync(goodId, userId);
 
         return Ok();
     }

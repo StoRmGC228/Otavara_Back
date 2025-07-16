@@ -32,28 +32,21 @@ public class EventRepository : BaseRepository<Event>, IEventRepository
         };
     }
 
-    public async Task<List<Event>> GetEventsSortedByDateAsync(bool ascending = true)
+
+    public async Task<List<Event>> GetEventsByDateRangeAsync(DateTime? startDate, DateTime? endDate)
     {
-        if (ascending)
+        IQueryable<Event> query = _eventDb;
+        if (startDate != null && endDate == null)
         {
-            return await _eventDb.OrderBy(e => e.EventStartTime).ToListAsync();
+            var timeLimit = startDate.Value.Date.AddHours(23).AddMinutes(59);
+            query = query.Where(e => e.EventStartTime >= startDate && e.EventStartTime <= timeLimit).OrderByDescending(e=>e.EventStartTime);
+        }
+        else if (startDate != null && endDate != null)
+        {
+            query = query.Where(e => e.EventStartTime >= startDate && e.EventStartTime <= endDate).OrderByDescending(e=>e.EventStartTime);
         }
 
-        return await _eventDb.OrderByDescending(e => e.EventStartTime).ToListAsync();
-    }
-
-    public async Task<List<Event>> GetEventsByDateAsync(DateTime date)
-    {
-        return await _eventDb
-            .Where(e => e.EventStartTime.Date == date.Date)
-            .ToListAsync();
-    }
-
-    public async Task<List<Event>> GetEventsByDateRangeAsync(DateTime startDate, DateTime endDate)
-    {
-        return await _eventDb
-            .Where(e => e.EventStartTime.Date >= startDate.Date && e.EventStartTime.Date <= endDate.Date)
-            .ToListAsync();
+        return await query.ToListAsync();
     }
 
     public async Task<List<Event>> GetEventsByPriceRangeAsync(int minPrice, int maxPrice)

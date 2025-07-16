@@ -17,6 +17,12 @@ public class CloudinaryUploader : IImageUploader
         _cloudinary = new Cloudinary(account);
     }
 
+    public async Task<List<string>> GetPublicIdOfAllImagesAsync()
+    {
+        var result = await _cloudinary.ListResourceByAssetFolderAsync("events", false, false, false);
+        return result.Resources.Select(p => p.PublicId).ToList();
+    }
+
     public async Task<string> UploadImageAsync(IFormFile file)
     {
         await using var stream = file.OpenReadStream();
@@ -29,12 +35,6 @@ public class CloudinaryUploader : IImageUploader
         return result.SecureUrl.AbsoluteUri;
     }
 
-    public async Task<List<string>> GetPublicIdOfAllImagesAsync()
-    {
-        var result = await _cloudinary.ListResourceByAssetFolderAsync("events", false, false, false);
-        return result.Resources.Select(p => p.PublicId).ToList();
-    }
-
     public Dictionary<string, string> GenerateUploadEventSignature(string folder = "events")
     {
         var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
@@ -42,7 +42,7 @@ public class CloudinaryUploader : IImageUploader
         var parameters = new SortedDictionary<string, object>
         {
             { "folder", folder },
-            { "timestamp", timestamp },
+            { "timestamp", timestamp }
         };
 
         var signature = _cloudinary.Api.SignParameters(parameters);
@@ -52,11 +52,10 @@ public class CloudinaryUploader : IImageUploader
             { "signature", signature },
             { "timestamp", timestamp.ToString() },
             { "folder", folder },
-            { "api_key", _cloudinary.Api.Account.ApiKey },
+            { "api_key", _cloudinary.Api.Account.ApiKey }
         };
-
-        
     }
+
     public Dictionary<string, string> GenerateUploadGoodsSignature(string folder = "goods")
     {
         var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
@@ -64,7 +63,7 @@ public class CloudinaryUploader : IImageUploader
         var parameters = new SortedDictionary<string, object>
         {
             { "folder", folder },
-            { "timestamp", timestamp },
+            { "timestamp", timestamp }
         };
 
         var signature = _cloudinary.Api.SignParameters(parameters);
@@ -74,7 +73,7 @@ public class CloudinaryUploader : IImageUploader
             { "signature", signature },
             { "timestamp", timestamp.ToString() },
             { "folder", folder },
-            { "api_key", _cloudinary.Api.Account.ApiKey },
+            { "api_key", _cloudinary.Api.Account.ApiKey }
         };
     }
 }

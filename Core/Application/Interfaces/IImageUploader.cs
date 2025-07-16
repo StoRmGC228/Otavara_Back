@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-public interface IImageUploader
+﻿public interface IImageUploader
 {
     Task<List<string>> GetPublicIdOfAllImagesAsync();
 }

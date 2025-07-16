@@ -1,6 +1,6 @@
 ﻿namespace Domain.DtoEntities;
 
-public class SearchEventDto
+public class SearchEventByNameAndDateDto
 {
     public string Name { get; set; }
     public DateTime? StartDate { get; set; }

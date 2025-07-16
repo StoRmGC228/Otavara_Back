@@ -4,9 +4,7 @@ using Domain.Entities;
 
 public interface IEventRepository : IBaseRepository<Event>
 {
-    Task<List<Event>> GetEventsSortedByDateAsync(bool ascending = true);
-    Task<List<Event>> GetEventsByDateAsync(DateTime date);
-    Task<List<Event>> GetEventsByDateRangeAsync(DateTime startDate, DateTime endDate);
+    Task<List<Event>> GetEventsByDateRangeAsync(DateTime? startDate, DateTime? endDate);
     Task<List<Event>> GetEventsByPriceRangeAsync(int minPrice, int maxPrice);
 
     Task<List<Event>> GetEventsByPriceRangeAndDateRangeAsync(int minPrice, int maxPrice, DateTime startDate,
