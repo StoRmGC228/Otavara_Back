@@ -27,7 +27,6 @@ public class AnnouncementRepository : BaseRepository<Announcement>, IAnnouncemen
         await _requestedCardDb
             .Where(a => a.RequestedDate <= twoWeeksAgo)
             .ExecuteDeleteAsync();
-        SaveChangesAsync();
     }
 
     public async Task<PaginatedDto<Announcement>> GetPaginatedAsync(int pageSize, int pageNumber)

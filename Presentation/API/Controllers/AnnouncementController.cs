@@ -89,12 +89,4 @@ public class AnnouncementController : ControllerBase
         await _announcementService.DeleteAsync(id);
         return Ok();
     }
-
-    [HttpDelete("deleteJob")]
-    public async Task<IActionResult> DeleteOverdueAnnoucements()
-    {
-        RecurringJob.AddOrUpdate(() => _announcementService.DeleteOverdueAnnouncements(), Cron.Daily);
-
-        return Ok("Recurring job started, mails will send in every minute");
-    }
 }
