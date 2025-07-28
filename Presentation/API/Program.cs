@@ -89,6 +89,7 @@ app.UseAuthorization();
 app.UseHangfireDashboard("/dashboard");
 app.MapControllers();
 
+app.Services.AddRecurringJobs();
 await app.EnsureDatabaseCreatedAsync();
 
 app.Run();
