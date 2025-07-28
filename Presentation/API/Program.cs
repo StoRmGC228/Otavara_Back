@@ -47,7 +47,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("MyAllowSpecificOrigins", policy =>
     {
         policy.WithOrigins(
-                "https://git.heroku.com/otavara-front.git",
+                "https://otavara-front-c90d325f28da.herokuapp.com",
                 "http://localhost:5173",
                 "https://otavara-front.loca.lt",
                 "https://otavara-back.loca.lt",
