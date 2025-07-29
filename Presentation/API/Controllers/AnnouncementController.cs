@@ -89,4 +89,14 @@ public class AnnouncementController : ControllerBase
         await _announcementService.DeleteAsync(id);
         return Ok();
     }
+
+    [Authorize]
+    [HttpGet("user/announcements")]
+    public async Task<IActionResult> GetUserAnnouncements()
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var userAnnouncements = await _announcementService.GetUserAnnouncementsAsync(userId);
+        var mappedAnnouncements = _mapper.Map<IEnumerable<AnnouncementDto>>(userAnnouncements);
+        return Ok(mappedAnnouncements);
+    }
 }
