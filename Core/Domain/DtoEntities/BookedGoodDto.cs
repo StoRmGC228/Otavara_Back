@@ -1,10 +1,14 @@
 ﻿namespace Domain.DtoEntities;
 
+using Newtonsoft.Json;
+
 public class BookedGoodDto
 {
-    public Guid UserId { get; set; }
+    [JsonIgnore] public Guid UserId { get; set; }
     public Guid GoodId { get; set; }
-    public GoodCreationDto? Good { get; set; }
-    public DateTime BookingExpirationDate { get; set; }
+
+    public string Name { get; set; }
+    public DateTime CreatedAt { get; set; }
+    [JsonIgnore] public DateTime BookingExpirationDate { get; set; }
     public int Count { get; set; }
 }

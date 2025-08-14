@@ -138,6 +138,7 @@ public class EventController : ControllerBase
         {
             return BadRequest();
         }
+
         searchedEvents.StartDate = searchedEvents.StartDate.Value.Date;
         if (searchedEvents.EndDate != null)
         {

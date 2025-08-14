@@ -58,14 +58,15 @@ public class DtoProfile : Profile
 
         CreateMap<Card, Card>().ForMember(dest => dest.Id, opt => opt.Ignore());
         CreateMap<Announcement, Announcement>().ForMember(dest => dest.Id, opt => opt.Ignore());
-        CreateMap<BookedGood, BookedGoodDto>();
+        CreateMap<BookedGood, BookedGoodDto>().ReverseMap();
         CreateMap<BookedGood, BookerDto>()
             .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.User.FirstName))
             .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.User.LastName))
             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.Username))
             .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => src.User.PhotoUrl))
             .ForMember(dest => dest.Count, opt => opt.MapFrom(src => src.Count))
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.UserId));
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.UserId))
+            .ReverseMap();
         CreateMap<Good, GoodAdminDto>().ReverseMap()
             .ForMember(dest => dest.Bookings, opt => opt.MapFrom(src => src.Bookings));
         CreateMap<Good, GoodDto>();

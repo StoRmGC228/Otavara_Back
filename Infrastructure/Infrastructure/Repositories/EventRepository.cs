@@ -4,6 +4,7 @@ using Application.Interfaces;
 using Configurations;
 using Domain.DtoEntities;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 public class EventRepository : BaseRepository<Event>, IEventRepository
@@ -32,23 +33,26 @@ public class EventRepository : BaseRepository<Event>, IEventRepository
         };
     }
 
-
+    [Authorize]
     public async Task<List<Event>> GetEventsByDateRangeAsync(DateTime? startDate, DateTime? endDate)
     {
         IQueryable<Event> query = _eventDb;
         if (startDate != null && endDate == null)
         {
             var timeLimit = startDate.Value.Date.AddHours(23).AddMinutes(59);
-            query = query.Where(e => e.EventStartTime >= startDate && e.EventStartTime <= timeLimit).OrderByDescending(e=>e.EventStartTime);
+            query = query.Where(e => e.EventStartTime >= startDate && e.EventStartTime <= timeLimit)
+                .OrderByDescending(e => e.EventStartTime);
         }
         else if (startDate != null && endDate != null)
         {
-            query = query.Where(e => e.EventStartTime >= startDate && e.EventStartTime <= endDate).OrderByDescending(e=>e.EventStartTime);
+            query = query.Where(e => e.EventStartTime >= startDate && e.EventStartTime <= endDate)
+                .OrderByDescending(e => e.EventStartTime);
         }
 
         return await query.ToListAsync();
     }
 
+    [Authorize]
     public async Task<List<Event>> GetEventsByPriceRangeAsync(int minPrice, int maxPrice)
     {
         return await _eventDb
@@ -56,6 +60,7 @@ public class EventRepository : BaseRepository<Event>, IEventRepository
             .ToListAsync();
     }
 
+    [Authorize]
     public async Task<List<Event>> GetEventsByPriceRangeAndDateRangeAsync(
         int minPrice, int maxPrice, DateTime startDate, DateTime endDate)
     {
@@ -66,6 +71,7 @@ public class EventRepository : BaseRepository<Event>, IEventRepository
     }
 
 
+    [Authorize]
     public async Task<List<Event>> GetEventsByNameAndDateRangeAsync(string name, DateTime? startDate, DateTime? endDate)
     {
         IQueryable<Event> query = _eventDb;

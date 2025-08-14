@@ -1,7 +1,7 @@
-﻿using Application.Interfaces;
-using Hangfire;
+﻿namespace API.Configurations;
 
-namespace API.Configurations;
+using Application.Interfaces;
+using Hangfire;
 
 public static class ServiceProviderExtensions
 {
@@ -21,7 +21,7 @@ public static class ServiceProviderExtensions
             Cron.Daily,
             new RecurringJobOptions
             {
-                TimeZone = TimeZoneInfo.Local, // або UTC, залежно від логіки
+                TimeZone = TimeZoneInfo.Local // або UTC, залежно від логіки
             });
 
         logger.LogInformation("Recurring job 'cleanup-overdue-announcements' registered.");

@@ -122,9 +122,4 @@ public class EventService : BaseService<Event>, IEventService
     {
         return await _eventRepository.GetEventsByNameAndDateRangeAsync(name, startDate, endDate);
     }
-
-    public async Task<Event> UpdateAsync(Guid id, Event entity)
-    {
-        return await _eventRepository.UpdateAsync(id, entity);
-    }
 }

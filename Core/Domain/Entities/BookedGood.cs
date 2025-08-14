@@ -8,4 +8,5 @@ public class BookedGood
     public virtual Good Good { get; set; }
     public int Count { get; set; }
     public DateTime BookingExpirationDate { get; set; }
+    public DateTime CreatedAt { get; set; }
 }

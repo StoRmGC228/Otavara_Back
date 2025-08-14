@@ -48,7 +48,7 @@ public class GoodController : ControllerBase
         var result = new PaginatedGoodsDto
         {
             TotalPages = paginatedGoods.TotalPages,
-            PaginatedGoods = mappedGoods
+            PaginatedEntities = mappedGoods
         };
         return Ok(result);
     }
@@ -70,6 +70,7 @@ public class GoodController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> CreateGoodAsync([FromBody] GoodCreationDto newGoodAdmin)
     {
@@ -78,6 +79,7 @@ public class GoodController : ControllerBase
         return Ok(createdGood);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateGoodAsync(Guid id, [FromBody] GoodAdminDto updatedGood)
     {
@@ -97,6 +99,7 @@ public class GoodController : ControllerBase
         return Ok();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteGoodAsync(Guid id)
     {

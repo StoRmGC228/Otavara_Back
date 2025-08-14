@@ -4,8 +4,10 @@ using Domain.DtoEntities;
 
 public interface IBookingService
 {
-    Task<List<BookedGoodDto>> GetUserBookingsAsync(Guid userId);
-    Task<bool> BookGoodAsync(Guid goodId, Guid userId, int count);
+    Task ConfirmBookings(List<CloseBookingsDto> closeBookings);
+    Task<List<AdminBookingDto>> GetAllBookings();
+    Task<List<UserBookingsDto>> GetUserBookingsAsync(Guid userId);
+    Task BookGoodsAsync(BookedGoodDto[] bookedGood, Guid userId);
     Task CancelBookingAsync(Guid goodId, Guid userId);
     Task<bool> IsGoodAvailableAsync(Guid goodId);
     Task<int> GetAvailableQuantityAsync(Guid goodId);

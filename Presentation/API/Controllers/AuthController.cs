@@ -55,4 +55,12 @@ public class AuthController : ControllerBase
         var response = _mapper.Map<UserGetDto>(user);
         return Ok(response);
     }
+
+    [Authorize]
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        Response.Cookies.Delete("MySecretCookies");
+        return Ok(new { message = "Logged out successfully" });
+    }
 }
