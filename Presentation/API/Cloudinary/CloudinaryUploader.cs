@@ -35,14 +35,15 @@ public class CloudinaryUploader : IImageUploader
         return result.SecureUrl.AbsoluteUri;
     }
 
-    public Dictionary<string, string> GenerateUploadEventSignature(string folder = "events")
+    public Dictionary<string, string> GenerateUploadEventSignature()
     {
         var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        const string uploadPreset = "Events_Upload";
 
         var parameters = new SortedDictionary<string, object>
         {
-            { "folder", folder },
-            { "timestamp", timestamp }
+            { "timestamp", timestamp },
+            { "upload_preset", uploadPreset }
         };
 
         var signature = _cloudinary.Api.SignParameters(parameters);
@@ -51,19 +52,20 @@ public class CloudinaryUploader : IImageUploader
         {
             { "signature", signature },
             { "timestamp", timestamp.ToString() },
-            { "folder", folder },
-            { "api_key", _cloudinary.Api.Account.ApiKey }
+            { "api_key", _cloudinary.Api.Account.ApiKey },
+            { "uploadPreset", uploadPreset }
         };
     }
 
-    public Dictionary<string, string> GenerateUploadGoodsSignature(string folder = "goods")
+    public Dictionary<string, string> GenerateUploadGoodsSignature()
     {
         var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        const string uploadPreset = "Goods_Upload";
 
         var parameters = new SortedDictionary<string, object>
         {
-            { "folder", folder },
-            { "timestamp", timestamp }
+            { "timestamp", timestamp },
+            { "upload_preset", uploadPreset }
         };
 
         var signature = _cloudinary.Api.SignParameters(parameters);
@@ -72,8 +74,8 @@ public class CloudinaryUploader : IImageUploader
         {
             { "signature", signature },
             { "timestamp", timestamp.ToString() },
-            { "folder", folder },
-            { "api_key", _cloudinary.Api.Account.ApiKey }
+            { "api_key", _cloudinary.Api.Account.ApiKey },
+            { "upload_preset", uploadPreset }
         };
     }
 }

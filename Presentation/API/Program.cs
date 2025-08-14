@@ -1,6 +1,5 @@
 using API.Configurations;
 using API.DtoProfile;
-using API.Middleware;
 using Application.Services;
 using Hangfire;
 using Microsoft.OpenApi.Models;
@@ -67,7 +66,7 @@ builder.Services.AddDataSeeders();
 builder.Services.AddScoped<DatabaseSeedService>();
 var app = builder.Build();
 
-app.UseMiddleware<ErrorHandlerMiddleware>();
+//app.UseMiddleware<ErrorHandlerMiddleware>();
 
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {

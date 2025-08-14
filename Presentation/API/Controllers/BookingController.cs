@@ -2,6 +2,8 @@
 
 using System.Security.Claims;
 using Application.Interfaces;
+using AutoMapper;
+using Domain.DtoEntities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,32 +12,37 @@ using Microsoft.AspNetCore.Mvc;
 public class BookingController : ControllerBase
 {
     private readonly IBookingService _bookingService;
+    private readonly IMapper _mapper;
 
-    public BookingController(IBookingService bookingService)
+    public BookingController(IBookingService bookingService, IMapper mapper)
     {
         _bookingService = bookingService;
+        _mapper = mapper;
     }
 
-    [HttpGet("user/{id}")]
-    public async Task<IActionResult> GetUserBookings(Guid id)
+    [Authorize]
+    [HttpGet("user")]
+    public async Task<IActionResult> GetUserBookings()
     {
-        var isAdmin = User.IsInRole("Admin");
         var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-        if (currentUserId == id || isAdmin)
-        {
-            var bookings = await _bookingService.GetUserBookingsAsync(id);
-            return Ok(bookings);
-        }
-
-        return Forbid();
+        var bookings = await _bookingService.GetUserBookingsAsync(currentUserId);
+        return Ok(bookings);
     }
 
-    [HttpPost("{goodId}")]
-    public async Task<IActionResult> BookGood(Guid goodId, int count)
+    [Authorize(Roles = "Admin")]
+    [HttpGet("admin")]
+    public async Task<IActionResult> GetAllBookings()
+    {
+        return Ok(await _bookingService.GetAllBookings());
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> BookGoods([FromBody] BookedGoodDto[] bookings)
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        await _bookingService.BookGoodAsync(goodId, userId, count);
+        await _bookingService.BookGoodsAsync(bookings, userId);
         return Ok();
     }
 
@@ -60,5 +67,13 @@ public class BookingController : ControllerBase
     {
         var availableQuantity = await _bookingService.GetAvailableQuantityAsync(goodId);
         return Ok(new { availableQuantity });
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpDelete("confirm")]
+    public async Task<IActionResult> ConfirmBookings([FromBody] List<CloseBookingsDto> closeBookings)
+    {
+        await _bookingService.ConfirmBookings(closeBookings);
+        return NoContent();
     }
 }

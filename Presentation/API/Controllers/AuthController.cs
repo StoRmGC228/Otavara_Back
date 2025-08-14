@@ -55,4 +55,20 @@ public class AuthController : ControllerBase
         var response = _mapper.Map<UserGetDto>(user);
         return Ok(response);
     }
+
+    [Authorize]
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true, // ВАЖЛИВО: Працює лише через HTTPS
+            SameSite = SameSiteMode.None,
+            Expires = DateTimeOffset.UtcNow.AddDays(7), // або MaxAge = TimeSpan.FromDays(7)
+            Path = "/"
+        };
+        Response.Cookies.Delete("MySecretCookies", cookieOptions);
+        return Ok(new { message = "Logged out successfully" });
+    }
 }
