@@ -60,7 +60,15 @@ public class AuthController : ControllerBase
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()
     {
-        Response.Cookies.Delete("MySecretCookies");
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true, // ВАЖЛИВО: Працює лише через HTTPS
+            SameSite = SameSiteMode.None,
+            Expires = DateTimeOffset.UtcNow.AddDays(7), // або MaxAge = TimeSpan.FromDays(7)
+            Path = "/"
+        };
+        Response.Cookies.Delete("MySecretCookies", cookieOptions);
         return Ok(new { message = "Logged out successfully" });
     }
 }
