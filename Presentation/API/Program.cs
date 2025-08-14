@@ -46,11 +46,12 @@ builder.Services.AddCors(options =>
     options.AddPolicy("MyAllowSpecificOrigins", policy =>
     {
         policy.WithOrigins(
-                "https://otavara-front-c90d325f28da.herokuapp.com",
+                "https://otavara-60887440e467.herokuapp.com",
                 "http://localhost:5173",
-                "https://otavara-front.loca.lt",
-                "https://otavara-back.loca.lt",
-                "https://fitting-gar-hideously.ngrok-free.app"
+                "https://otavara-frontend.loca.lt",
+                "https://wxtkfl8g-5173.euw.devtunnels.ms",
+                "https://otavara-api.loca.lt",
+                "https://happy-bikes-punch.loca.lt"
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
@@ -62,8 +63,6 @@ builder.Services.AddInfrastructureConfigurations(builder.Configuration);
 builder.Services.AddApplicationConfigurations(builder.Configuration);
 builder.Services.AddApiConfigurations(builder.Configuration);
 
-builder.Services.AddDataSeeders();
-builder.Services.AddScoped<DatabaseSeedService>();
 var app = builder.Build();
 
 //app.UseMiddleware<ErrorHandlerMiddleware>();
@@ -89,6 +88,5 @@ app.UseHangfireDashboard("/dashboard");
 app.MapControllers();
 
 app.Services.AddRecurringJobs();
-await app.EnsureDatabaseCreatedAsync();
 
 app.Run();
