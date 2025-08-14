@@ -5,7 +5,6 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.DtoEntities;
 using Domain.Entities;
-using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
