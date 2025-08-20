@@ -46,12 +46,12 @@ builder.Services.AddCors(options =>
     options.AddPolicy("MyAllowSpecificOrigins", policy =>
     {
         policy.WithOrigins(
-                "https://otavara-60887440e467.herokuapp.com",
+                "https://otavara-front-c90d325f28da.herokuapp.com",
                 "http://localhost:5173",
                 "https://otavara-frontend.loca.lt",
                 "https://wxtkfl8g-5173.euw.devtunnels.ms",
                 "https://otavara-api.loca.lt",
-                "https://happy-bikes-punch.loca.lt"
+                "https://fitting-gar-hideously.ngrok-free.app"
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
