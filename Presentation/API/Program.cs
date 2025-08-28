@@ -51,7 +51,7 @@ builder.Services.AddCors(options =>
                 "https://otavara-frontend.loca.lt",
                 "https://wxtkfl8g-5173.euw.devtunnels.ms",
                 "https://otavara-api.loca.lt",
-                "https://happy-bikes-punch.loca.lt"
+                "https://fitting-gar-hideously.ngrok-free.app"
             )
             .AllowAnyHeader()
             .AllowAnyMethod()

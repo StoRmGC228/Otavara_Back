@@ -102,16 +102,12 @@ public class EventController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost("{userId}/{id}/participants")]
-    public async Task<IActionResult> AddParticipant(Guid userId, Guid id)
+    [HttpPost("{id}/participants")]
+    public async Task<IActionResult> AddParticipant(Guid id)
     {
-        if (userId == null)
-        {
-            return Unauthorized();
-        }
-
-        await _eventService.AddParticipantAsync(id, userId);
-        return Ok();
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var result = await _eventService.AddParticipantAsync(id, userId);
+        return Ok(_mapper.Map<EventDto>(result));
     }
 
     [Authorize]
@@ -119,8 +115,8 @@ public class EventController : ControllerBase
     public async Task<IActionResult> UnsubscribeFromEvent(Guid id)
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        await _eventService.RemoveParticipantAsync(id, userId);
-        return Ok();
+        var result = await _eventService.RemoveParticipantAsync(id, userId);
+        return Ok(_mapper.Map<EventDto>(result));
     }
 
     [HttpDelete("{userId}/{eventId}/admin/participants")]

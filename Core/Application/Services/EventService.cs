@@ -92,14 +92,14 @@ public class EventService : BaseService<Event>, IEventService
         return await _participantsRepository.GetEventParticipantsAsync(eventId);
     }
 
-    public async Task AddParticipantAsync(Guid eventId, Guid userId)
+    public async Task<Event> AddParticipantAsync(Guid eventId, Guid userId)
     {
-        await _participantsRepository.AddParticipantAsync(eventId, userId);
+        return await _participantsRepository.AddParticipantAsync(eventId, userId);
     }
 
-    public async Task RemoveParticipantAsync(Guid eventId, Guid userId)
+    public async Task<Event> RemoveParticipantAsync(Guid eventId, Guid userId)
     {
-        await _participantsRepository.RemoveParticipantAsync(eventId, userId);
+        return await _participantsRepository.RemoveParticipantAsync(eventId, userId);
     }
 
     public async Task<int> GetEventParticipantsCountAsync(Guid eventId)

@@ -7,6 +7,7 @@ public class Event : IBaseEntity
     public string? Description { get; set; }
     public int? Price { get; set; }
     public string? Format { get; set; }
+    public int MaxParticipants { get; set; }
     public DateTime EventStartTime { get; set; }
     public virtual List<Participant>? Participants { get; set; }
     public Guid Id { get; set; }
