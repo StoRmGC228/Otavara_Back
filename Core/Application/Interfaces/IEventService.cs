@@ -15,8 +15,8 @@ public interface IEventService : IBaseService<Event>
         DateTime endDate);
 
     Task<List<Participant>> GetEventParticipantsAsync(Guid eventId);
-    Task AddParticipantAsync(Guid eventId, Guid userId);
-    Task RemoveParticipantAsync(Guid eventId, Guid userId);
+    Task<Event> AddParticipantAsync(Guid eventId, Guid userId);
+    Task<Event> RemoveParticipantAsync(Guid eventId, Guid userId);
     Task<int> GetEventParticipantsCountAsync(Guid eventId);
     Task<bool> IsUserParticipantAsync(Guid eventId, Guid userId);
     Task<List<Event>> GetUserEventsAsync(Guid userId);

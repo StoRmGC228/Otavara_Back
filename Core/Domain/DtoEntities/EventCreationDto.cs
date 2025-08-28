@@ -9,6 +9,7 @@ public class EventCreationDto
     public string? Description { get; set; }
     public int? Price { get; set; }
     public string? Format { get; set; }
+    public int MaxParticipants { get; set; }
     [JsonPropertyName("date")] public DateOnly EventDate { get; set; }
     [JsonPropertyName("time")] public TimeOnly EventTime { get; set; }
 }
