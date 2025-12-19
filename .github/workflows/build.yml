@@ -17,10 +17,10 @@ jobs:
           dotnet-version: "8.0.x"
 
       - name: Restore
-        run: dotnet restore Presentation/Presentation.csproj
+        run: dotnet restore Presentation/API/API.csproj
 
       - name: Publish
-        run: dotnet publish Presentation/Presentation.csproj -c Release -o publish
+        run: dotnet publish Presentation/API/API.csproj -c Release -o publish
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
