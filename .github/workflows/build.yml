@@ -1,29 +1,103 @@
-name: Build and Publish Otavara Backend
+name: Build and Deploy
 
-on:
+on:                 
   push:
-    branches: ["main"]
-  workflow_dispatch:
+    branches:
+      - '**'         
+  workflow_dispatch: 
 
-jobs:
+jobs:                 
+
   build:
+    name: Build application
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout source
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-dotnet@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.0.x"
+          dotnet-version: 8.0.x
 
-      - name: Restore
-        run: dotnet restore Presentation/API/API.csproj
+      - name: Restore dependencies
+        run: dotnet restore
 
-      - name: Publish
-        run: dotnet publish Presentation/API/API.csproj -c Release -o publish
+      - name: Build solution
+        run: dotnet build --configuration Release --no-restore
 
-      - name: Upload artifact
+      - name: Publish artifact
+        run: dotnet publish Presentation/API/API.csproj -c Release -o ./artifact
+
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: otavara-backend
-          path: publish
+          name: app-artifact
+          path: ./artifact
+
+
+  test:
+    name: Run unit tests
+    runs-on: ubuntu-latest
+    needs: build        
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-artifact
+          path: ./artifact
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Run tests
+        run: dotnet test --configuration Release --no-build
+
+
+  deploy-dev:
+    name: Deploy to DEV
+    runs-on: ubuntu-latest
+    needs: test          
+    environment: dev     
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-artifact
+          path: ./artifact
+
+      - name: Deploy to DEV
+        run: |
+          echo "Deploying to DEV from artifact"
+          ls -la ./artifact
+
+
+  deploy-prod:
+    name: Deploy to PROD
+    runs-on: ubuntu-latest
+    needs: deploy-dev   
+    environment: prod    
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-artifact
+          path: ./artifact
+
+      - name: Deploy to PROD
+        run: |
+          echo "Deploying to PROD from SAME artifact"
+          ls -la ./artifact
+
