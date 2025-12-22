@@ -58,10 +58,10 @@ jobs:
           path: ./artifact
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore Otavara_Back.sln
 
       - name: Run tests
-        run: dotnet test --configuration Release --no-build
+        run: dotnet test Otavara_Back.sln --configuration Release --no-build
 
 
   deploy-dev:
