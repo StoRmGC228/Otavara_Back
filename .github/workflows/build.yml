@@ -25,7 +25,7 @@ jobs:
         run: dotnet restore Otavara_Back.sln
 
       - name: Build solution
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build Otavara_Back.sln --configuration Release --no-restore
 
       - name: Publish artifact
         run: dotnet publish Presentation/API/API.csproj -c Release -o ./artifact
