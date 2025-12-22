@@ -22,7 +22,7 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Restore dependencies
-        run: dotnet restore Otavara_back.sln
+        run: dotnet restore G:\Project\Otavara_back\Otavara_back.sln
 
       - name: Build solution
         run: dotnet build --configuration Release --no-restore
