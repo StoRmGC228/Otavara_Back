@@ -1,0 +1,62 @@
+name: Deploy from Release Assets
+
+on:
+  release:
+    types:
+      - published 
+
+jobs:
+
+  deploy-dev:
+    name: Deploy to DEV
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+      - name: Download release assets
+        uses: robinraju/release-downloader@v1.9
+        with:
+          tag: ${{ github.event.release.tag_name }}
+          fileName: "*"
+          out-file-path: artifact
+
+      - name: Inspect downloaded assets
+        run: |
+          echo "Release tag: ${{ github.event.release.tag_name }}"
+          ls -la artifact
+
+      - name: Extract deploy package
+        run: |
+          tar -xzf artifact/*.tar.gz -C artifact
+
+      - name: Deploy to DEV
+        run: |
+          echo "Deploying to DEV from release assets"
+          echo "Artifact content:"
+          ls -la artifact
+       
+
+
+  deploy-prod:
+    name: Deploy to PROD
+    runs-on: ubuntu-latest
+    needs: deploy-dev
+    environment: prod  
+
+    steps:
+      - name: Download release assets
+        uses: robinraju/release-downloader@v1.9
+        with:
+          tag: ${{ github.event.release.tag_name }}
+          fileName: "*"
+          out-file-path: artifact
+
+      - name: Extract deploy package
+        run: |
+          tar -xzf artifact/*.tar.gz -C artifact
+
+      - name: Deploy to PROD
+        run: |
+          echo "Deploying to PROD from SAME release assets"
+          echo "Artifact content:"
+          ls -la artifact
