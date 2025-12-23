@@ -61,7 +61,7 @@ jobs:
         run: dotnet restore Otavara_Back.sln
 
       - name: Run tests
-        run: dotnet test Otavara_Back.sln --configuration Release --no-build
+        run: dotnet test Otavara_Back.sln --configuration Release 
 
 
   deploy-dev:
