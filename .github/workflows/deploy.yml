@@ -17,7 +17,7 @@ jobs:
         uses: robinraju/release-downloader@v1.9
         with:
           tag: ${{ github.event.release.tag_name }}
-          fileName: "*"
+          fileName: "api-build"
           out-file-path: artifact
 
       - name: Inspect downloaded assets
