@@ -1,40 +1,55 @@
-name: Build & Test
+name: CI Build & Test
 
 on:
+  pull_request:
+    branches:
+      - dev
+      - main
   push:
     branches:
-      - '**'
+      - dev
+      - main
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-dotnet@v4
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: '8.0.x'
 
       - name: Restore
-        run: dotnet restore Otavara_Back.sln
+        run: dotnet restore
 
-      - name: Build
-        run: dotnet build Otavara_Back.sln --configuration Release --no-restore
+      - name: Build (Release)
+        run: dotnet build -c Release --no-restore
 
-      - name: Test
-        run: dotnet test Otavara_Back.sln --configuration Release
+  test:
+    name: Test
+    needs: build
+    runs-on: ubuntu-latest
 
-      - name: Publish API
-        run: dotnet publish Presentation/API/API.csproj -c Release -o publish
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Archive publish output
-        run: |
-          cd publish
-          tar -czf ../api-${{ github.sha }}.tar.gz .
-
-      - name: Upload build artifact (optional)
-        uses: actions/upload-artifact@v4
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
         with:
-          name: api-build
-          path: api-${{ github.sha }}.tar.gz
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Run tests (Release)
+        run: dotnet test -c Release --no-build --verbosity normal
