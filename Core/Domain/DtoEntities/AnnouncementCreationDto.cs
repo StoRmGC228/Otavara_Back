@@ -1,5 +1,5 @@
 ﻿namespace Domain.DtoEntities;
-
+//test
 public class AnnouncementCreationDto
 {
     public int Count { get; set; }
